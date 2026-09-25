@@ -1,0 +1,492 @@
+{
+  "version": 1,
+  "daily_reset_local_hour": 4,
+  "login_calendar": {
+    "missed_day_resets": false,
+    "days": [
+      {
+        "day": 1,
+        "reward": {
+          "credits": 650
+        },
+        "milestone": false
+      },
+      {
+        "day": 2,
+        "reward": {
+          "stardust": 14
+        },
+        "milestone": false
+      },
+      {
+        "day": 3,
+        "reward": {
+          "credits": 950
+        },
+        "milestone": false
+      },
+      {
+        "day": 4,
+        "reward": {
+          "stardust": 18
+        },
+        "milestone": false
+      },
+      {
+        "day": 5,
+        "reward": {
+          "credits": 1250
+        },
+        "milestone": false
+      },
+      {
+        "day": 6,
+        "reward": {
+          "stardust": 22
+        },
+        "milestone": false
+      },
+      {
+        "day": 7,
+        "reward": {
+          "credits": 5000,
+          "stardust": 100,
+          "item": "chest_rare"
+        },
+        "milestone": true
+      },
+      {
+        "day": 8,
+        "reward": {
+          "stardust": 26
+        },
+        "milestone": false
+      },
+      {
+        "day": 9,
+        "reward": {
+          "credits": 1850
+        },
+        "milestone": false
+      },
+      {
+        "day": 10,
+        "reward": {
+          "stardust": 30
+        },
+        "milestone": false
+      },
+      {
+        "day": 11,
+        "reward": {
+          "credits": 2150
+        },
+        "milestone": false
+      },
+      {
+        "day": 12,
+        "reward": {
+          "stardust": 34
+        },
+        "milestone": false
+      },
+      {
+        "day": 13,
+        "reward": {
+          "credits": 2450
+        },
+        "milestone": false
+      },
+      {
+        "day": 14,
+        "reward": {
+          "credits": 12000,
+          "stardust": 200,
+          "item": "chest_epic"
+        },
+        "milestone": true
+      },
+      {
+        "day": 15,
+        "reward": {
+          "credits": 2750
+        },
+        "milestone": false
+      },
+      {
+        "day": 16,
+        "reward": {
+          "stardust": 42
+        },
+        "milestone": false
+      },
+      {
+        "day": 17,
+        "reward": {
+          "credits": 3050
+        },
+        "milestone": false
+      },
+      {
+        "day": 18,
+        "reward": {
+          "stardust": 46
+        },
+        "milestone": false
+      },
+      {
+        "day": 19,
+        "reward": {
+          "credits": 3350
+        },
+        "milestone": false
+      },
+      {
+        "day": 20,
+        "reward": {
+          "stardust": 50
+        },
+        "milestone": false
+      },
+      {
+        "day": 21,
+        "reward": {
+          "credits": 25000,
+          "stardust": 300,
+          "item": "chest_epic"
+        },
+        "milestone": true
+      },
+      {
+        "day": 22,
+        "reward": {
+          "stardust": 54
+        },
+        "milestone": false
+      },
+      {
+        "day": 23,
+        "reward": {
+          "credits": 3950
+        },
+        "milestone": false
+      },
+      {
+        "day": 24,
+        "reward": {
+          "stardust": 58
+        },
+        "milestone": false
+      },
+      {
+        "day": 25,
+        "reward": {
+          "credits": 4250
+        },
+        "milestone": false
+      },
+      {
+        "day": 26,
+        "reward": {
+          "stardust": 62
+        },
+        "milestone": false
+      },
+      {
+        "day": 27,
+        "reward": {
+          "credits": 4550
+        },
+        "milestone": false
+      },
+      {
+        "day": 28,
+        "reward": {
+          "stardust": 66
+        },
+        "milestone": false
+      },
+      {
+        "day": 29,
+        "reward": {
+          "credits": 4850
+        },
+        "milestone": false
+      },
+      {
+        "day": 30,
+        "reward": {
+          "credits": 50000,
+          "stardust": 500,
+          "item": "oven_supernova",
+          "skin": "bakery_supernova"
+        },
+        "milestone": true
+      }
+    ]
+  },
+  "daily_quests": {
+    "per_day": 3,
+    "difficulties": [
+      "easy",
+      "medium",
+      "hard"
+    ],
+    "streak_income_bonus": [
+      {
+        "days": 3,
+        "bonus_pct": 5
+      },
+      {
+        "days": 7,
+        "bonus_pct": 10
+      },
+      {
+        "days": 14,
+        "bonus_pct": 15
+      },
+      {
+        "days": 30,
+        "bonus_pct": 25
+      }
+    ],
+    "streak_freeze": {
+      "free_per_week": 1,
+      "stardust_cost": 50
+    }
+  },
+  "season_pass": {
+    "levels": 30,
+    "xp_per_level": 1000,
+    "target_levels_per_day": 1,
+    "double_xp_days": [
+      27
+    ],
+    "free_track_rewards": [
+      {
+        "level": 25,
+        "item": "oven_supernova"
+      }
+    ]
+  },
+  "unlocks_by_day": [
+    {
+      "day": 1,
+      "features": [
+        "ftue",
+        "planet_moon",
+        "oven_2"
+      ]
+    },
+    {
+      "day": 2,
+      "features": [
+        "daily_quests",
+        "oven_3"
+      ]
+    },
+    {
+      "day": 3,
+      "features": [
+        "event_meteor_shower",
+        "guaranteed_rare_recipe"
+      ]
+    },
+    {
+      "day": 4,
+      "features": [
+        "showcase_autosell"
+      ]
+    },
+    {
+      "day": 5,
+      "features": [
+        "vip_customer"
+      ]
+    },
+    {
+      "day": 6,
+      "features": [
+        "weekly_challenge"
+      ]
+    },
+    {
+      "day": 7,
+      "features": [
+        "planet_mars"
+      ]
+    },
+    {
+      "day": 8,
+      "features": [
+        "fillings_craft"
+      ]
+    },
+    {
+      "day": 9,
+      "features": [
+        "recipe_lab"
+      ]
+    },
+    {
+      "day": 10,
+      "features": [
+        "guilds"
+      ]
+    },
+    {
+      "day": 11,
+      "features": [
+        "guild_weekly_goal"
+      ]
+    },
+    {
+      "day": 12,
+      "features": [
+        "pet_helper"
+      ]
+    },
+    {
+      "day": 13,
+      "features": [
+        "event_space_fair"
+      ]
+    },
+    {
+      "day": 14,
+      "features": [
+        "planet_saturn_teaser"
+      ]
+    },
+    {
+      "day": 15,
+      "features": [
+        "leagues"
+      ]
+    },
+    {
+      "day": 16,
+      "features": [
+        "decor"
+      ]
+    },
+    {
+      "day": 17,
+      "features": [
+        "guild_coop_order"
+      ]
+    },
+    {
+      "day": 18,
+      "features": [
+        "vip_chain"
+      ]
+    },
+    {
+      "day": 19,
+      "features": [
+        "oven_level_3"
+      ]
+    },
+    {
+      "day": 20,
+      "features": [
+        "event_black_hole"
+      ]
+    },
+    {
+      "day": 21,
+      "features": [
+        "planet_europa"
+      ]
+    },
+    {
+      "day": 22,
+      "features": [
+        "league_results"
+      ]
+    },
+    {
+      "day": 23,
+      "features": [
+        "collection_album"
+      ]
+    },
+    {
+      "day": 24,
+      "features": [
+        "minigame_decorating"
+      ]
+    },
+    {
+      "day": 25,
+      "features": [
+        "season_boss_teaser"
+      ]
+    },
+    {
+      "day": 26,
+      "features": [
+        "guild_boss_prep"
+      ]
+    },
+    {
+      "day": 27,
+      "features": [
+        "pass_double_xp"
+      ]
+    },
+    {
+      "day": 28,
+      "features": [
+        "league_season_final"
+      ]
+    },
+    {
+      "day": 29,
+      "features": [
+        "event_boss_kraken"
+      ]
+    },
+    {
+      "day": 30,
+      "features": [
+        "oven_supernova",
+        "season_rewards",
+        "next_season_teaser"
+      ]
+    }
+  ],
+  "comeback": [
+    {
+      "days_absent": 3,
+      "reward": {
+        "credits": 3000,
+        "speedups": 3
+      }
+    },
+    {
+      "days_absent": 7,
+      "reward": {
+        "income_multiplier": 2,
+        "duration_min": 60,
+        "pass_catchup_xp": 2000
+      }
+    }
+  ],
+  "push": {
+    "max_per_day": 2,
+    "streak_warning_local_hour": 20
+  },
+  "economy": {
+    "upgrade_cost_growth": 1.15,
+    "income_growth": 1.1
+  },
+  "kpi_targets": {
+    "d1": 0.4,
+    "d3": 0.25,
+    "d7": 0.15,
+    "d14": 0.1,
+    "d30": 0.06
+  }
+}
