@@ -1,0 +1,14 @@
+{
+  "name": "Cocofanto_Elefanto",
+  "title": "Cocofanto Elefanto",
+  "tris": 15000,
+  "size_cm": [
+    109,
+    142,
+    129
+  ],
+  "fbx": "SM_Cocofanto_Elefanto.fbx",
+  "texture": "T_Cocofanto_Elefanto_BaseColor.png",
+  "materials": 1,
+  "colors": 10
+}

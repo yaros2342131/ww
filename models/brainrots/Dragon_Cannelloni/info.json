@@ -1,0 +1,14 @@
+{
+  "name": "Dragon_Cannelloni",
+  "title": "Dragon Cannelloni",
+  "tris": 15000,
+  "size_cm": [
+    184,
+    121,
+    183
+  ],
+  "fbx": "SM_Dragon_Cannelloni.fbx",
+  "texture": "T_Dragon_Cannelloni_BaseColor.png",
+  "materials": 1,
+  "colors": 12
+}

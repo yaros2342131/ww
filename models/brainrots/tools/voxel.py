@@ -108,6 +108,15 @@ class Vox:
         sub = self.g[sl]
         sub[m] = -1 if col is None else self.c(col)
 
+    def paint(self, lo, hi, inside, col):
+        """Перекрасить только уже заполненные воксели, где inside истинно (полоски, пятна)."""
+        sl, X, Y, Z = self._region(lo, hi)
+        if X.size == 0:
+            return
+        sub = self.g[sl]
+        m = inside(X, Y, Z) & (sub >= 0)
+        sub[m] = self.c(col)
+
     def ellipsoid(self, cx, cy, cz, rx, ry, rz, col, only_empty=False):
         self.shape((cx - rx, cy - ry, cz - rz), (cx + rx, cy + ry, cz + rz),
                    lambda X, Y, Z: ((X - cx) / rx) ** 2 + ((Y - cy) / ry) ** 2 + ((Z - cz) / rz) ** 2 <= 1,

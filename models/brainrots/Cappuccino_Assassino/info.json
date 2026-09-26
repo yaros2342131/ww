@@ -1,0 +1,14 @@
+{
+  "name": "Cappuccino_Assassino",
+  "title": "Cappuccino Assassino",
+  "tris": 14998,
+  "size_cm": [
+    103,
+    89,
+    150
+  ],
+  "fbx": "SM_Cappuccino_Assassino.fbx",
+  "texture": "T_Cappuccino_Assassino_BaseColor.png",
+  "materials": 1,
+  "colors": 10
+}

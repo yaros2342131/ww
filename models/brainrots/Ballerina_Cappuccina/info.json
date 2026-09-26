@@ -1,0 +1,14 @@
+{
+  "name": "Ballerina_Cappuccina",
+  "title": "Ballerina Cappuccina",
+  "tris": 15000,
+  "size_cm": [
+    77,
+    77,
+    155
+  ],
+  "fbx": "SM_Ballerina_Cappuccina.fbx",
+  "texture": "T_Ballerina_Cappuccina_BaseColor.png",
+  "materials": 1,
+  "colors": 9
+}

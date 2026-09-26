@@ -2,8 +2,8 @@
 
     python build.py                     # все персонажи
     python build.py SixSeven_67
-Нужен Python 3.11 с bpy 4.2 (pip install bpy==4.2.0 pillow numpy).
-Результат: models/brainrots/<Имя>/SM_<Имя>.fbx, T_<Имя>_Palette.png, preview.png, info.json
+Нужен Python 3.11 с bpy 4.2 (pip install bpy==4.2.0 pillow numpy scipy scikit-image).
+Результат: models/brainrots/<Имя>/SM_<Имя>.fbx, T_<Имя>_BaseColor.png, preview.png, info.json
 """
 import json
 import os
@@ -13,6 +13,17 @@ sys.path.insert(0, os.path.dirname(__file__))
 import kit  # noqa: E402
 import voxel  # noqa: E402
 from voxel_chars import K, VOX_CHARACTERS  # noqa: E402
+import importlib  # noqa: E402
+
+CHARACTERS = dict(VOX_CHARACTERS)
+for _mod in ('chars_a', 'chars_b', 'chars_c'):
+    try:
+        m = importlib.import_module(_mod)
+    except ModuleNotFoundError as e:
+        if e.name != _mod:
+            raise
+        continue
+    CHARACTERS.update(getattr(m, 'CHARS_' + _mod[-1].upper()))
 from PIL import Image, ImageDraw, ImageFont  # noqa: E402
 
 ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
@@ -20,7 +31,7 @@ MAX_TRIS = 20000
 
 
 def build(key):
-    title, fn = VOX_CHARACTERS[key]
+    title, fn = CHARACTERS[key]
     out = os.path.join(ROOT, key)
     os.makedirs(out, exist_ok=True)
     kit.reset()
@@ -62,6 +73,6 @@ def build(key):
 
 
 if __name__ == '__main__':
-    keys = [a for a in sys.argv[1:] if not a.startswith('-')] or list(VOX_CHARACTERS)
+    keys = [a for a in sys.argv[1:] if not a.startswith('-')] or list(CHARACTERS)
     for k in keys:
         build(k)
