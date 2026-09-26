@@ -1,0 +1,14 @@
+{
+  "name": "SixSeven_67",
+  "title": "67 (Six Seven)",
+  "tris": 1484,
+  "size_cm": [
+    192,
+    39,
+    140
+  ],
+  "fbx": "SM_SixSeven_67.fbx",
+  "texture": "T_SixSeven_67_Palette.png",
+  "materials": 1,
+  "colors": 8
+}
