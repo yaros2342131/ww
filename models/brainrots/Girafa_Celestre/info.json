@@ -1,0 +1,14 @@
+{
+  "name": "Girafa_Celestre",
+  "title": "Girafa Celestre",
+  "tris": 15000,
+  "size_cm": [
+    84,
+    73,
+    172
+  ],
+  "fbx": "SM_Girafa_Celestre.fbx",
+  "texture": "T_Girafa_Celestre_BaseColor.png",
+  "materials": 1,
+  "colors": 10
+}

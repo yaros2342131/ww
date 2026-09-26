@@ -1,0 +1,14 @@
+{
+  "name": "Spaghetti_Tualetti",
+  "title": "Spaghetti Tualetti",
+  "tris": 14998,
+  "size_cm": [
+    70,
+    94,
+    123
+  ],
+  "fbx": "SM_Spaghetti_Tualetti.fbx",
+  "texture": "T_Spaghetti_Tualetti_BaseColor.png",
+  "materials": 1,
+  "colors": 11
+}

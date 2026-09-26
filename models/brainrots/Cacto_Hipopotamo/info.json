@@ -1,0 +1,14 @@
+{
+  "name": "Cacto_Hipopotamo",
+  "title": "Cacto Hipopotamo",
+  "tris": 15000,
+  "size_cm": [
+    78,
+    122,
+    101
+  ],
+  "fbx": "SM_Cacto_Hipopotamo.fbx",
+  "texture": "T_Cacto_Hipopotamo_BaseColor.png",
+  "materials": 1,
+  "colors": 10
+}

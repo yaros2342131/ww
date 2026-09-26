@@ -117,28 +117,30 @@ def girafa_celestre():
 
 
 def cacto_hipopotamo():
-    """Cacto Hipopotamo — бегемот-кактус: зелёный ребристый, с колючками, розовым цветком и огромной пастью."""
+    """Cacto Hipopotamo — бегемот-кактус: зелёный ребристый, с колючками, отростками, цветком и огромной пастью."""
     v = new(55)
-    cac, cac_d, mouth, pinkc = '#5BAA4A', '#3A7A2E', '#8A1E3A', '#FF5FA2'
+    cac, cac_d, cac_l, mouth, pinkc = '#4E9A3E', '#2F6E26', '#7CC45E', '#5A1027', '#FF5FA2'
     cx = 32
     legs4(v, [(23, 25), (41, 25), (23, 38), (41, 38)], 12, 3.2, cac, hoof=cac_d, foot_r=3.4)
     v.ellipsoid(cx, 30, 20, 13, 14, 11, cac)
-    v.paint((cx - 14, 15, 8), (cx + 14, 45, 32),
-            lambda X, Y, Z: np.sin(np.arctan2(Z - 20, X - cx) * 9) > 0.7, cac_d)
-    v.ellipsoid(cx, 13, 24, 10, 8, 8, shade(cac, 0.12))
-    v.ellipsoid(cx, 5.5, 20.5, 7, 2.2, 3.4, mouth)
-    v.ellipsoid(cx, 5, 19, 4, 1.2, 1.4, '#FF6F91')
+    for s in (-1, 1):                                   # кактусовые отростки на спине
+        poly(v, [(cx + s * 7, 33, 28), (cx + s * 11, 34, 31), (cx + s * 11, 34, 37)], 2.4, 2.1, cac)
+    v.paint((cx - 16, 15, 8), (cx + 16, 45, 40),
+            lambda X, Y, Z: np.sin(np.arctan2(Y - 30, X - cx) * 12) > 0.6, cac_d)   # вертикальные рёбра
+    v.ellipsoid(cx, 13, 24, 10, 8, 8, cac_l)
+    v.ellipsoid(cx, 6, 20.5, 7.5, 3, 4.2, mouth)
+    v.ellipsoid(cx, 4.5, 19, 4.5, 1.4, 1.8, '#FF6F91')
     for s in (-1, 1):
-        v.ellipsoid(cx + s * 4, 4.5, 23.4, 1.1, 0.9, 1.6, WHITE)
+        v.ellipsoid(cx + s * 4.3, 4, 23.6, 1.2, 1, 1.8, WHITE)
         v.ellipsoid(cx + s * 3, 7, 29.5, 1, 0.8, 0.8, cac_d)
-        v.ellipsoid(cx + s * 5, 14, 31, 2.6, 2.6, 2.4, shade(cac, 0.12))
-        eye3(v, cx + s * 5, 12, 31.8, 1.8, look=(0, 0))
-        v.ellipsoid(cx + s * 8.5, 17, 32, 1.6, 1, 1.4, cac)
-    dots(v, (cx, 30, 20), (13, 14, 11), 20, ['#F5F5DC'], r=0.45, seed=9, front=False, zmin=16)
+        v.ellipsoid(cx + s * 5, 14, 31, 3, 3, 2.8, cac_l)
+        eye3(v, cx + s * 5, 11.6, 32, 2.3, look=(0, -0.1), lid=cac_d, lid_amount=0.25)
+        v.ellipsoid(cx + s * 8.5, 17, 32, 1.6, 1, 1.4, cac_l)
+    dots(v, (cx, 30, 20), (13.3, 14.3, 11.3), 36, ['#FFF8D6'], r=0.55, seed=9, front=False, zmin=14)
     for a in range(6):
         ang = a * 2 * math.pi / 6
-        v.ellipsoid(cx + math.cos(ang) * 2.2, 30 + math.sin(ang) * 2.2, 31.5, 1.8, 1.8, 1.1, pinkc)
-    v.ellipsoid(cx, 30, 32.2, 1.2, 1.2, 0.8, '#FFD23F')
+        v.ellipsoid(cx + math.cos(ang) * 2.4, 30 + math.sin(ang) * 2.4, 31.5, 2, 2, 1.1, pinkc)
+    v.ellipsoid(cx, 30, 32.3, 1.3, 1.3, 0.9, '#FFD23F')
     return v, SIZE
 
 
