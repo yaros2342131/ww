@@ -254,7 +254,10 @@ def bananita_dolphinita():
             lambda X, Y, Z: np.abs(np.sin(np.arctan2(Y - 25, X - cx) * 2.5)) < 0.1, yel_d)
     v.ellipsoid(cx, 22, 45, 7, 7.5, 6.5, dol)
     v.ellipsoid(cx, 13, 43.5, 3.2, 5, 2.6, dol)
-    v.paint((cx - 8, 10, 38), (cx + 8, 30, 44), lambda X, Y, Z: Z < 42, shade(dol, 0.3))
+    v.paint((cx - 8, 8, 38), (cx + 8, 30, 46),
+            lambda X, Y, Z: (Z < 42.5) & (Y < 21) & (((X - cx) / 7) ** 2 + ((Y - 22) / 7.5) ** 2 + ((Z - 45) / 6.5) ** 2 <= 1.15
+                                                | (((X - cx) / 3.2) ** 2 + ((Y - 13) / 5) ** 2 + ((Z - 43.5) / 2.6) ** 2 <= 1.15)),
+            shade(dol, 0.3))
     fin_yz(v, (27, 44), (33, 42), (33, 53), cx - 0.9, cx + 0.9, dol_d)
     for s in (-1, 1):
         tri(v, (cx + s * 7, 30), (cx + s * 7, 24), (cx + s * 14, 23), 'xz', 24, 26.5, dol)

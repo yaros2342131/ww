@@ -1,0 +1,14 @@
+{
+  "name": "Blueberrinni_Octopussini",
+  "title": "Blueberrinni Octopussini",
+  "tris": 15000,
+  "size_cm": [
+    93,
+    93,
+    80
+  ],
+  "fbx": "SM_Blueberrinni_Octopussini.fbx",
+  "texture": "T_Blueberrinni_Octopussini_BaseColor.png",
+  "materials": 1,
+  "colors": 8
+}

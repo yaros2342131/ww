@@ -1,0 +1,14 @@
+{
+  "name": "Bananita_Dolphinita",
+  "title": "Bananita Dolphinita",
+  "tris": 15000,
+  "size_cm": [
+    80,
+    77,
+    153
+  ],
+  "fbx": "SM_Bananita_Dolphinita.fbx",
+  "texture": "T_Bananita_Dolphinita_BaseColor.png",
+  "materials": 1,
+  "colors": 8
+}
