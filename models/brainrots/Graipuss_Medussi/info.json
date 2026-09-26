@@ -1,0 +1,14 @@
+{
+  "name": "Graipuss_Medussi",
+  "title": "Graipuss Medussi",
+  "tris": 15000,
+  "size_cm": [
+    76,
+    76,
+    139
+  ],
+  "fbx": "SM_Graipuss_Medussi.fbx",
+  "texture": "T_Graipuss_Medussi_BaseColor.png",
+  "materials": 1,
+  "colors": 10
+}

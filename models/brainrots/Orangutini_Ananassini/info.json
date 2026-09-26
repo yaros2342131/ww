@@ -1,0 +1,14 @@
+{
+  "name": "Orangutini_Ananassini",
+  "title": "Orangutini Ananassini",
+  "tris": 15000,
+  "size_cm": [
+    104,
+    59,
+    150
+  ],
+  "fbx": "SM_Orangutini_Ananassini.fbx",
+  "texture": "T_Orangutini_Ananassini_BaseColor.png",
+  "materials": 1,
+  "colors": 11
+}
