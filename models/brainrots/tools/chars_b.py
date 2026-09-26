@@ -326,10 +326,9 @@ def graipuss():
             pts2.append((cx + math.cos(ang) * rr + math.cos(ang + 1.57) * wob,
                          cy + math.sin(ang) * rr + math.sin(ang + 1.57) * wob, cz - 5 - t * (cz - 6.5)))
         poly(v, pts2, 1.6, 0.8, tent)
-    y = cy - 10
     for s in (-1, 1):
-        eye3(v, cx + s * 3.6, y - 0.5, cz - 1.5, 2.1, look=(0, -0.2))
-    v.ellipsoid(cx, y - 0.2, cz - 5.8, 1.6, 0.8, 1.0, '#3A1030')
+        eye3(v, cx + s * 3.8, fy(v, cx + s * 3.8, cz - 1.5) + 0.3, cz - 1.5, 2.3, look=(0, -0.2))
+    v.ellipsoid(cx, fy(v, cx, cz - 6) + 0.2, cz - 6, 1.6, 0.8, 1.0, '#3A1030')
     blush(v, cx, cz - 4.5, 6.5, r=1.2)
     return v, SIZE
 

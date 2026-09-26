@@ -1,0 +1,14 @@
+{
+  "name": "Chef_Crabracadabra",
+  "title": "Chef Crabracadabra",
+  "tris": 15000,
+  "size_cm": [
+    156,
+    81,
+    133
+  ],
+  "fbx": "SM_Chef_Crabracadabra.fbx",
+  "texture": "T_Chef_Crabracadabra_BaseColor.png",
+  "materials": 1,
+  "colors": 8
+}
