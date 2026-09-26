@@ -1,0 +1,14 @@
+{
+  "name": "Boneca_Ambalabu",
+  "title": "Boneca Ambalabu",
+  "tris": 15000,
+  "size_cm": [
+    94,
+    50,
+    151
+  ],
+  "fbx": "SM_Boneca_Ambalabu.fbx",
+  "texture": "T_Boneca_Ambalabu_BaseColor.png",
+  "materials": 1,
+  "colors": 13
+}

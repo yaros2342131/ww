@@ -1,0 +1,14 @@
+{
+  "name": "Bombardiro_Crocodilo",
+  "title": "Bombardiro Crocodilo",
+  "tris": 15000,
+  "size_cm": [
+    179,
+    147,
+    110
+  ],
+  "fbx": "SM_Bombardiro_Crocodilo.fbx",
+  "texture": "T_Bombardiro_Crocodilo_BaseColor.png",
+  "materials": 1,
+  "colors": 11
+}

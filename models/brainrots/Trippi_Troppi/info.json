@@ -1,0 +1,14 @@
+{
+  "name": "Trippi_Troppi",
+  "title": "Trippi Troppi",
+  "tris": 15000,
+  "size_cm": [
+    48,
+    82,
+    143
+  ],
+  "fbx": "SM_Trippi_Troppi.fbx",
+  "texture": "T_Trippi_Troppi_BaseColor.png",
+  "materials": 1,
+  "colors": 10
+}

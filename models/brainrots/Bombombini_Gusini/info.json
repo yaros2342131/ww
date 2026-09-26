@@ -1,0 +1,14 @@
+{
+  "name": "Bombombini_Gusini",
+  "title": "Bombombini Gusini",
+  "tris": 15000,
+  "size_cm": [
+    144,
+    138,
+    135
+  ],
+  "fbx": "SM_Bombombini_Gusini.fbx",
+  "texture": "T_Bombombini_Gusini_BaseColor.png",
+  "materials": 1,
+  "colors": 11
+}

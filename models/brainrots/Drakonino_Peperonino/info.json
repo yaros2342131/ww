@@ -1,0 +1,14 @@
+{
+  "name": "Drakonino_Peperonino",
+  "title": "Drakonino Peperonino",
+  "tris": 15000,
+  "size_cm": [
+    136,
+    131,
+    171
+  ],
+  "fbx": "SM_Drakonino_Peperonino.fbx",
+  "texture": "T_Drakonino_Peperonino_BaseColor.png",
+  "materials": 1,
+  "colors": 12
+}

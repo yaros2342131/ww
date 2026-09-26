@@ -1,0 +1,14 @@
+{
+  "name": "Lirili_Larila",
+  "title": "Lirilì Larilà",
+  "tris": 15000,
+  "size_cm": [
+    105,
+    67,
+    163
+  ],
+  "fbx": "SM_Lirili_Larila.fbx",
+  "texture": "T_Lirili_Larila_BaseColor.png",
+  "materials": 1,
+  "colors": 11
+}

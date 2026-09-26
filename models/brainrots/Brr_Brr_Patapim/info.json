@@ -1,0 +1,14 @@
+{
+  "name": "Brr_Brr_Patapim",
+  "title": "Brr Brr Patapim",
+  "tris": 15000,
+  "size_cm": [
+    106,
+    79,
+    149
+  ],
+  "fbx": "SM_Brr_Brr_Patapim.fbx",
+  "texture": "T_Brr_Brr_Patapim_BaseColor.png",
+  "materials": 1,
+  "colors": 9
+}
