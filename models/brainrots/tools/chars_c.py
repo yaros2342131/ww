@@ -152,17 +152,24 @@ def strawberrelli():
     v.line((cx - 2, 26, 20), (cx - 2, 26, 1.5), 0.9, pinkf)
     v.ellipsoid(cx - 2, 24, 1, 2, 3, 0.8, pink_d)
     poly(v, [(cx + 2, 26, 20), (cx + 5, 24, 13), (cx + 1, 25, 11)], 0.9, 0.8, pinkf)
-    v.shape((cx - 11, 15, 17), (cx + 11, 37, 42),
-            lambda X, Y, Z: ((X - cx) / (5 + (Z - 17) * 0.24)) ** 2 + ((Y - 26) / (4.5 + (Z - 17) * 0.22)) ** 2
-            + ((Z - 31) / 11) ** 8 <= 1, straw)
-    dots(v, (cx, 26, 30), (8.8, 8.3, 11), 26, [seed_c], r=0.5, seed=10, front=False, zmin=19, zmax=39)
-    for a in range(6):
-        ang = a * 2 * math.pi / 6
-        tri(v, (cx, 26), (cx + math.cos(ang - 0.4) * 5, 26 + math.sin(ang - 0.4) * 5),
-            (cx + math.cos(ang) * 8, 26 + math.sin(ang) * 8), 'xy', 40.5, 41.8, leaf)
+    def berry(X, Y, Z):
+        t = np.clip((Z - 17) / 24, 0, 1)
+        r = 9.5 * np.sqrt(np.sin(np.pi / 2 * t)) * (1 - 0.3 * t ** 3) + 0.8
+        return ((X - cx) ** 2 + ((Y - 26) * 1.08) ** 2 <= r * r) & (Z >= 16.5) & (Z <= 41)
+
+    v.shape((cx - 11, 15, 16), (cx + 11, 37, 42), berry, straw)
+    v.ellipsoid(cx, 26, 40, 7.2, 6.8, 2.8, straw)
+    v.paint((cx - 11, 15, 17), (cx + 11, 37, 43),
+            lambda X, Y, Z: (np.sin(X * 1.5 + Z * 0.75) > 0.9) & (np.sin(Y * 1.5 - Z * 0.75) > 0.55) & (Z < 40),
+            seed_c)
+    for a in range(7):
+        ang = a * 2 * math.pi / 7
+        tri(v, (cx, 26), (cx + math.cos(ang - 0.45) * 4.5, 26 + math.sin(ang - 0.45) * 4.5),
+            (cx + math.cos(ang) * 9.5, 26 + math.sin(ang) * 9), 'xy', 42, 43.6, leaf)
+    v.ellipsoid(cx, 26, 43, 3, 3, 1.2, shade(leaf, -0.15))
     for s in (-1, 1):
         v.ellipsoid(cx + s * 9, 27, 31, 1.6, 5, 4, pinkf)
-    poly(v, [(cx, 22, 38), (cx, 18, 44), (cx, 20, 50), (cx, 17, 55)], 1.8, 1.6, pinkf)
+    poly(v, [(cx, 23, 42), (cx, 18, 46), (cx, 20, 51), (cx, 17, 55)], 1.8, 1.6, pinkf)
     v.ellipsoid(cx, 15, 56, 3.4, 4.2, 3, pinkf)
     poly(v, [(cx, 11.5, 56), (cx, 9, 54.5), (cx, 8, 52)], 1.3, 0.7, WHITE)
     v.ellipsoid(cx, 7.9, 51.5, 0.8, 0.8, 0.9, BLACK)

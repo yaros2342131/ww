@@ -1,0 +1,14 @@
+{
+  "name": "Spioniro_Golubiro",
+  "title": "Spioniro Golubiro",
+  "tris": 15000,
+  "size_cm": [
+    68,
+    83,
+    136
+  ],
+  "fbx": "SM_Spioniro_Golubiro.fbx",
+  "texture": "T_Spioniro_Golubiro_BaseColor.png",
+  "materials": 1,
+  "colors": 11
+}
