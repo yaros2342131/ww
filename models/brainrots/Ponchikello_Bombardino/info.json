@@ -1,0 +1,9 @@
+{
+  "name": "Ponchikello_Bombardino",
+  "title": "Пончикелло Бомбардино",
+  "tris": 20000,
+  "height_cm": 125,
+  "fbx": "SM_Ponchikello_Bombardino.fbx",
+  "texture": "T_Ponchikello_Bombardino_BaseColor.png",
+  "materials": 1
+}

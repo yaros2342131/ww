@@ -1,0 +1,9 @@
+{
+  "name": "Keksolino_Meteorino",
+  "title": "Кексолино Метеорино",
+  "tris": 20000,
+  "height_cm": 140,
+  "fbx": "SM_Keksolino_Meteorino.fbx",
+  "texture": "T_Keksolino_Meteorino_BaseColor.png",
+  "materials": 1
+}
