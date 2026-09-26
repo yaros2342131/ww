@@ -4,11 +4,11 @@
   "tris": 15000,
   "size_cm": [
     64,
-    83,
+    80,
     176
   ],
   "fbx": "SM_Strawberrelli_Flamingelli.fbx",
   "texture": "T_Strawberrelli_Flamingelli_BaseColor.png",
   "materials": 1,
-  "colors": 7
+  "colors": 8
 }
