@@ -225,7 +225,8 @@ def salamino_penguino():
     cx = 32
     for s in (-1, 1):
         v.ellipsoid(cx + s * 4, 21, 1.2, 2.8, 4.5, 1.2, orange)
-    v.ellipsoid(cx, 25, 23, 9, 8, 18, sal)
+        v.line((cx + s * 4, 24, 8), (cx + s * 4, 22, 1.5), 1.4, orange)   # ножки
+    v.ellipsoid(cx, 25, 22, 9, 8, 17, sal)
     dots(v, (cx, 25, 20), (9, 8, 14), 30, [fat, shade(fat, -0.1)], r=0.8, seed=11, front=False, zmax=32)
     v.paint((cx - 10, 16, 5), (cx + 10, 34, 40), lambda X, Y, Z: np.abs(np.sin(Z * 0.55)) < 0.12, twine)
     v.paint((cx - 10, 16, 32), (cx + 10, 34, 42), lambda X, Y, Z: Z > 33, black)
