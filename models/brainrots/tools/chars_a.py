@@ -319,8 +319,8 @@ def chimpanzini():
         yy = 25 + dy * 8
         tip = (cx + s * 15 if s else cx, 25 + dy * 14, 16)
         poly(v, [(cx + dx, yy, 29), (cx + dx * 1.35, 25 + dy * 11, 25), tip], 3.2, 1.6, yel)
-    v.paint((cx - 17, 9, 12), (cx + 17, 41, 32),
-            lambda X, Y, Z: ((X - cx) ** 2 / 81 + (Y - 25) ** 2 / 81 > 0.95), yel_d)
+    v.paint((cx - 10, 15, 5), (cx + 10, 35, 33),
+            lambda X, Y, Z: np.abs(np.sin(np.arctan2(Y - 25, X - cx) * 2.5)) < 0.08, yel_d)  # грани банана
     v.ellipsoid(cx, 25, 31, 8, 7, 7, brown)
     v.ellipsoid(cx, 24, 42, 7, 6.5, 6.5, brown)
     v.ellipsoid(cx, 19, 41, 5.5, 3, 5, face)

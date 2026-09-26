@@ -1,0 +1,14 @@
+{
+  "name": "Chimpanzini_Bananini",
+  "title": "Chimpanzini Bananini",
+  "tris": 15000,
+  "size_cm": [
+    99,
+    93,
+    145
+  ],
+  "fbx": "SM_Chimpanzini_Bananini.fbx",
+  "texture": "T_Chimpanzini_Bananini_BaseColor.png",
+  "materials": 1,
+  "colors": 10
+}
