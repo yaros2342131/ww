@@ -1,0 +1,14 @@
+{
+  "name": "Espresso_Signora",
+  "title": "Espresso Signora",
+  "tris": 15000,
+  "size_cm": [
+    71,
+    64,
+    147
+  ],
+  "fbx": "SM_Espresso_Signora.fbx",
+  "texture": "T_Espresso_Signora_BaseColor.png",
+  "materials": 1,
+  "colors": 12
+}

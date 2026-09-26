@@ -1,0 +1,14 @@
+{
+  "name": "Frigo_Camelo",
+  "title": "Frigo Camelo",
+  "tris": 15000,
+  "size_cm": [
+    63,
+    95,
+    171
+  ],
+  "fbx": "SM_Frigo_Camelo.fbx",
+  "texture": "T_Frigo_Camelo_BaseColor.png",
+  "materials": 1,
+  "colors": 14
+}
