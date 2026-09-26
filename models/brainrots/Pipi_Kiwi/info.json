@@ -1,0 +1,14 @@
+{
+  "name": "Pipi_Kiwi",
+  "title": "Pipi Kiwi",
+  "tris": 15000,
+  "size_cm": [
+    72,
+    96,
+    112
+  ],
+  "fbx": "SM_Pipi_Kiwi.fbx",
+  "texture": "T_Pipi_Kiwi_BaseColor.png",
+  "materials": 1,
+  "colors": 9
+}

@@ -1,0 +1,14 @@
+{
+  "name": "Tim_Cheese",
+  "title": "Tim Cheese",
+  "tris": 15000,
+  "size_cm": [
+    110,
+    80,
+    134
+  ],
+  "fbx": "SM_Tim_Cheese.fbx",
+  "texture": "T_Tim_Cheese_BaseColor.png",
+  "materials": 1,
+  "colors": 7
+}
