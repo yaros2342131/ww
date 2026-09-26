@@ -238,12 +238,13 @@ def salamino_penguino():
     v.ellipsoid(cx, 25, 22, 9, 8, 17, sal)
     dots(v, (cx, 25, 20), (9, 8, 14), 30, [fat, shade(fat, -0.1)], r=0.8, seed=11, front=False, zmax=32)
     v.paint((cx - 10, 16, 5), (cx + 10, 34, 40), lambda X, Y, Z: np.abs(np.sin(Z * 0.55)) < 0.12, twine)
-    v.paint((cx - 10, 16, 32), (cx + 10, 34, 42), lambda X, Y, Z: Z > 33, black)
-    v.paint((cx - 10, 16, 30), (cx + 10, 22, 40),
-            lambda X, Y, Z: (Y < 20) & ((X - cx) ** 2 / 30 + (Z - 34) ** 2 / 18 < 1), WHITE)
-    v.ellipsoid(cx, fy(v, cx, 33) - 1.2, 33, 2.2, 2.6, 1.3, orange)
-    eyes(v, cx, 35.5, 2.8, r=1.5)
-    blush(v, cx, 32.5, 4.8, r=1.1)
+    v.paint((cx - 10, 16, 30), (cx + 10, 34, 42), lambda X, Y, Z: Z > 31.5, black)
+    v.paint((cx - 10, 14, 27), (cx + 10, 22, 38),
+            lambda X, Y, Z: (Y < 20) & ((X - cx) ** 2 / 32 + (Z - 32) ** 2 / 16 < 1), WHITE)
+    v.ellipsoid(cx, fy(v, cx, 31) - 1.2, 31, 2.2, 2.6, 1.3, orange)
+    for s in (-1, 1):
+        eye3(v, cx + s * 2.8, fy(v, cx + s * 2.8, 33.5) - 0.1, 33.5, 1.6)
+    blush(v, cx, 30.5, 4.8, r=1.1)
     for s in (-1, 1):
         poly(v, [(cx + s * 8, 25, 28), (cx + s * 12, 24, 22), (cx + s * 13, 23, 16)], 2, 1.2, black)
     v.line((cx, 25, 41), (cx, 25, 44), 0.5, twine)
@@ -264,8 +265,9 @@ def bananita_dolphinita():
     v.ellipsoid(cx, 22, 45, 7, 7.5, 6.5, dol)
     v.ellipsoid(cx, 13, 43.5, 3.2, 5, 2.6, dol)
     v.paint((cx - 8, 8, 38), (cx + 8, 30, 46),
-            lambda X, Y, Z: (Z < 42.5) & (Y < 21) & (((X - cx) / 7) ** 2 + ((Y - 22) / 7.5) ** 2 + ((Z - 45) / 6.5) ** 2 <= 1.15
-                                                | (((X - cx) / 3.2) ** 2 + ((Y - 13) / 5) ** 2 + ((Z - 43.5) / 2.6) ** 2 <= 1.15)),
+            lambda X, Y, Z: (Z < 42.5) & (Y < 21)
+            & ((((X - cx) / 7) ** 2 + ((Y - 22) / 7.5) ** 2 + ((Z - 45) / 6.5) ** 2 <= 1.15)
+               | (((X - cx) / 3.2) ** 2 + ((Y - 13) / 5) ** 2 + ((Z - 43.5) / 2.6) ** 2 <= 1.15)),
             shade(dol, 0.3))
     fin_yz(v, (27, 44), (33, 42), (33, 53), cx - 0.9, cx + 0.9, dol_d)
     for s in (-1, 1):
