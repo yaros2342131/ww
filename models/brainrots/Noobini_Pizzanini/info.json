@@ -1,0 +1,14 @@
+{
+  "name": "Noobini_Pizzanini",
+  "title": "Noobini Pizzanini",
+  "tris": 15000,
+  "size_cm": [
+    114,
+    32,
+    153
+  ],
+  "fbx": "SM_Noobini_Pizzanini.fbx",
+  "texture": "T_Noobini_Pizzanini_BaseColor.png",
+  "materials": 1,
+  "colors": 10
+}

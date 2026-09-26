@@ -1,0 +1,14 @@
+{
+  "name": "Svinina_Bombardino",
+  "title": "Svinina Bombardino",
+  "tris": 14998,
+  "size_cm": [
+    84,
+    106,
+    143
+  ],
+  "fbx": "SM_Svinina_Bombardino.fbx",
+  "texture": "T_Svinina_Bombardino_BaseColor.png",
+  "materials": 1,
+  "colors": 13
+}
