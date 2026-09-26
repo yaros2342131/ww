@@ -22,7 +22,8 @@ def vacca_saturno():
             lambda X, Y, Z: np.sin((Z - cz) * 0.9 + (X - cx) * 0.12) < -0.8, band2)
     v.shape((cx - 24, cy - 24, cz - 9), (cx + 24, cy + 24, cz + 9),
             lambda X, Y, Z: (np.abs(Z - cz - 0.28 * (X - cx)) < 0.9)
-            & ((X - cx) ** 2 + (Y - cy) ** 2 >= 16 ** 2) & ((X - cx) ** 2 + (Y - cy) ** 2 <= 23 ** 2), ring)
+            & ((X - cx) ** 2 + (Y - cy) ** 2 >= 16 ** 2) & ((X - cx) ** 2 + (Y - cy) ** 2 <= 23 ** 2)
+            & ~((np.abs(X - cx) < 9) & (Y < cy - 8)), ring)  # спереди кольцо «уходит» за голову
     v.paint((cx - 24, cy - 24, cz - 9), (cx + 24, cy + 24, cz + 9),
             lambda X, Y, Z: np.abs(np.sqrt((X - cx) ** 2 + (Y - cy) ** 2) - 19.5) < 0.9, ring2)
     legs4(v, [(24, 22), (40, 22), (25, 34), (39, 34)], 17, 2.6, cow, hoof=spot, foot_r=2.8)
@@ -195,13 +196,13 @@ def burbaloni():
             > 0.7, shade(shell, -0.25))
     v.ellipsoid(cx, 27, 18, 9, 10, 8, capy)
     v.ellipsoid(cx, 16, 25, 6.5, 7, 5.5, capy)
-    v.ellipsoid(cx, 10.5, 24, 4.8, 2.4, 3.8, capy_d)
+    v.ellipsoid(cx, 10.5, 23.5, 4.2, 2.6, 3, shade(capy, 0.12))   # морда
     for s in (-1, 1):
-        v.ellipsoid(cx + s * 1.4, 8.4, 25, 0.7, 0.5, 0.5, BLACK)
+        v.ellipsoid(cx + s * 1.5, fy(v, cx + s * 1.5, 24.5) + 0.2, 24.5, 0.8, 0.5, 0.5, BLACK)
         v.ellipsoid(cx + s * 5, 18, 30, 1.4, 1, 1.4, capy_d)
-        eye3(v, cx + s * 3.6, fy(v, cx + s * 3.6, 28) + 0.4, 28, 1.3, lid=capy_d, lid_amount=0.55)
+        eye3(v, cx + s * 3.8, fy(v, cx + s * 3.8, 28.5) + 0.3, 28.5, 1.4, lid=capy_d, lid_amount=0.5)
         arm(v, (cx + s * 7, 20, 18), (cx + s * 12, 16, 17.5), 1.5, capy, hand=capy_d, hand_r=1.6)
-    smile(v, cx, 22, 2.5, 0.6, BLACK, 0.4)
+    smile(v, cx, 22.2, 2.5, 0.6, BLACK, 0.4)
     v.ellipsoid(cx, 16, 32.5, 3.2, 3.2, 2.8, orange)
     v.ellipsoid(cx + 0.8, 16.5, 35.3, 1.2, 0.6, 0.5, '#3FA34D')
     return v, SIZE

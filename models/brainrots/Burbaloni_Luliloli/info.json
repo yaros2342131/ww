@@ -1,0 +1,14 @@
+{
+  "name": "Burbaloni_Luliloli",
+  "title": "Burbaloni Luliloli",
+  "tris": 15000,
+  "size_cm": [
+    90,
+    99,
+    101
+  ],
+  "fbx": "SM_Burbaloni_Luliloli.fbx",
+  "texture": "T_Burbaloni_Luliloli_BaseColor.png",
+  "materials": 1,
+  "colors": 9
+}

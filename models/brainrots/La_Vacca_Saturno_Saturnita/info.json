@@ -1,0 +1,14 @@
+{
+  "name": "La_Vacca_Saturno_Saturnita",
+  "title": "La Vacca Saturno Saturnita",
+  "tris": 15000,
+  "size_cm": [
+    138,
+    138,
+    122
+  ],
+  "fbx": "SM_La_Vacca_Saturno_Saturnita.fbx",
+  "texture": "T_La_Vacca_Saturno_Saturnita_BaseColor.png",
+  "materials": 1,
+  "colors": 11
+}
