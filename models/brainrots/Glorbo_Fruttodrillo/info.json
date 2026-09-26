@@ -1,0 +1,14 @@
+{
+  "name": "Glorbo_Fruttodrillo",
+  "title": "Glorbo Fruttodrillo",
+  "tris": 15000,
+  "size_cm": [
+    91,
+    146,
+    96
+  ],
+  "fbx": "SM_Glorbo_Fruttodrillo.fbx",
+  "texture": "T_Glorbo_Fruttodrillo_BaseColor.png",
+  "materials": 1,
+  "colors": 10
+}
