@@ -115,33 +115,50 @@ def export(objs, path, embed=True):
                              bake_anim=False, axis_forward='-Z', axis_up='Y')
 
 
-if __name__ == '__main__':
+def pack(folders, zpath, all_name):
+    global OUT_TEX
     stage = os.path.join(ROOT, '_uefn_pack')
     shutil.rmtree(stage, ignore_errors=True)
-    OUT_MESH, OUT_TEX, OUT_PREV = (os.path.join(stage, d) for d in ('Meshes', 'Textures', 'Previews'))
-    for d in (OUT_MESH, OUT_TEX, OUT_PREV):
+    out_mesh, OUT_TEX, out_prev = (os.path.join(stage, d) for d in ('Meshes', 'Textures', 'Previews'))
+    for d in (out_mesh, OUT_TEX, out_prev):
         os.makedirs(d)
     kit.reset()
-    folders = sorted(f for f in glob.glob(os.path.join(ROOT, '*')) if os.path.isfile(os.path.join(f, 'info.json')))
     all_objs, names = [], []
-    for i, folder in enumerate(folders):
+    from PIL import Image
+    for folder in folders:
         obj, hull, tex, info = prepare(folder)
-        export([obj, hull], os.path.join(OUT_MESH, obj.name + '.fbx'), embed=False)
-        from PIL import Image
+        export([obj, hull], os.path.join(out_mesh, obj.name + '.fbx'), embed=False)
         im = Image.open(os.path.join(folder, 'preview.png')).convert('RGB')
         im.thumbnail((1280, 1280))
-        im.save(os.path.join(OUT_PREV, info['name'] + '.jpg'), quality=85)
+        im.save(os.path.join(out_prev, info['name'] + '.jpg'), quality=85)
         all_objs += [obj, hull]
         names.append(info['title'])
         print('PACKED', obj.name)
-    export(all_objs, os.path.join(stage, 'Brainrots_All.fbx'))
+    export(all_objs, os.path.join(stage, all_name))
     with open(os.path.join(stage, 'README_UEFN.txt'), 'w', encoding='utf-8') as f:
-        f.write(README.format(n=len(names), hull=HULL_TRIS, names=', '.join(names)))
-    zpath = os.path.join(ROOT, 'Brainrots_UEFN.zip')
+        f.write(README.format(n=len(names), hull=HULL_TRIS, names=', '.join(names)).replace('Brainrots_All.fbx', all_name))
     with zipfile.ZipFile(zpath, 'w', zipfile.ZIP_DEFLATED) as z:
         for base, _, files in os.walk(stage):
             for fn in files:
                 full = os.path.join(base, fn)
-                z.write(full, os.path.join('Brainrots_UEFN', os.path.relpath(full, stage)))
+                z.write(full, os.path.join(os.path.splitext(os.path.basename(zpath))[0], os.path.relpath(full, stage)))
     shutil.rmtree(stage)
     print('ZIP', zpath, round(os.path.getsize(zpath) / 1e6, 1), 'MB', len(names), 'models')
+
+
+if __name__ == '__main__':
+    # python pack_uefn.py             → Brainrots_UEFN.zip (все модели)
+    # python pack_uefn.py --parts 3   → Brainrots_UEFN_1of3.zip ... (каждая часть < 30 МБ, для пересылки)
+    folders = sorted(f for f in glob.glob(os.path.join(ROOT, '*')) if os.path.isfile(os.path.join(f, 'info.json')))
+    out_dir = ROOT
+    if '--out' in sys.argv:
+        out_dir = sys.argv[sys.argv.index('--out') + 1]
+    if '--parts' in sys.argv:
+        n = int(sys.argv[sys.argv.index('--parts') + 1])
+        size = -(-len(folders) // n)
+        for i in range(n):
+            chunk = folders[i * size:(i + 1) * size]
+            if chunk:
+                pack(chunk, os.path.join(out_dir, f'Brainrots_UEFN_{i + 1}of{n}.zip'), f'Brainrots_Part{i + 1}.fbx')
+    else:
+        pack(folders, os.path.join(out_dir, 'Brainrots_UEFN.zip'), 'Brainrots_All.fbx')

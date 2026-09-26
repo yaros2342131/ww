@@ -1,0 +1,14 @@
+{
+  "name": "Trulimero_Trulicina",
+  "title": "Trulimero Trulicina",
+  "tris": 15000,
+  "size_cm": [
+    68,
+    123,
+    118
+  ],
+  "fbx": "SM_Trulimero_Trulicina.fbx",
+  "texture": "T_Trulimero_Trulicina_BaseColor.png",
+  "materials": 1,
+  "colors": 13
+}

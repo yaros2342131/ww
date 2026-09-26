@@ -1,0 +1,14 @@
+{
+  "name": "Talpa_Di_Ferro",
+  "title": "Talpa Di Ferro",
+  "tris": 15000,
+  "size_cm": [
+    102,
+    73,
+    157
+  ],
+  "fbx": "SM_Talpa_Di_Ferro.fbx",
+  "texture": "T_Talpa_Di_Ferro_BaseColor.png",
+  "materials": 1,
+  "colors": 10
+}

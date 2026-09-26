@@ -1,0 +1,14 @@
+{
+  "name": "Rhino_Toasterino",
+  "title": "Rhino Toasterino",
+  "tris": 15000,
+  "size_cm": [
+    78,
+    103,
+    111
+  ],
+  "fbx": "SM_Rhino_Toasterino.fbx",
+  "texture": "T_Rhino_Toasterino_BaseColor.png",
+  "materials": 1,
+  "colors": 9
+}

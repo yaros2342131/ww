@@ -1,0 +1,14 @@
+{
+  "name": "Pandaccini_Bananini",
+  "title": "Pandaccini Bananini",
+  "tris": 15000,
+  "size_cm": [
+    80,
+    83,
+    132
+  ],
+  "fbx": "SM_Pandaccini_Bananini.fbx",
+  "texture": "T_Pandaccini_Bananini_BaseColor.png",
+  "materials": 1,
+  "colors": 8
+}
