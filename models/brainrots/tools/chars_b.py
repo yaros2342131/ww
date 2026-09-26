@@ -200,7 +200,7 @@ def burbaloni():
     for s in (-1, 1):
         v.ellipsoid(cx + s * 1.5, fy(v, cx + s * 1.5, 24.5) + 0.2, 24.5, 0.8, 0.5, 0.5, BLACK)
         v.ellipsoid(cx + s * 5, 18, 30, 1.4, 1, 1.4, capy_d)
-        eye3(v, cx + s * 3.6, fy(v, cx + s * 3.6, 29) + 0.4, 29, 1.9, lid=capy_d, lid_amount=0.3)
+        eye3(v, cx + s * 3.3, fy(v, cx + s * 3.3, 27.3) + 0.2, 27.3, 1.7, lid=capy_d, lid_amount=0.25)
         arm(v, (cx + s * 7, 20, 18), (cx + s * 12, 16, 17.5), 1.5, capy, hand=capy_d, hand_r=1.6)
     smile(v, cx, 22.2, 2.5, 0.6, BLACK, 0.4)
     v.ellipsoid(cx, 16, 32.5, 3.2, 3.2, 2.8, orange)
