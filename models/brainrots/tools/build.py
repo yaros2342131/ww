@@ -1,4 +1,4 @@
-"""Сборка воксельных брейнротов: сетка кубиков → greedy-меш → FBX + палитра + превью.
+"""Сборка брейнротов: воксельный рисунок → гладкая модель (K=3) или пиксельная (K=1) → FBX + текстура + превью.
 
     python build.py                     # все персонажи
     python build.py SixSeven_67
@@ -12,7 +12,7 @@ import sys
 sys.path.insert(0, os.path.dirname(__file__))
 import kit  # noqa: E402
 import voxel  # noqa: E402
-from voxel_chars import VOX_CHARACTERS  # noqa: E402
+from voxel_chars import K, VOX_CHARACTERS  # noqa: E402
 from PIL import Image, ImageDraw, ImageFont  # noqa: E402
 
 ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
@@ -25,7 +25,13 @@ def build(key):
     os.makedirs(out, exist_ok=True)
     kit.reset()
     vox, size = fn()
-    obj, tex = voxel.finalize(vox, key, out, size)
+    if K > 1:
+        obj, tex = voxel.finalize_smooth(vox, key, out, size, target_tris=MAX_TRIS - 5000)
+    else:
+        obj, tex = voxel.finalize(vox, key, out, size)
+    for old in os.listdir(out):  # убрать файлы другого режима
+        if old.startswith('T_') and os.path.join(out, old) != tex:
+            os.remove(os.path.join(out, old))
     n_tris = kit.tris(obj)
     assert n_tris <= MAX_TRIS, f'{key}: {n_tris} треугольников > {MAX_TRIS}'
     dims = obj.dimensions

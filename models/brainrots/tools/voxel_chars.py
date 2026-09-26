@@ -7,44 +7,53 @@ WHITE, BLACK = '#FFFFFF', '#15131C'
 
 
 # ------------------------------------------------------------------ общие детали
+K = 3  # детализация сетки: 1 — пиксельный стиль, 3 — для гладких моделей
+
+
 def front_y(v, x, z):
-    for y in range(v.g.shape[1]):
-        if v.g[x, y, z] >= 0:
-            return y
-    return None
+    return v.front_y(x, z)
 
 
 def eye(v, x, z, w=4, h=5, look=(0, 0), pupil=2, depth_out=1, white=WHITE):
-    """Глаз, выступающий из передней поверхности: белок w×h, зрачок pupil×pupil, блик."""
+    """Круглый глаз, выступающий из передней поверхности: белок w×h, зрачок, блик.
+    (x, z) — левый верхний угол глаза в дизайн-координатах."""
     ys = [front_y(v, xx, zz) for xx in range(x, x + w) for zz in range(z - h + 1, z + 1)]
     ys = [y for y in ys if y is not None]
-    y = min(ys) - depth_out
-    v.box(x, x + w - 1, y, y + depth_out, z - h + 1, z, white)
-    px = x + (w - pupil) // 2 + look[0]
-    pz = z - (h - pupil) // 2 + look[1]
-    v.box(px, px + pupil - 1, y - 1, y - 1, pz - pupil + 1, pz, BLACK)
-    v.set(px, y - 1, pz, WHITE)  # блик
+    y = min(ys)
+    cx, cz = x + w / 2, z - h / 2 + 1
+    v.ellipsoid(cx, y + 0.6, cz, w / 2 + 0.2, 1.3 + depth_out * 0.4, h / 2 + 0.2, white)
+    px, pz = cx + look[0] * 0.6, cz + look[1] * 0.6
+    v.ellipsoid(px, y - 0.55, pz, pupil / 2 + 0.25, 0.7, pupil / 2 + 0.4, BLACK)
+    v.ellipsoid(px - 0.35, y - 0.9, pz + 0.45, 0.4, 0.4, 0.4, WHITE)  # блик
+
+
+def mouth(v, cx, cz, w, h, color='#5A1027', tongue='#FF6F91'):
+    """Открытый рот-улыбка на передней поверхности."""
+    y = min(yy for yy in (front_y(v, int(cx + dx), int(cz)) for dx in (-1, 0, 1)) if yy is not None)
+    v.ellipsoid(cx, y + 0.3, cz, w / 2, 0.9, h / 2, color)
+    if tongue:
+        v.ellipsoid(cx, y - 0.1, cz - h * 0.2, w * 0.28, 0.6, h * 0.28, tongue)
 
 
 def outline(v, col, dark):
-    """Затемнить края фигуры цвета col (как обводка в пиксель-арте)."""
+    """Затемнить края фигуры цвета col (толщина — один дизайн-воксель)."""
     import numpy as np
     idx = v.c(col)
     g = v.g
     filled = g >= 0
     edge = np.zeros_like(filled)
     for axis in (0, 2):
-        for s in (-1, 1):
-            nb = np.roll(filled, s, axis=axis)
-            if s == 1:
-                sl = [slice(None)] * 3
-                sl[axis] = 0
-                nb[tuple(sl)] = False
-            else:
-                sl = [slice(None)] * 3
-                sl[axis] = -1
-                nb[tuple(sl)] = False
-            edge |= filled & ~nb
+        for s in range(1, v.k + 1):
+            for sign in (-1, 1):
+                nb = np.zeros_like(filled)
+                src = [slice(None)] * 3
+                dst = [slice(None)] * 3
+                if sign > 0:
+                    src[axis], dst[axis] = slice(s, None), slice(None, -s)
+                else:
+                    src[axis], dst[axis] = slice(None, -s), slice(s, None)
+                nb[tuple(dst)] = filled[tuple(src)]
+                edge |= filled & ~nb
     g[(g == idx) & edge] = v.c(dark)
 
 
@@ -88,32 +97,52 @@ def digit_bitmap(ch, W=15, H=26, s=6):
     return [''.join('#' if c else '.' for c in row) for row in g]
 
 
+def stroke2d(v, pts, r, y0, y1, col):
+    """Плоский штрих-«шрифт» по ломаной pts (точки x, z) толщиной 2r, выдавленный по Y от y0 до y1."""
+    import numpy as np
+    for (ax, az), (bx, bz) in zip(pts, pts[1:]):
+        dx, dz = bx - ax, bz - az
+        L2 = max(1e-9, dx * dx + dz * dz)
+
+        def inside(X, Y, Z, ax=ax, az=az, dx=dx, dz=dz, L2=L2):
+            t = np.clip(((X - ax) * dx + (Z - az) * dz) / L2, 0, 1)
+            return ((X - ax - t * dx) ** 2 + (Z - az - t * dz) ** 2 <= r * r) & (Y >= y0) & (Y < y1)
+
+        v.shape((min(ax, bx) - r, y0, min(az, bz) - r), (max(ax, bx) + r, y1, max(az, bz) + r), inside, col)
+
+
+def ring2d(v, cx, cz, rx, rz, t, y0, y1, col):
+    """Плоское кольцо-петля (эллипс толщиной t), выдавленное по Y."""
+    v.shape((cx - rx, y0, cz - rz), (cx + rx, y1, cz + rz),
+            lambda X, Y, Z: (((X - cx) / rx) ** 2 + ((Z - cz) / rz) ** 2 <= 1)
+            & (((X - cx) / (rx - t)) ** 2 + ((Z - cz) / (rz - t)) ** 2 > 1) & (Y >= y0) & (Y < y1), col)
+
+
 def six_seven():
     """67 — цифры 6 и 7 с глазами, руки в жесте «six-seven» (одна ладонь выше, другая ниже)."""
-    v = Vox((62, 30, 56))
-    main, dark, light = '#2EC5FF', '#1379C9', '#9BE8FF'
-    y0, y1 = 10, 18
-    ztop = 39
-    x6, x7 = 10, 27
-    v.bitmap(digit_bitmap('6'), x6, ztop, y0, y1, {'#': main})
-    v.bitmap(digit_bitmap('7'), x7, ztop, y0, y1, {'#': main})
+    import math as m
+    v = Vox((62, 30, 56), k=K)
+    main, dark = '#2EC5FF', '#1379C9'
+    y0, y1 = 10, 19
+    # «6»: петля + стойка, уходящая дугой вправо-вверх
+    ring2d(v, 17.5, 20.5, 7.5, 6.8, 5.0, y0, y1, main)
+    arc = [(12.9, 20.5), (12.9, 28.5)] + [(17.8 - 5.0 * m.cos(a), 30.5 + 5.6 * m.sin(a))
+                                          for a in (0.25, 0.7, 1.15, 1.6, 2.05, 2.5)]
+    stroke2d(v, arc, 2.9, y0, y1, main)
+    # «7»: перекладина + наклонная ножка
+    stroke2d(v, [(29.5, 36.2), (41.0, 36.2), (32.0, 16.8)], 3.0, y0, y1, main)
     outline(v, main, dark)
-    for x0 in (x6, x7):
-        v.box(x0 + 1, x0 + 13, y0, y0, ztop, ztop, light)
-    eye(v, x6 + 2, ztop - 1, w=4, h=5, look=(1, 0))
-    eye(v, x6 + 8, ztop - 1, w=4, h=5, look=(1, 0))
-    eye(v, x7 + 3, ztop - 1, w=4, h=5, look=(-1, 0))
-    eye(v, x7 + 9, ztop - 1, w=4, h=5, look=(-1, 0))
-    my = front_y(v, x6 + 7, ztop - 23) - 1
-    v.box(x6 + 3, x6 + 11, my, my, ztop - 22, ztop - 22, '#5A1027')
-    v.box(x6 + 4, x6 + 10, my, my, ztop - 23, ztop - 23, '#5A1027')
-    v.box(x6 + 5, x6 + 9, my, my, ztop - 24, ztop - 24, '#FF6F91')
+    eye(v, 14, 38, w=4, h=5, look=(1, 0))
+    eye(v, 19, 38, w=4, h=5, look=(1, 0))
+    eye(v, 30, 38, w=4, h=5, look=(-1, 0))
+    eye(v, 35, 38, w=4, h=5, look=(-1, 0))
+    mouth(v, 17.5, 16.2, 7.5, 3.2)
     # руки: 6 — ладонь вверх слева, 7 — ладонь вниз справа
-    v.line((x6, 14, 30), (3, 14, 36), 1.7, main)
+    v.line((11, 14, 28), (3, 14, 36), 1.7, main)
     v.ellipsoid(2.5, 14, 37.5, 3, 2.8, 2.4, WHITE)
-    v.line((x7 + 15, 14, 33), (51, 14, 26), 1.7, main)
-    v.ellipsoid(52, 14, 25, 3, 2.8, 2.4, WHITE)
-    for x in (x6 + 7, x7 + 5):
+    v.line((43, 14, 35), (51, 14, 27), 1.7, main)
+    v.ellipsoid(52, 14, 26, 3, 2.8, 2.4, WHITE)
+    for x in (17, 32):
         v.line((x, 14, 15), (x, 14, 4), 1.9, main)
         sneaker(v, x, 18, 0, main=WHITE, accent=main, w=6, l=10)
     return v, 0.035
@@ -122,36 +151,32 @@ def six_seven():
 # ------------------------------------------------------------------ Тунг Тунг Тунг Сахур
 def tung_sahur():
     """Тунг Тунг Тунг Сахур — деревянное бревно с огромными глазами и бейсбольной битой."""
-    v = Vox((60, 30, 64), seed=3)
+    v = Vox((60, 30, 64), seed=3, k=K)
     wood, bark_d, top = '#C68A4E', '#9C6532', '#E3B77F'
     cx, cy = 22, 13
+    import numpy as np
     v.cyl_z(cx, cy, 12, 44, 8.5, 7.5, wood)
-    v.noise(wood, [shade(wood, -0.08), shade(wood, 0.07)], chance=0.35)
-    # вертикальные волокна коры
-    for x in range(cx - 9, cx + 10):
-        if x % 4 == 0:
-            for z in range(12, 45):
-                if (z * 7 + x) % 11 < 8:
-                    for y in range(v.g.shape[1]):
-                        if v.g[x, y, z] >= 0:
-                            v.set(x, y, z, bark_d)
-                            break
+    # продольные борозды коры: полосы по углу, чуть извилистые по высоте
+    v.shape((cx - 9, cy - 8, 12), (cx + 9, cy + 8, 44),
+            lambda X, Y, Z: (np.sin(np.arctan2(Y - cy, X - cx) * 11 + np.sin(Z * 0.35) * 0.8) > 0.72)
+            & (((X - cx) / 8.5) ** 2 + ((Y - cy) / 7.5) ** 2 <= 1), bark_d)
+    v.shape((cx - 9, cy - 8, 12), (cx + 9, cy + 8, 44),
+            lambda X, Y, Z: (np.sin(np.arctan2(Y - cy, X - cx) * 5 + Z * 0.21) > 0.93)
+            & (((X - cx) / 8.5) ** 2 + ((Y - cy) / 7.5) ** 2 <= 1), shade(wood, 0.12))
     # годичные кольца на срезе сверху
-    for x in range(cx - 9, cx + 10):
-        for y in range(cy - 9, cy + 10):
-            if v.get(x, y, 44):
-                r = math.hypot((x + .5 - cx) / 8.5, (y + .5 - cy) / 7.5)
-                v.set(x, y, 44, bark_d if r > 0.85 or int(r * 6) % 2 else top)
+    v.shape((cx - 9, cy - 8, 44), (cx + 9, cy + 8, 45),
+            lambda X, Y, Z: (((X - cx) / 8.5) ** 2 + ((Y - cy) / 7.5) ** 2 <= 1) & (Z >= 44), top)
+    v.shape((cx - 9, cy - 8, 44), (cx + 9, cy + 8, 45),
+            lambda X, Y, Z: (np.sin(np.sqrt(((X - cx) / 8.5) ** 2 + ((Y - cy) / 7.5) ** 2) * 19) > 0.55) & (Z >= 44)
+            & (((X - cx) / 8.5) ** 2 + ((Y - cy) / 7.5) ** 2 <= 1), shade(top, -0.2))
     # лицо: огромные глаза-блюдца, густые брови, маленький рот
     eye(v, 14, 37, w=6, h=6, pupil=2, look=(1, 0))
     eye(v, 23, 37, w=6, h=6, pupil=2, look=(-1, 0))
-    for x0, slope in ((14, 1), (23, -1)):
-        yb = front_y(v, x0 + 2, 39) - 1
-        for i in range(6):
-            v.box(x0 + i, x0 + i, yb, yb, 39 + (i * slope) // 3 + (1 if slope < 0 else 0),
-                  40 + (i * slope) // 3 + (1 if slope < 0 else 0), '#3A2412')
-    my = front_y(v, 22, 26) - 1
-    v.box(19, 25, my, my, 26, 26, '#3A2412')
+    for x0, x1, zl, zr in ((13.5, 20, 39.2, 40.6), (22.5, 29, 40.6, 39.2)):
+        yb = front_y(v, int((x0 + x1) / 2), 40) - 0.6
+        v.line((x0, yb, zl), (x1, yb, zr), 0.85, '#3A2412')
+    my = front_y(v, 22, 26)
+    v.line((19.5, my - 0.2, 26.5), (25.5, my - 0.2, 26.5), 0.7, '#3A2412')
     # руки-палки; правая держит биту над головой
     limb = shade(wood, -0.05)
     v.line((13, cy, 30), (7, cy - 1, 20), 1.3, limb)
@@ -159,11 +184,7 @@ def tung_sahur():
     v.line((31, cy, 32), (37, cy - 1, 40), 1.3, limb)
     v.ellipsoid(37.5, cy - 1, 41, 2, 2, 2, limb)
     bat = '#E8C890'
-    n = 18
-    for i in range(n + 1):
-        t = i / n
-        p = (37 + t * 9, cy - 1 - t * 1, 40 + t * 20)
-        v.ellipsoid(*p, 1.1 + 1.6 * t, 1.1 + 1.6 * t, 1.1 + 1.6 * t, bat)
+    v.line((37, cy - 1, 40), (46, cy - 2, 60), 1.1, bat, r1=2.8)
     v.ellipsoid(37, cy - 1, 39, 1.8, 1.8, 1.0, shade(bat, -0.25))  # набалдашник
     # ноги-палки и ступни
     for x in (18, 26):
@@ -175,51 +196,54 @@ def tung_sahur():
 # ------------------------------------------------------------------ Тралалеро Тралала
 def tralalero():
     """Тралалеро Тралала — акула на трёх ногах в синих кроссовках."""
-    v = Vox((64, 28, 50), seed=5)
+    v = Vox((64, 28, 50), seed=5, k=K)
     skin, belly, dark = '#5E8FC7', '#EEF3F8', '#3B6597'
     cx, cy, cz = 32, 13, 27
-    # тело: вытянутый эллипсоид, нос заострён (сужаем переднюю часть)
-    for x in range(8, 58):
-        t = (x - 8) / 50
-        # профиль: заострённый нос → самое толстое место на трети длины → сужение к хвосту
-        prof = math.sin(math.pi / 2 * t / 0.35) ** 0.6 if t < 0.35 else 1 - 0.72 * ((t - 0.35) / 0.65) ** 1.4
-        ry, rz = 8.5 * prof, 9.5 * prof
-        zc = cz + (1.5 if t < 0.3 else 0)
-        for y in range(0, 28):
-            for z in range(10, 45):
-                if ((y + .5 - cy) / max(ry, .5)) ** 2 + ((z + .5 - zc) / max(rz, .5)) ** 2 <= 1:
-                    v.set(x, y, z, belly if z < zc - 2.5 else skin)
-    # затемнение спины
-    for x in range(8, 58):
-        for y in range(28):
-            for z in range(44, 20, -1):
-                if v.get(x, y, z):
-                    v.set(x, y, z, dark)
-                    break
-    # спинной плавник
-    for i in range(10):
-        v.box(28 + i // 2, 36 - i // 3, cy - 1, cy + 1, 36 + i, 36 + i, dark)
-    # хвост-полумесяц
-    for i in range(12):
-        v.box(56 + i // 3, 58 + i // 3, cy - 1, cy + 1, 28 + i, 28 + i, dark)
-        v.box(56 + i // 4, 58 + i // 4, cy - 1, cy + 1, 26 - i // 2, 26 - i // 2, skin)
-    # грудные плавники
-    for s in (-1, 1):
-        y = cy + s * 9
-        for i in range(6):
-            v.box(22 + i, 24 + i, y + s * (i // 3), y + s * (i // 3), 22 - i, 22 - i, skin)
-    # глаза с двух сторон, пасть с зубами
-    for y, s in ((cy - 7, -1), (cy + 7, 1)):
-        for yy in (y, y + s):
-            v.box(15, 17, yy + s, yy + s, 30, 32, WHITE)
-        v.box(15, 16, y + 2 * s, y + 2 * s, 30, 31, BLACK)
-        v.set(16, y + 2 * s, 31, WHITE)
-    for x in range(9, 21):
-        for y in range(28):
-            if v.get(x, y, 23):
-                v.set(x, y, 23, '#5A1027')
-                if x % 2 == 0:
-                    v.set(x, y, 24, WHITE)
+    # тело: профиль — заострённый нос → самое толстое место на трети длины → сужение к хвосту
+    import numpy as np
+
+    def prof(X):
+        t = np.clip((X - 8) / 50, 0, 1)
+        return np.where(t < 0.35, np.sin(np.pi / 2 * t / 0.35) ** 0.6, 1 - 0.72 * ((t - 0.35) / 0.65) ** 1.4)
+
+    def body(X, Y, Z):
+        p = np.maximum(prof(X), 0.02)
+        zc = cz + np.where(X < 23, 1.5, 0)
+        return (((Y - cy) / (8.5 * p)) ** 2 + ((Z - zc) / (9.5 * p)) ** 2 <= 1) & (X >= 8) & (X < 58)
+
+    def zc_of(X):
+        return cz + np.where(X < 23, 1.5, 0)
+
+    v.shape((8, 0, 10), (58, 28, 45), body, skin)
+    # спина темнее, брюхо белое — границы по плавным кривым
+    v.shape((8, 0, 10), (58, 28, 45),
+            lambda X, Y, Z: body(X, Y, Z) & (Z - zc_of(X) > 9.5 * prof(X) * (0.38 + 0.1 * np.sin(X * 0.4))), dark)
+    v.shape((8, 0, 10), (58, 28, 45), lambda X, Y, Z: body(X, Y, Z) & (Z - zc_of(X) < -9.5 * prof(X) * 0.3), belly)
+
+    def tri(ax, az, bx, bz, qx, qz, y0, y1, col):
+        """Плоский треугольник (плавник) в плоскости XZ, толщина по Y."""
+        def inside(X, Y, Z):
+            d = (bz - qz) * (ax - qx) + (qx - bx) * (az - qz)
+            l1 = ((bz - qz) * (X - qx) + (qx - bx) * (Z - qz)) / d
+            l2 = ((qz - az) * (X - qx) + (ax - qx) * (Z - qz)) / d
+            return (l1 >= 0) & (l2 >= 0) & (l1 + l2 <= 1) & (Y >= y0) & (Y < y1)
+        v.shape((min(ax, bx, qx), y0, min(az, bz, qz)), (max(ax, bx, qx), y1, max(az, bz, qz)), inside, col)
+
+    tri(26, 33, 39, 33, 31, 47, cy - 1.2, cy + 1.2, dark)          # спинной плавник
+    tri(53, 30, 57, 24, 62, 41, cy - 1.2, cy + 1.2, dark)          # хвост — верхняя лопасть
+    tri(53, 28, 57, 24, 61, 16, cy - 1.2, cy + 1.2, skin)          # нижняя лопасть
+    for sd in (-1, 1):                                             # грудные плавники
+        v.line((22, cy + sd * 6, 22), (28, cy + sd * 11, 17), 1.3, skin, r1=0.5)
+    # глаза по бокам головы
+    for sd in (-1, 1):
+        v.ellipsoid(16, cy + sd * 6.2, 31, 1.7, 1.1, 1.7, WHITE)
+        v.ellipsoid(15.6, cy + sd * 7.0, 31.2, 0.9, 0.6, 1.0, BLACK)
+        v.ellipsoid(15.2, cy + sd * 7.4, 31.7, 0.35, 0.3, 0.35, WHITE)
+    # пасть с зубами: плавная линия вокруг морды
+    mz = lambda X: cz - 3.2 + 0.12 * (X - 9)
+    v.shape((8, 0, 18), (21, 28, 30), lambda X, Y, Z: body(X, Y, Z) & (np.abs(Z - mz(X)) < 0.7), '#5A1027')
+    v.shape((8, 0, 18), (21, 28, 30), lambda X, Y, Z: body(X, Y, Z) & (Z - mz(X) >= 0.7) & (Z - mz(X) < 1.7)
+            & ((Z - mz(X) - 0.7) < 1.0 - np.abs(((X * 1.4) % 2) - 1) * 1.0), WHITE)
     # три ноги в кроссовках
     for x in (20, 32, 44):
         v.line((x, cy, 18), (x, cy, 4), 1.8, skin)

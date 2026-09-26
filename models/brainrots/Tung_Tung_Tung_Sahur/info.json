@@ -1,14 +1,14 @@
 {
   "name": "Tung_Tung_Tung_Sahur",
   "title": "Тунг Тунг Тунг Сахур",
-  "tris": 3156,
+  "tris": 15000,
   "size_cm": [
     123,
-    45,
-    176
+    46,
+    175
   ],
   "fbx": "SM_Tung_Tung_Tung_Sahur.fbx",
-  "texture": "T_Tung_Tung_Tung_Sahur_Palette.png",
+  "texture": "T_Tung_Tung_Tung_Sahur_BaseColor.png",
   "materials": 1,
   "colors": 12
 }

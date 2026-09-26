@@ -1,14 +1,14 @@
 {
   "name": "Tralalero_Tralala",
   "title": "Тралалеро Тралала",
-  "tris": 3240,
+  "tris": 15000,
   "size_cm": [
-    162,
+    160,
     63,
-    138
+    139
   ],
   "fbx": "SM_Tralalero_Tralala.fbx",
-  "texture": "T_Tralalero_Tralala_Palette.png",
+  "texture": "T_Tralalero_Tralala_BaseColor.png",
   "materials": 1,
   "colors": 7
 }
