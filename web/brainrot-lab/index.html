@@ -1,0 +1,1329 @@
+<title>Брейнрот Лаборатория</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Unbounded:wght@600;800&family=Nunito:wght@500;700;800;900&family=JetBrains+Mono:wght@500;700&display=swap">
+<style>
+:root {
+  color-scheme: dark;
+  --espresso: #1f140e;
+  --mocha: #33231a;
+  --mocha-2: #402d21;
+  --line: #5a4131;
+  --crema: #f6e7c8;
+  --crema-dim: #cbb593;
+  --pomodoro: #e03a3e;
+  --pomodoro-deep: #9e1b25;
+  --limone: #ffd23f;
+  --basilico: #57c84d;
+  --lab: #33e1d6;
+  --r0: #e9edf5; --r1: #4fa8ff; --r2: #b26bff; --r3: #ffc83d; --r4: #ff4f7b; --r5: #39f2e0;
+  --display: "Unbounded", "Arial Black", system-ui, sans-serif;
+  --body: "Nunito", "Segoe UI", system-ui, sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  --radius: 14px;
+}
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+html, body { background: var(--espresso); color: var(--crema); }
+body { font-family: var(--body); font-size: 14px; line-height: 1.4; margin: 0; }
+button { font: inherit; color: inherit; cursor: pointer; }
+button:focus-visible, [tabindex]:focus-visible { outline: 3px solid var(--lab); outline-offset: 2px; }
+.num, .mono { font-family: var(--mono); font-variant-numeric: tabular-nums; }
+h2, h3 { font-family: var(--display); font-weight: 800; letter-spacing: .01em; margin: 0; text-wrap: balance; }
+h2 { font-size: 15px; text-transform: uppercase; }
+h3 { font-size: 13px; }
+.lbl { font-size: 10.5px; text-transform: uppercase; letter-spacing: .08em; color: var(--crema-dim); font-weight: 800; }
+.muted { color: var(--crema-dim); }
+.wrap { padding-inline: 16px; padding-block: 0 40px; max-width: 1560px; margin: 0 auto; }
+
+/* ---------- HUD */
+.hud { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 30; background: var(--espresso);
+  border-bottom: 2px solid var(--line); padding-inline: 16px; padding-block: 8px; }
+.hud-row { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 18px; max-width: 1560px; margin: 0 auto; }
+.brand { font-family: var(--display); font-weight: 800; font-size: 17px; line-height: 1; color: var(--limone); }
+.brand small { display: block; font-family: var(--body); font-size: 11px; color: var(--crema-dim); font-weight: 700; margin-top: 3px; }
+.stat { display: flex; flex-direction: column; min-width: 64px; }
+.stat b { font-family: var(--display); font-size: 17px; font-variant-numeric: tabular-nums; line-height: 1.15; }
+.stat.cash b { color: var(--limone); font-size: 21px; }
+.stat em { font-style: normal; color: var(--basilico); font-family: var(--mono); font-size: 12px; font-weight: 700; }
+.hud-spacer { flex: 1 1 0; }
+.cal { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.cal .chip { font-family: var(--mono); font-weight: 700; font-size: 12px; }
+.seg { display: inline-flex; border: 1px solid var(--line); border-radius: 999px; overflow: hidden; }
+.seg button { background: transparent; border: 0; padding: 5px 9px; font-family: var(--mono); font-size: 12px; font-weight: 700; }
+.seg button[aria-pressed="true"] { background: var(--limone); color: #2a1c00; }
+.btn { background: var(--mocha-2); border: 1px solid var(--line); border-radius: 10px; padding: 7px 11px; font-weight: 800; font-size: 13px; }
+.btn:hover { border-color: var(--crema-dim); }
+.btn.go { background: var(--basilico); border-color: #3e9a36; color: #102a0c; }
+.btn.hot { background: var(--pomodoro); border-color: var(--pomodoro-deep); color: #fff; }
+.btn.gold { background: var(--limone); border-color: #c9a21c; color: #2a1c00; }
+.btn.lab { background: var(--lab); border-color: #1fa89f; color: #03302d; }
+.btn[disabled] { opacity: .45; cursor: not-allowed; }
+.btn.sm { padding: 4px 8px; font-size: 12px; border-radius: 8px; }
+.chip { display: inline-flex; align-items: center; gap: 6px; padding: 3px 9px; border-radius: 999px; background: var(--mocha-2);
+  border: 1px solid var(--line); font-size: 12px; font-weight: 800; white-space: nowrap; }
+
+/* ---------- storm strip */
+.storm { margin-block: 12px; border-radius: var(--radius); background: var(--mocha); border: 1px solid var(--line); padding: 10px 14px;
+  display: grid; grid-template-columns: minmax(220px, 1.1fr) 2fr; gap: 10px 18px; align-items: center; position: relative; overflow: hidden; }
+.storm.active { border-color: var(--lab); box-shadow: 0 0 0 2px rgba(51,225,214,.35) inset; }
+.storm-title { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; }
+.storm-title b { font-family: var(--display); font-size: 16px; color: var(--lab); }
+.meter { height: 16px; border-radius: 999px; background: #241811; border: 1px solid var(--line); overflow: hidden; margin-top: 6px; }
+.meter i { display: block; height: 100%; width: 0; background: linear-gradient(90deg, #1fa89f, var(--lab), #b6fff9); transition: width .3s; }
+.storm.active .meter i { background: repeating-linear-gradient(135deg, var(--lab) 0 12px, #b6fff9 12px 24px); animation: slide 1s linear infinite; }
+@keyframes slide { to { background-position: 34px 0; } }
+.lobby { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6px; }
+@media (max-width: 560px) { .lobby { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+.lob { display: flex; align-items: center; gap: 6px; background: var(--mocha-2); border: 1px solid var(--line); border-radius: 10px; padding: 3px 6px; min-width: 0; }
+.lob img { width: 28px; height: 28px; object-fit: contain; flex: none; }
+.lob span { font-size: 11px; font-weight: 800; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.lob small { display: block; font-size: 10px; color: var(--crema-dim); font-family: var(--mono); }
+.lob.you { border-color: var(--limone); }
+.flash { position: absolute; inset: 0; pointer-events: none; background: radial-gradient(circle at 70% 20%, rgba(182,255,249,.45), transparent 55%); opacity: 0; }
+.storm.active .flash { animation: flash 2.4s infinite; }
+@keyframes flash { 0%, 88%, 100% { opacity: 0; } 90% { opacity: 1; } 93% { opacity: .2; } 95% { opacity: .8; } }
+
+.eventbar { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 12px; }
+.ev { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; border-radius: 12px; padding: 8px 12px; font-weight: 800;
+  background: var(--mocha); border: 1px dashed var(--line); }
+.ev.sat { background: #3b1420; border: 1px solid var(--pomodoro); }
+.ev.thu { background: #13312e; border: 1px solid var(--lab); }
+.hint { background: #2c2a10; border: 1px solid #6b5f1b; color: #fff3b0; }
+
+/* ---------- main grid */
+.grid { display: grid; gap: 14px; grid-template-columns: minmax(290px, 1fr) minmax(360px, 1.35fr) minmax(310px, 1.05fr); align-items: start; }
+@media (max-width: 1250px) { .grid { grid-template-columns: minmax(280px, 1fr) minmax(340px, 1.3fr); } .panel { grid-column: 1 / -1; } }
+@media (max-width: 820px) { .grid { grid-template-columns: 1fr; } .storm { grid-template-columns: 1fr; } }
+.card { background: var(--mocha); border: 1px solid var(--line); border-radius: var(--radius); padding: 14px; min-width: 0; }
+.card-head { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; margin-bottom: 10px; flex-wrap: wrap; }
+
+/* ---------- belt */
+.portal { display: flex; align-items: center; gap: 10px; background: #2a1d33; border: 1px solid #5a3f73; border-radius: 12px; padding: 6px 10px; }
+.portal img { width: 46px; height: 46px; object-fit: contain; }
+.portal .timers { font-family: var(--mono); font-size: 11.5px; line-height: 1.45; }
+.belt { position: relative; margin-top: 8px; border-radius: 12px; background: repeating-linear-gradient(180deg, var(--pomodoro) 0 22px, #c92f36 22px 44px);
+  border: 3px solid var(--limone); overflow: hidden; }
+.belt-row { position: absolute; left: 6px; right: 6px; height: 58px; display: flex; align-items: center; gap: 8px; padding: 4px 8px 4px 4px;
+  background: rgba(20,12,8,.84); border-radius: 10px; border: 1px solid rgba(255,255,255,.08); transition: transform .55s cubic-bezier(.3,.8,.3,1), opacity .4s;
+  cursor: pointer; text-align: left; }
+.belt-row:hover { background: rgba(40,26,18,.95); }
+.belt-row .cap { width: 34px; height: 44px; object-fit: contain; flex: none; }
+.belt-row .who { width: 46px; height: 46px; object-fit: contain; flex: none; }
+.belt-row .nm { flex: 1 1 auto; min-width: 0; }
+.belt-row .nm b { display: block; font-size: 13px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.belt-row .nm small { font-size: 11px; font-weight: 800; }
+.belt-row .pr { font-family: var(--mono); font-weight: 700; font-size: 12.5px; color: var(--limone); white-space: nowrap; }
+.belt-row.cant .pr { color: #ff8f8f; }
+.belt-row.leaving { opacity: 0; }
+.belt-end { text-align: center; font-size: 11px; color: var(--crema-dim); margin-top: 4px; }
+.hands { margin-top: 10px; display: flex; align-items: center; gap: 10px; padding: 8px 10px; border-radius: 12px; background: var(--mocha-2); border: 1px solid var(--line); min-height: 58px; }
+.hands img { width: 42px; height: 42px; object-fit: contain; }
+.stations { margin-top: 12px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+.st { background: var(--mocha-2); border: 1px solid var(--line); border-radius: 12px; padding: 6px 4px 8px; display: flex; flex-direction: column;
+  align-items: center; gap: 2px; font-weight: 800; font-size: 12px; text-align: center; position: relative; }
+.st img { width: 58px; height: 58px; object-fit: contain; }
+.st small { font-size: 10.5px; color: var(--crema-dim); font-weight: 700; }
+.st.live { border-color: var(--lab); box-shadow: 0 0 0 2px rgba(51,225,214,.3); }
+.st.live::after { content: "LIVE"; position: absolute; top: 4px; right: 6px; font-size: 9px; background: var(--pomodoro); color: #fff; padding: 1px 5px; border-radius: 6px; }
+
+/* ---------- lab */
+.incs { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+@media (max-width: 520px) { .incs { grid-template-columns: repeat(2, 1fr); } }
+.inc { position: relative; background: radial-gradient(circle at 50% 35%, #3b4a54, #23191a 70%); border: 1px solid var(--line); border-radius: 14px;
+  aspect-ratio: 3 / 4; max-width: 100%; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; padding: 6px; overflow: hidden; user-select: none; }
+.inc .shell { position: absolute; inset: 8% 8% 22%; width: 84%; height: 70%; object-fit: contain; opacity: .95; }
+.inc .inside { position: absolute; left: 50%; top: 34%; width: 38%; transform: translate(-50%, -50%); transition: transform .08s; }
+.inc.hit .inside { transform: translate(-50%, -50%) scale(.9) rotate(-6deg); }
+.inc .ring { position: absolute; left: 50%; top: 34%; width: 66%; aspect-ratio: 1; transform: translate(-50%, -50%); border-radius: 50%;
+  background: conic-gradient(var(--basilico) calc(var(--p) * 1%), rgba(255,255,255,.08) 0); -webkit-mask: radial-gradient(circle, transparent 58%, #000 60%); mask: radial-gradient(circle, transparent 58%, #000 60%); }
+.inc .tx { position: relative; z-index: 2; font-size: 11px; font-weight: 800; text-align: center; background: rgba(20,12,8,.8); border-radius: 8px; padding: 2px 6px; width: 100%; }
+.inc .tx .mono { color: var(--basilico); font-size: 13px; }
+.inc.locked { filter: grayscale(.85); opacity: .6; }
+.inc.empty .tx { color: var(--limone); }
+.float { position: absolute; left: 50%; top: 30%; transform: translateX(-50%); font-family: var(--display); font-size: 13px; color: #fff; pointer-events: none;
+  animation: up .8s ease-out forwards; text-shadow: 0 2px 0 #000; z-index: 5; white-space: nowrap; }
+.float.crit { color: var(--limone); font-size: 17px; }
+@keyframes up { to { transform: translate(-50%, -46px); opacity: 0; } }
+
+.podium-head { display: flex; justify-content: space-between; align-items: baseline; margin: 14px 0 8px; gap: 8px; flex-wrap: wrap; }
+.podium { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 6px; }
+@media (max-width: 520px) { .podium { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+.slot { position: relative; aspect-ratio: 1 / 1.08; max-width: 100%; border-radius: 12px; background: #2a1d15; border: 1px dashed var(--line);
+  display: flex; align-items: flex-end; justify-content: center; padding: 0; overflow: hidden; }
+.slot.filled { border-style: solid; background: radial-gradient(circle at 50% 110%, rgba(255,210,63,.12), transparent 60%), #2a1d15; }
+.slot .ped { position: absolute; left: 10%; right: 10%; bottom: 7%; height: 17%; border-radius: 50%; background: var(--ped, #d9dde8);
+  box-shadow: 0 5px 0 #151018, 0 6px 10px rgba(0,0,0,.5); }
+.slot img { position: relative; width: 84%; height: 84%; object-fit: contain; margin-bottom: 12%; z-index: 1; }
+.slot .inc-lbl { position: absolute; top: 3px; left: 4px; right: 4px; font-family: var(--mono); font-size: 10px; font-weight: 700; color: var(--basilico);
+  background: rgba(20,12,8,.7); border-radius: 6px; text-align: center; z-index: 2; white-space: nowrap; overflow: hidden; }
+.slot.ideal::before { content: ""; position: absolute; inset: 0; background: radial-gradient(circle at 50% 45%, rgba(255,229,138,.55), transparent 60%); animation: glow 2s ease-in-out infinite; }
+@keyframes glow { 50% { opacity: .35; } }
+.slot.locked { opacity: .35; border-style: dotted; align-items: center; font-size: 10px; font-weight: 800; color: var(--crema-dim); }
+.slot.empty { align-items: center; color: var(--crema-dim); font-size: 10px; font-weight: 800; }
+.fams { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+.fam-chip { font-size: 11.5px; }
+.fam-chip b { color: var(--basilico); }
+.fam-chip.full { border-color: var(--limone); }
+.comps { display: flex; gap: 6px; flex-wrap: wrap; }
+.comps .chip img { width: 22px; height: 22px; object-fit: contain; }
+
+/* ---------- panel */
+.tabs { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 12px; }
+.tabs button { background: var(--mocha-2); border: 1px solid var(--line); border-radius: 999px; padding: 5px 10px; font-weight: 800; font-size: 12px; }
+.tabs button[aria-selected="true"] { background: var(--crema); color: var(--espresso); border-color: var(--crema); }
+.tabs button .dot { display: inline-block; width: 7px; height: 7px; background: var(--pomodoro); border-radius: 50%; margin-left: 4px; vertical-align: middle; }
+.pc { display: flex; flex-direction: column; gap: 10px; }
+.pc p { margin: 0; }
+.list { display: flex; flex-direction: column; gap: 6px; }
+.row { display: flex; align-items: center; gap: 8px; padding: 6px 8px; border-radius: 10px; background: var(--mocha-2); border: 1px solid var(--line); text-align: left; width: 100%; }
+button.row:hover { border-color: var(--crema-dim); }
+.row img { width: 40px; height: 40px; object-fit: contain; flex: none; }
+.row .grow { flex: 1 1 auto; min-width: 0; }
+.row .grow b { display: block; font-size: 13px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.row .grow small { font-size: 11px; color: var(--crema-dim); font-weight: 700; }
+.row.sel { border-color: var(--lab); background: #173633; }
+.req { display: flex; align-items: center; gap: 8px; }
+.req .ok { color: var(--basilico); font-weight: 900; }
+.req .no { color: #ff8f8f; font-weight: 900; }
+.box { border-radius: 12px; border: 1px solid var(--line); padding: 10px 12px; background: #2a1d15; }
+.box.warn { border-color: #6b5f1b; background: #2c2a10; }
+.dex { display: grid; grid-template-columns: repeat(auto-fill, minmax(84px, 1fr)); gap: 6px; }
+.dx { background: var(--mocha-2); border: 1px solid var(--line); border-radius: 10px; padding: 4px; text-align: center; font-size: 10.5px; font-weight: 800; }
+.dx img { width: 100%; aspect-ratio: 1; object-fit: contain; max-width: 100%; }
+.dx.unk img { filter: brightness(0) invert(.25); }
+.dx.soon { opacity: .45; }
+.dx .rar { display: block; font-size: 9.5px; }
+.timeline { display: flex; flex-direction: column; gap: 8px; }
+.upd { border: 1px solid var(--line); border-radius: 12px; padding: 10px 12px; background: var(--mocha-2); }
+.upd.now { border-color: var(--limone); }
+.upd.past { opacity: .78; }
+.upd .top { display: flex; align-items: center; justify-content: space-between; gap: 8px; flex-wrap: wrap; }
+.upd .imgs { display: flex; gap: 4px; margin-top: 6px; flex-wrap: wrap; }
+.upd .imgs img { width: 38px; height: 38px; object-fit: contain; background: #2a1d15; border-radius: 8px; }
+.upd ul { margin: 6px 0 0; padding-left: 18px; }
+.flow { display: grid; gap: 6px; }
+.flow .step { display: grid; grid-template-columns: 26px 1fr; gap: 8px; align-items: start; }
+.flow .step i { font-style: normal; font-family: var(--display); font-size: 12px; background: var(--limone); color: #2a1c00; border-radius: 50%; width: 24px; height: 24px; display: grid; place-items: center; }
+.formula { font-family: var(--mono); font-size: 12px; background: #1a110c; border: 1px solid var(--line); border-radius: 10px; padding: 8px 10px; overflow-x: auto; white-space: pre; }
+
+/* ---------- toasts, modal */
+.toasts { position: fixed; right: 16px; bottom: calc(16px + env(safe-area-inset-bottom, 0px)); z-index: 60; display: flex; flex-direction: column; gap: 6px; max-width: min(420px, calc(100% - 32px)); pointer-events: none; }
+.toast { background: #120b07; border: 1px solid var(--line); border-left: 4px solid var(--limone); border-radius: 10px; padding: 7px 10px; font-weight: 800; font-size: 12.5px;
+  animation: tin .25s ease-out; box-shadow: 0 6px 20px rgba(0,0,0,.4); }
+.toast.lab { border-left-color: var(--lab); }
+.toast.hot { border-left-color: var(--pomodoro); }
+.toast.bot { border-left-color: var(--crema-dim); font-weight: 700; color: var(--crema-dim); }
+@keyframes tin { from { transform: translateY(8px); opacity: 0; } }
+.modal { position: fixed; inset: 0; z-index: 70; background: rgba(10,6,4,.72); display: grid; place-items: center; padding: 16px; }
+.dialog { background: var(--mocha); border: 1px solid var(--line); border-radius: 18px; padding: 16px; width: min(680px, 100%); max-height: calc(100vh - 32px); overflow: auto; }
+.dialog-head { display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-bottom: 10px; }
+.unit-top { display: grid; grid-template-columns: 140px 1fr; gap: 14px; align-items: center; }
+@media (max-width: 460px) { .unit-top { grid-template-columns: 1fr; } }
+.unit-top .pic { position: relative; background: radial-gradient(circle at 50% 70%, #4a3526, #2a1d15); border-radius: 14px; aspect-ratio: 1; max-width: 100%; display: grid; place-items: center; }
+.unit-top .pic img { width: 88%; }
+.acts { display: flex; flex-wrap: wrap; gap: 6px; }
+.game-wrap { position: relative; width: 100%; border-radius: 12px; overflow: hidden; background: #0f0a07; border: 1px solid var(--line); touch-action: none; }
+.game-wrap canvas { display: block; width: 100%; height: auto; }
+.game-bar { display: flex; justify-content: space-between; gap: 10px; align-items: center; margin: 8px 0; flex-wrap: wrap; font-weight: 800; }
+.pad { display: flex; gap: 8px; margin-top: 8px; }
+.pad button { flex: 1; padding: 12px; font-family: var(--display); font-size: 16px; }
+.pinata-stage { display: grid; place-items: center; background: radial-gradient(circle at 50% 30%, #3a2a55, #140e1c); border-radius: 12px; padding: 16px; user-select: none; }
+.pinata-stage img { width: min(240px, 60vw); transition: transform .06s; cursor: pointer; }
+.pinata-stage img.whack { transform: rotate(-9deg) scale(.95); }
+.hp { height: 14px; border-radius: 999px; background: #241811; border: 1px solid var(--line); overflow: hidden; width: 100%; }
+.hp i { display: block; height: 100%; background: linear-gradient(90deg, var(--pomodoro), var(--limone)); transition: width .15s; }
+.devbox { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+.kbd { font-family: var(--mono); background: #120b07; border: 1px solid var(--line); border-radius: 6px; padding: 0 5px; font-size: 11.5px; }
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: .001ms !important; animation-iteration-count: 1 !important; transition-duration: .001ms !important; }
+}
+</style>
+
+<header class="hud">
+  <div class="hud-row">
+    <div class="brand">BRAINROT LAB<small>Лаборатория #1 · это ты</small></div>
+    <div class="stat cash"><span class="lbl">Кэш</span><b id="h-cash">0</b><em id="h-inc">+0/с</em></div>
+    <div class="stat"><span class="lbl">Лайки</span><b id="h-likes">0</b></div>
+    <div class="stat"><span class="lbl">Кристаллы</span><b id="h-cr">0</b></div>
+    <div class="stat"><span class="lbl">Перерождение</span><b id="h-rb">0</b></div>
+    <div class="hud-spacer"></div>
+    <div class="cal">
+      <span class="chip" id="h-cal">Неделя 0 · Пн 08:00</span>
+      <button class="btn sm" data-act="skipday" title="Перемотать к следующему утру (как будто ты был офлайн)">+1 день</button>
+      <button class="btn sm gold" data-act="skipweek" title="Перемотать к следующему понедельнику — выйдет следующее обновление">Следующее обновление</button>
+      <span class="seg" id="h-speed" role="group" aria-label="Скорость времени">
+        <button data-act="speed" data-arg="1">×1</button><button data-act="speed" data-arg="5">×5</button><button data-act="speed" data-arg="20">×20</button><button data-act="speed" data-arg="60">×60</button>
+      </span>
+      <button class="btn sm" data-act="sound" id="h-sound">Звук: выкл</button>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+  <section class="storm" id="storm" aria-live="polite">
+    <div class="flash"></div>
+    <div>
+      <div class="storm-title"><b id="st-title">Хайп-шторм</b><span class="muted" id="st-sub"></span></div>
+      <div class="meter"><i id="st-bar"></i></div>
+    </div>
+    <div class="lobby" id="lobby"></div>
+  </section>
+
+  <div class="eventbar" id="eventbar"></div>
+
+  <main class="grid">
+    <section class="card piazza">
+      <div class="card-head"><h2>Пьяцца · конвейер</h2><span class="lbl">общий для лобби</span></div>
+      <div class="portal">
+        <img src="img/p/MemePortal.webp" alt="Мем-портал">
+        <div class="timers" id="belt-timers"></div>
+      </div>
+      <div class="belt" id="belt" aria-label="Конвейер: нажми на капсулу, чтобы купить"></div>
+      <div class="belt-end">↓ непроданные капсулы уезжают обратно в портал</div>
+      <div class="hands" id="hands"></div>
+      <div class="stations" id="stations"></div>
+    </section>
+
+    <section class="card lab">
+      <div class="card-head"><h2>Твоя лаборатория #1</h2><div class="comps" id="comps"></div></div>
+      <div class="incs" id="incs"></div>
+      <div class="podium-head"><h3 id="pod-title">Подиум</h3><span class="muted" id="pod-sub"></span></div>
+      <div class="podium" id="podium"></div>
+      <div class="fams" id="fams"></div>
+    </section>
+
+    <aside class="card panel">
+      <div class="tabs" id="tabs" role="tablist"></div>
+      <div class="pc" id="pc"></div>
+    </aside>
+  </main>
+</div>
+
+<div class="toasts" id="toasts" aria-live="polite"></div>
+<div class="modal" id="modal" hidden><div class="dialog" id="dialog" role="dialog" aria-modal="true"></div></div>
+
+<script src="data.js"></script>
+<script>
+(() => {
+"use strict";
+const L = window.LAB, N = L.n;
+const RAR = L.rarities, VAR = L.variants, BR = L.brainrots, FAM = L.families;
+const RCOL = ["#e9edf5", "#4fa8ff", "#b26bff", "#ffc83d", "#ff4f7b", "#39f2e0"];
+const CAPS = ["Capsule_Common", "Capsule_Rare", "Capsule_Epic", "Capsule_Legendary", "Capsule_Mythic", "Capsule_Iconic"];
+const PED = ["linear-gradient(#f4f6fb,#b9bfcc)", "linear-gradient(#fff1a8,#d9a520 60%,#8a6a10)", "linear-gradient(#ffffff,#9ff0ff 50%,#56c7e0)",
+  "conic-gradient(#ff3b3b,#ff9f1c,#ffe53b,#3bff6e,#3b8bff,#b23bff,#ff3b3b)", "radial-gradient(circle,#ffd200,#ff5a00 45%,#2b120a 70%)",
+  "linear-gradient(90deg,#39ff14,#00e5a8,#ff2bd6)", "radial-gradient(circle at 30% 40%,#fff 0 3%,transparent 4%),radial-gradient(circle at 70% 60%,#fff 0 3%,transparent 4%),linear-gradient(#2a0f5c,#0b0620)"];
+const DAYS = ["Пн", "Вт", "Ср", "Чт", "Пт", "Сб", "Вс"];
+const DAYS_FULL = ["понедельник", "вторник", "среда", "четверг", "пятница", "суббота", "воскресенье"];
+const THU = 3, SAT = 5, WINDOWS = 8, ROW_H = 64, SAVE_KEY = "brainrot-lab-save-v1";
+const KEY = {}; BR.forEach((b, i) => KEY[b.key] = i);
+const ICON_SAHUR = KEY.Tung_Tung_Tung_Sahur, ICON_TRALA = KEY.Tralalero_Tralala, ICON_67 = KEY.SixSeven_67;
+const bimg = id => `img/b/${BR[id].key}.webp`;
+const pimg = k => `img/p/${k}.webp`;
+const $ = s => document.querySelector(s);
+const esc = s => String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+const rnd = (a, b) => a + Math.random() * (b - a);
+const rint = (a, b) => Math.floor(rnd(a, b + 1));
+const pick = arr => arr[Math.floor(Math.random() * arr.length)];
+function weighted(ws) { const t = ws.reduce((a, b) => a + b, 0); if (t <= 0) return 0; let r = Math.random() * t; for (let i = 0; i < ws.length; i++) { if (r < ws[i]) return i; r -= ws[i]; } return ws.length - 1; }
+const SUF = ["", "K", "M", "B", "T", "Qa", "Qi", "Sx", "Sp", "Oc"];
+function fmt(v) { v = Math.max(0, v); let i = 0; while (v >= 1000 && i < SUF.length - 1) { v /= 1000; i++; } if (i === 0) return String(Math.floor(v)); return (v >= 100 ? Math.floor(v) : Math.floor(v * 10) / 10) + SUF[i]; }
+function ftime(s) { s = Math.max(0, Math.floor(s)); const h = Math.floor(s / 3600), m = Math.floor(s % 3600 / 60), x = s % 60; return h > 0 ? `${h}:${String(m).padStart(2, "0")}:${String(x).padStart(2, "0")}` : `${m}:${String(x).padStart(2, "0")}`; }
+const rarName = id => RAR[BR[id].rarity].name;
+const varName = v => VAR[v].name;
+const title = id => BR[id].title;
+
+// ======================================================================= состояние
+function fresh() {
+  return { v: 1, cash: N.startCash, likes: 0, crystals: 0, rebirth: 0, superR: 0, uid: 1, units: [], reserve: [], carrying: null,
+    inc: [null, null, null, null], fus: [null, null], tour: null, discovered: [], idealFound: [], recipesFound: [], familiesDone: [],
+    shop: {}, unlocks: {}, companions: [], pstorms: [], t: 8 * 3600, quest: { day: -1, prog: [0, 0, 0], claimed: [false, false, false] },
+    luckyDay: -1, eventWins: {}, hatched: 0, lastReal: Date.now(), speed: 1, sound: false, seenWeek: 0, fusionPick: [], tab: "guide" };
+}
+let S;
+const T = { belt: [], cid: 1, beltAcc: 0, next: {}, bots: [], storm: null, pinata: null, lastRender: 0, lastHit: 0, podiumKey: "", mini: null, dirty: true };
+
+function save() { try { S.lastReal = Date.now(); localStorage.setItem(SAVE_KEY, JSON.stringify(S)); } catch (e) { /* хранилище недоступно — игра работает без сохранения */ } }
+function load() { try { const raw = localStorage.getItem(SAVE_KEY); if (!raw) return null; const s = JSON.parse(raw); return Object.assign(fresh(), s); } catch (e) { return null; } }
+
+// ======================================================================= календарь
+const week = () => Math.floor(S.t / 604800);
+const dayIdx = () => Math.floor(S.t / 86400);
+const weekday = () => dayIdx() % 7;
+const hour = () => (S.t % 86400) / 3600;
+const isSat = () => weekday() === SAT;
+const isThu = () => weekday() === THU;
+const stormActive = () => T.storm && T.storm.active;
+
+// ======================================================================= экономика
+const shopLvl = k => S.shop[k] || 0;
+const slotCount = () => Math.min(N.slotsMax, N.slotsStart + S.rebirth * N.slotsPer);
+const incCount = () => Math.min(N.incMax, N.incStart + shopLvl("extra_incubator") + (S.unlocks.lab_pack ? 1 : 0));
+const compSlots = () => Math.min(2, 1 + shopLvl("second_companion"));
+const fusSlots = () => S.unlocks.fusion_pack ? 2 : 1;
+const reserveMax = () => N.reserveMax + 5 * shopLvl("reserve_plus");
+const unitBase = (id, v) => RAR[BR[id].rarity].income * VAR[v].mult;
+const capsuleBase = (id, v) => { const r = RAR[BR[id].rarity]; return r.income * r.payback * VAR[v].mult; };
+const byUid = uid => S.units.find(u => u.uid === uid);
+const podiumIds = () => S.units.filter(u => u.slot >= 0).map(u => u.id);
+
+function unitBonus(id, ids) {
+  const b = BR[id], fam = FAM[b.family]; let bonus = 0; const parts = [];
+  if (fam.key !== "icons") {
+    const cnt = fam.members.filter(m => ids.includes(m)).length;
+    const fb = L.familyBonus[Math.min(cnt, 4)] || 0;
+    if (fb) { bonus += fb; parts.push(`семья «${fam.name}» ${cnt}/${fam.members.length}: +${Math.round(fb * 100)}%`); }
+    if (cnt >= 2 && cnt >= fam.members.length) { bonus += L.familyFull; parts.push(`вся семья: +${Math.round(L.familyFull * 100)}%`); }
+  }
+  for (const c of L.combos) if (c.week <= week() && c.members.includes(id) && c.members.every(m => ids.includes(m))) { bonus += c.bonus; parts.push(`комбо «${c.name}»: +${Math.round(c.bonus * 100)}%`); }
+  return { bonus, parts };
+}
+function companionPerk(perk) {
+  let s = 0;
+  for (const uid of S.companions) { const u = byUid(uid); if (!u) continue; const b = BR[u.id]; if (FAM[b.family].perk === perk) s += L.companionPerk[b.rarity] * (1 + 0.1 * u.v); }
+  return s;
+}
+const hasComp = id => S.companions.some(uid => { const u = byUid(uid); return u && u.id === id; });
+function globalMult() {
+  let m = Math.pow(N.rebirthMult, S.rebirth) * Math.pow(N.superMult, S.superR);
+  m *= 1 + S.idealFound.length * N.idealBonus;
+  m *= 1 + companionPerk("cash_bonus");
+  if (hasComp(ICON_67)) m *= 1.067;
+  return m;
+}
+function baseIncome() { const ids = podiumIds(); return S.units.filter(u => u.slot >= 0).reduce((a, u) => a + unitBase(u.id, u.v) * (1 + unitBonus(u.id, ids).bonus), 0); }
+const stormMult = () => stormActive() ? N.stormIncome : 1;
+const eventMult = () => isSat() ? N.eventIncome : 1;
+const income = () => baseIncome() * globalMult() * stormMult() * eventMult();
+const unitIncome = u => unitBase(u.id, u.v) * (1 + unitBonus(u.id, podiumIds()).bonus) * globalMult();
+const capsulePrice = (id, v) => capsuleBase(id, v) * (1 - Math.min(0.4, companionPerk("belt_discount")));
+const likesGain = base => Math.floor(base * (1 + companionPerk("likes_bonus")) * (isThu() ? N.miniLikes : 1));
+const hypeMult = () => 1 + companionPerk("hype_bonus") + (hasComp(ICON_TRALA) ? 0.25 : 0);
+const hatchSec = id => RAR[BR[id].rarity].hatch * (1 - Math.min(0.6, companionPerk("hatch_speed") + 0.1 * shopLvl("hatch_speed"))) / (isSat() ? N.eventHatch : 1);
+const critChance = () => N.crit + companionPerk("pickaxe_crit") + 0.05 * shopLvl("pickaxe_crit") + (hasComp(ICON_SAHUR) ? 0.5 * N.crit : 0);
+const critMult = () => hasComp(ICON_SAHUR) ? N.critMult * 1.5 : N.critMult;
+const variantUpChance = () => companionPerk("variant_up") + (hasComp(ICON_TRALA) ? 0.1 : 0);
+const idealChance = () => N.idealChance * (shopLvl("ideal_charm") ? 2 : 1) * (1 + companionPerk("ideal_luck"));
+const rebirthCost = () => N.rebirthFirst * Math.pow(N.rebirthGrowth, S.rebirth);
+const reqVariant = v => Math.min(6, v + S.superR);
+const hasAtLeast = (id, v) => S.units.some(u => u.id === id && u.v >= v);
+function nextReq() { return L.rebirthReqs[S.rebirth] || { ids: [], vars: [] }; }
+const missingReqs = () => { const r = nextReq(); return r.ids.filter((id, i) => !hasAtLeast(id, reqVariant(r.vars[i]))).length; };
+const canRebirth = () => S.rebirth < N.rebirthLevels && S.cash >= rebirthCost() && missingReqs() === 0;
+const hasRainbowLegend = () => S.units.some(u => BR[u.id].rarity >= 3 && u.v >= 3);
+const canSuper = () => week() >= N.superWeek && S.rebirth >= N.superRebirth && hasRainbowLegend();
+const superCrystals = () => L.superCrystals[Math.min(S.rebirth, N.rebirthLevels) - N.superRebirth] || 0;
+const upgradeCost = u => (L.upgrade[BR[u.id].rarity] || [])[u.v] || 0;
+const canUpgrade = u => { const c = upgradeCost(u); const nv = VAR[u.v + 1]; return c > 0 && nv && nv.week <= week() && S.likes >= c; };
+const sellCash = u => capsuleBase(u.id, u.v) * N.sellShare;
+const sellLikes = u => RAR[BR[u.id].rarity].sellLikes * (u.v + 1);
+function freeSlot() { const used = new Set(S.units.filter(u => u.slot >= 0).map(u => u.slot)); for (let i = 0; i < slotCount(); i++) if (!used.has(i)) return i; return -1; }
+const beltPool = (r, wk) => BR.map((b, i) => [b, i]).filter(([b]) => b.rarity === r && b.source === "belt" && b.week <= wk).map(([, i]) => i);
+function randomBrainrot(r, wk) { while (r > 0 && !beltPool(r, wk).length) r--; const p = beltPool(r, wk); return p.length ? pick(p) : 0; }
+
+// ======================================================================= сообщения и звук
+function toast(text, kind = "") {
+  const el = document.createElement("div"); el.className = "toast " + kind; el.textContent = text;
+  const box = $("#toasts"); box.appendChild(el); while (box.children.length > 5) box.firstChild.remove();
+  setTimeout(() => el.remove(), 5200);
+}
+let AC = null;
+function sfx(type) {
+  if (!S.sound) return;
+  try {
+    AC = AC || new (window.AudioContext || window.webkitAudioContext)();
+    const o = AC.createOscillator(), g = AC.createGain(); o.connect(g); g.connect(AC.destination);
+    const f = { buy: [520, 780], hatch: [660, 990], crit: [880, 1320], storm: [220, 440], hit: [300, 240], win: [520, 1040], no: [200, 150] }[type] || [440, 440];
+    o.type = type === "storm" ? "sawtooth" : "triangle"; const t = AC.currentTime;
+    o.frequency.setValueAtTime(f[0], t); o.frequency.exponentialRampToValueAtTime(f[1], t + 0.12);
+    g.gain.setValueAtTime(0.08, t); g.gain.exponentialRampToValueAtTime(0.001, t + (type === "storm" ? 0.6 : 0.18));
+    o.start(t); o.stop(t + 0.62);
+  } catch (e) { /* звук не обязателен */ }
+}
+
+// ======================================================================= задания
+const QUEST_TEXT = { hatch: n => `Выведи ${n} брейнротов`, buy_capsule: n => `Купи ${n} капсул`, pickaxe_hit: n => `Сделай ${n} ударов по инкубаторам`,
+  sell: n => `Продай ${n} брейнротов`, storm: n => `Поучаствуй в Хайп-шторме (${n})`, tour: n => `Отправь на гастроли (${n})`,
+  upgrade: n => `Улучши вариант (${n})`, hatch_epic: n => `Выведи ${n} Эпических или выше`, fusion: n => `Скрести брейнротов (${n})` };
+function todayQuests() { const d = dayIdx(); return ["easy", "medium", "hard"].map(k => L.quests[k][d % L.quests[k].length]); }
+function ensureQuestDay() { if (S.quest.day !== dayIdx()) S.quest = { day: dayIdx(), prog: [0, 0, 0], claimed: [false, false, false] }; }
+function addQuest(kind, n = 1) { ensureQuestDay(); todayQuests().forEach((q, i) => { if (q.kind === kind) S.quest.prog[i] += n; }); }
+const questReady = i => { ensureQuestDay(); const q = todayQuests()[i]; return S.quest.prog[i] >= q.target && !S.quest.claimed[i]; };
+
+// ======================================================================= Хайп-шторм и лобби
+const BOT_NAMES = ["Pizza_Nonna", "Brr_Master", "Capy_Lover", "Frigo77", "NoobiniKing", "Shark_Runner", "Bombardino_Pro"];
+function initBots() {
+  T.bots = BOT_NAMES.map((name, i) => ({ name, plot: i + 2, rate: rnd(0.12, 0.32), best: randomBrainrot(rint(0, 2), 0), rebirth: rint(0, 3), income: rnd(20, 300) }));
+}
+function initStorm() { T.storm = { meter: 0, hist: [], contrib: {}, active: false, ends: 0, ready: S.t + 120, thr: N.stormFloor * N.players }; }
+function addHype(who, pts) {
+  if (pts <= 0 || !T.storm) return;
+  T.storm.meter += pts; T.storm.hist.push([S.t, pts]); T.storm.contrib[who] = (T.storm.contrib[who] || 0) + pts;
+}
+function stormDuration() { return N.stormDur * (week() === 6 && isSat() ? 2 : 1); }
+function stormTick() {
+  const s = T.storm; const w = N.stormWindow;
+  while (s.hist.length && s.hist[0][0] < S.t - w) s.hist.shift();
+  s.thr = Math.max(N.stormFloor * N.players, s.hist.reduce((a, h) => a + h[1], 0));
+  if (s.active) { if (S.t >= s.ends) stormEnd(); }
+  else if (S.t >= s.ready && s.meter >= s.thr) stormStart();
+}
+function stormStart() {
+  const s = T.storm; s.active = true; s.ends = S.t + stormDuration(); s.ready = s.ends + N.stormCooldown;
+  const need = s.thr * N.stormShare, you = (s.contrib.you || 0) >= need;
+  s.lastWinners = Object.entries(s.contrib).filter(([, v]) => v >= need).map(([k]) => k);
+  s.contrib = {}; s.meter = 0;
+  toast("ХАЙП-ШТОРМ! 3 минуты: доход ×2, конвейер вдвое быстрее, редкие капсулы чаще", "lab"); sfx("storm");
+  if (you) {
+    const id = randomBrainrot(weighted(N.stormCapsule), week());
+    addReserve({ id, v: 0 }); addQuest("storm");
+    toast(`За вклад в шторм: капсула ${title(id)} (${rarName(id)}) в запасе`, "lab");
+  } else toast(`Твой вклад меньше ${Math.round(N.stormShare * 100)}% порога — в следующий раз бей по инкубаторам и выводи брейнротов`, "bot");
+}
+function stormEnd() { T.storm.active = false; toast("Шторм закончился. Копим хайп дальше!", "bot"); }
+function botsTick(dt) {
+  const wk = week(), grow = 1 + 0.05 * Math.min(S.rebirth, 20);
+  for (const b of T.bots) {
+    addHype(b.name, b.rate * grow * dt);
+    b.income *= 1 + 0.0004 * dt;
+    if (Math.random() < 0.004 * dt) {
+      const r = weighted([55, 28, 12, 4.5, wk >= N.gMythicWeek ? 0.8 : 0]); const id = randomBrainrot(r, wk);
+      addHype(b.name, RAR[BR[id].rarity].hype);
+      if (RAR[BR[id].rarity].income >= RAR[BR[b.best].rarity].income) b.best = id;
+      if (r >= 4) toast(`${b.name} вывел Мифика: ${title(id)}!`, "bot");
+    }
+    if (Math.random() < 0.00025 * dt) { b.rebirth++; toast(`${b.name} переродился — перерождение ${b.rebirth}`, "bot"); }
+  }
+}
+
+// ======================================================================= конвейер
+function initBelt() {
+  T.belt = Array(WINDOWS).fill(null);
+  T.next = { legend: S.t + N.gLegend, rainbow: S.t + N.gRainbow, mythic: S.t + N.gMythic, lava: S.t + N.gLava };
+  for (let i = 0; i < WINDOWS; i++) beltStep(true);
+}
+function rollVariant() { const x = Math.random(), rb = VAR[3].belt, dm = VAR[2].belt, gd = VAR[1].belt; return x < rb ? 3 : x < rb + dm ? 2 : x < rb + dm + gd ? 1 : 0; }
+function rollCapsule(quiet) {
+  const wk = week(), st = stormActive();
+  let r = weighted(RAR.slice(0, 5).map((d, i) => d.weight * (st ? N.stormWeights[i] : 1))), v = rollVariant();
+  if (S.t >= T.next.legend) { T.next.legend = S.t + N.gLegend; r = Math.max(r, 3); }
+  if (wk >= N.gMythicWeek && S.t >= T.next.mythic) { T.next.mythic = S.t + N.gMythic; r = 4; }
+  if (S.t >= T.next.rainbow) { T.next.rainbow = S.t + N.gRainbow; v = Math.max(v, 3); }
+  if (wk >= N.gLavaWeek && S.t >= T.next.lava) { T.next.lava = S.t + N.gLava; v = Math.max(v, 4); }
+  const id = randomBrainrot(r, wk);
+  if (!quiet && (BR[id].rarity >= 3 || v >= 3)) toast(`На конвейере: ${title(id)} — ${rarName(id)}, ${varName(v)}!`, "hot");
+  return { cid: T.cid++, id, v };
+}
+function beltStep(quiet) {
+  const gone = T.belt[WINDOWS - 1];
+  if (gone) { const el = document.querySelector(`[data-cid="${gone.cid}"]`); if (el) { el.classList.add("leaving"); setTimeout(() => el.remove(), 420); } }
+  T.belt = [rollCapsule(quiet), ...T.belt.slice(0, WINDOWS - 1)];
+  if (!quiet && Math.random() < 0.3) {
+    const i = rint(2, WINDOWS - 1), c = T.belt[i];
+    if (c) { const bot = pick(T.bots); T.belt[i] = null; const el = document.querySelector(`[data-cid="${c.cid}"]`); if (el) { el.classList.add("leaving"); setTimeout(() => el.remove(), 420); }
+      if (BR[c.id].rarity >= 3) toast(`${bot.name} купил ${title(c.id)} с конвейера`, "bot"); addHype(bot.name, 0.5); }
+  }
+  renderBelt();
+}
+function buyCapsule(cid) {
+  const i = T.belt.findIndex(c => c && c.cid === cid); if (i < 0) return;
+  const c = T.belt[i];
+  if (S.carrying) { toast("Руки заняты — сначала положи капсулу в инкубатор", "hot"); sfx("no"); return; }
+  const price = capsulePrice(c.id, c.v);
+  if (S.cash < price) { toast(`Не хватает Кэша: нужно ${fmt(price)}`, "hot"); sfx("no"); return; }
+  S.cash -= price; let v = c.v;
+  if (S.pstorms.length) { v = Math.max(v, S.pstorms.shift()); toast(`Личный шторм сработал: ${varName(v)}!`, "lab"); }
+  if (v < 3 && Math.random() < 0.02 * shopLvl("belt_luck")) { v++; toast("Удача конвейера: вариант выше!", "lab"); }
+  S.carrying = { id: c.id, v }; T.belt[i] = null; addQuest("buy_capsule"); sfx("buy");
+  const el = document.querySelector(`[data-cid="${cid}"]`); if (el) el.remove();
+  toast(`Куплено: ${title(c.id)} (${varName(v)}). Неси в инкубатор!`);
+  renderBelt(); renderHands(); renderIncs();
+}
+
+// ======================================================================= инкубаторы и вылупление
+function addReserve(c) { if (S.reserve.length < reserveMax()) S.reserve.push(c); else { S.likes += RAR[BR[c.id].rarity].sellLikes * 2; toast("Запас капсул полон — лишняя капсула превратилась в Лайки", "bot"); } }
+function takeCapsule() { if (S.carrying) { const c = S.carrying; S.carrying = null; return c; } return S.reserve.shift() || null; }
+function incInteract(i) {
+  if (i >= incCount()) { toast("Инкубатор закрыт — открой его в Хайп-магазине (250 кристаллов)", "hot"); return; }
+  const cur = S.inc[i];
+  if (cur) { hitInc(i); return; }
+  const c = takeCapsule();
+  if (!c) { toast("Нет капсулы — купи её на конвейере слева", "hot"); sfx("no"); return; }
+  const sec = hatchSec(c.id); S.inc[i] = { id: c.id, v: c.v, ends: S.t + sec, total: sec };
+  toast("Капсула в инкубаторе! Кликай по нему — это удары киркой, вылупится быстрее");
+  renderHands(); renderIncs();
+}
+function hitInc(i) {
+  const now = performance.now(); if (now - T.lastHit < 90) return; T.lastHit = now;
+  const cur = S.inc[i]; if (!cur) return;
+  const crit = Math.random() < critChance(), amt = crit ? N.hit * critMult() : N.hit;
+  cur.ends -= amt; addHype("you", N.stormHit * hypeMult()); addQuest("pickaxe_hit");
+  const box = document.querySelector(`[data-inc="${i}"]`);
+  if (box) { box.classList.add("hit"); setTimeout(() => box.classList.remove("hit"), 80);
+    const f = document.createElement("span"); f.className = "float" + (crit ? " crit" : ""); f.textContent = crit ? `КРИТ −${amt.toFixed(1)} с` : `−${amt.toFixed(1)} с`;
+    box.appendChild(f); setTimeout(() => f.remove(), 820); }
+  sfx(crit ? "crit" : "hit");
+}
+function hatch(id, v, fromInc) {
+  if (fromInc && v < 3 && Math.random() < variantUpChance()) v++;
+  const ideal = Math.random() < idealChance(), isNew = !S.discovered.includes(id);
+  const u = { uid: S.uid++, id, v, ideal, slot: freeSlot() }; S.units.push(u); S.hatched++;
+  if (isNew) S.discovered.push(id);
+  if (ideal && !S.idealFound.includes(id)) S.idealFound.push(id);
+  addQuest("hatch"); if (BR[id].rarity >= 2) addQuest("hatch_epic");
+  addHype("you", RAR[BR[id].rarity].hype * hypeMult());
+  const t = `${title(id)} (${varName(v)})`;
+  toast(u.slot >= 0 ? `${t} вылупился и встал на подиум!` : `${t} вылупился! Подиум полон — он в запасе`, "lab");
+  if (isNew) toast(`Новый вид в Мемопедии: ${title(id)}`, "lab");
+  if (ideal) toast(`ИДЕАЛЬНЫЙ ${t}! +1% ко всему доходу навсегда`, "hot");
+  sfx("hatch"); checkFamilies(); T.dirty = true;
+}
+function checkFamilies() {
+  const ids = podiumIds();
+  FAM.forEach((f, fi) => {
+    if (f.key === "icons" || S.familiesDone.includes(fi)) return;
+    if (f.members.every(m => ids.includes(m))) { S.familiesDone.push(fi); addHype("you", N.stormFamily * hypeMult()); toast(`Собрана вся семья «${f.name}»! +25 очков шторму`, "lab"); }
+  });
+}
+
+// ======================================================================= действия с брейнротами
+function place(uid) { const u = byUid(uid), s = freeSlot(); if (!u) return; if (s < 0) { toast("Подиум полон — сначала убери кого-нибудь", "hot"); return; } u.slot = s; checkFamilies(); T.dirty = true; }
+function unplace(uid) { const u = byUid(uid); if (u) { u.slot = -1; T.dirty = true; } }
+function upgrade(uid) { const u = byUid(uid); if (!u || !canUpgrade(u)) return; S.likes -= upgradeCost(u); u.v++; addQuest("upgrade"); toast(`${title(u.id)} теперь ${varName(u.v)}!`, "lab"); sfx("win"); T.dirty = true; }
+function sell(uid) {
+  const u = byUid(uid); if (!u) return; const c = sellCash(u), l = likesGain(sellLikes(u));
+  S.cash += c; S.likes += l; removeUnit(uid); addQuest("sell"); toast(`Продано: +${fmt(c)} Кэша и ${l} Лайков`); T.dirty = true;
+}
+function removeUnit(uid) { S.units = S.units.filter(u => u.uid !== uid); S.companions = S.companions.filter(x => x !== uid); S.fusionPick = S.fusionPick.filter(x => x !== uid); }
+function toggleCompanion(uid) {
+  if (S.companions.includes(uid)) S.companions = S.companions.filter(x => x !== uid);
+  else if (S.companions.length < compSlots()) S.companions.push(uid);
+  else S.companions = [...S.companions.slice(1), uid];
+  T.dirty = true;
+}
+function autoArrange() {
+  S.units.forEach(u => u.slot = -1);
+  for (let s = 0; s < slotCount(); s++) {
+    let best = null, bestVal = -1;
+    for (const u of S.units) { if (u.slot >= 0) continue; u.slot = s; const val = baseIncome(); u.slot = -1; if (val > bestVal) { bestVal = val; best = u; } }
+    if (!best) break; best.slot = s;
+  }
+  checkFamilies(); T.dirty = true; toast("Расставлено по максимальному доходу с учётом семей и комбо");
+}
+function doRebirth() {
+  if (!canRebirth()) return; S.cash = 0; S.rebirth++; T.dirty = true; sfx("win");
+  toast(`ПЕРЕРОЖДЕНИЕ ${S.rebirth}! Доход ×${N.rebirthMult} и +1 место на подиуме`, "hot");
+}
+function doSuper() {
+  if (!canSuper()) return; const g = superCrystals();
+  S.crystals += g; S.superR++; S.rebirth = 0; S.cash = N.startCash;
+  const lim = slotCount(); S.units.forEach(u => { if (u.slot >= lim) u.slot = -1; });
+  T.dirty = true; sfx("storm"); toast(`ВИРУСНЫЙ ВЗРЫВ! +${g} Хайп-кристаллов, доход ×${N.superMult} навсегда`, "hot");
+}
+
+// ======================================================================= скрещивание
+function fusionPreview() {
+  const p = S.fusionPick.map(byUid).filter(Boolean);
+  if (p.length !== 3) return { ok: false, note: `Выбери 3 брейнрота (${p.length}/3)` };
+  const speed = Math.min(0.6, companionPerk("fusion_speed") + (S.unlocks.fusion_pack ? 0.5 : 0));
+  const [a, b, c] = p;
+  if (a.id === b.id && b.id === c.id && a.v === b.v && b.v === c.v) {
+    const nv = VAR[a.v + 1]; if (!nv || nv.week > week()) return { ok: false, note: "Следующий вариант пока закрыт" };
+    return { ok: true, id: a.id, v: a.v + 1, recipe: -1, min: N.fusionVarMin * (1 - speed), note: `3 одинаковых → ${title(a.id)} (${nv.name})` };
+  }
+  const ids = p.map(u => u.id);
+  const ri = L.recipes.findIndex(r => BR[r.result].week <= week() && r.inputs.every(x => ids.includes(x)));
+  if (ri < 0) return { ok: false, note: "Такой комбинации нет. Подсказки — в Мемопедии" };
+  const r = L.recipes[ri];
+  return { ok: true, id: r.result, v: Math.min(a.v, b.v, c.v), recipe: ri, min: N.fusionMin[BR[r.result].rarity] * (1 - speed), note: `Секретный рецепт: ${title(r.result)}!` };
+}
+const fusionCost = p => 2 * capsuleBase(p.id, 0);
+function startFusion() {
+  const p = fusionPreview(); if (!p.ok) { toast(p.note, "hot"); return; }
+  const slot = S.fus.findIndex((f, i) => i < fusSlots() && !f); if (slot < 0) { toast("Все колбы заняты", "hot"); return; }
+  const cost = fusionCost(p); if (S.cash < cost) { toast(`Не хватает Кэша: нужно ${fmt(cost)}`, "hot"); return; }
+  S.cash -= cost; S.fusionPick.forEach(removeUnit); S.fusionPick = [];
+  S.fus[slot] = { id: p.id, v: p.v, ends: S.t + p.min * 60, total: p.min * 60 };
+  addHype("you", N.stormFusion * hypeMult()); addQuest("fusion");
+  if (p.recipe >= 0 && !S.recipesFound.includes(p.recipe)) { S.recipesFound.push(p.recipe); toast(`Ты первым в лобби открыл секретный рецепт: ${title(p.id)}!`, "hot"); }
+  toast(`Скрещивание началось: ${title(p.id)} через ${ftime(p.min * 60)}`, "lab"); T.dirty = true;
+}
+
+// ======================================================================= мем-автомат, гастроли, магазины, задания
+function luckyRoll(uid) {
+  const u = byUid(uid); if (!u || S.luckyDay === dayIdx()) return;
+  const nv = VAR[u.v + 1]; if (!nv || nv.week > week()) return;
+  S.luckyDay = dayIdx();
+  if (Math.random() < L.lucky[u.v + 1]) { u.v++; toast(`Мем-автомат: ${title(u.id)} теперь ${nv.name}!`, "hot"); sfx("win"); T.dirty = true; }
+  else { toast("Мем-автомат: не повезло. Приходи завтра!", "bot"); sfx("no"); }
+}
+const tourCost = i => Math.max(100, income() / (stormMult() * eventMult()) * L.tours[i].cost_income_min * 60);
+const tourSec = i => L.tours[i].duration_min * 60 * (1 - Math.min(0.5, companionPerk("tour_speed")));
+function startTour(i) {
+  if (S.tour) { toast("Гастроли уже идут", "hot"); return; }
+  const c = tourCost(i); if (S.cash < c) { toast(`Не хватает Кэша: нужно ${fmt(c)}`, "hot"); return; }
+  S.cash -= c; S.tour = { i, ends: S.t + tourSec(i), total: tourSec(i) }; addQuest("tour");
+  toast(`Брейнроты уехали: «${L.tours[i].name}». Вернутся через ${ftime(tourSec(i))}`);
+}
+function finishTour() {
+  const t = L.tours[S.tour.i]; S.tour = null;
+  const likes = likesGain(rint(t.likes[0], t.likes[1])); S.likes += likes;
+  let txt = `Гастроли «${t.name}» закончились: +${likes} Лайков`;
+  if (Math.random() < t.capsule_chance) { const r = t.epic_plus ? weighted(N.stormCapsule) : weighted(RAR.slice(0, 5).map(x => x.weight)); const id = randomBrainrot(r, week()); addReserve({ id, v: 0 }); txt += ` и капсула ${title(id)} в запасе`; }
+  toast(txt, "lab");
+}
+function buyShop(i) {
+  const it = L.shop[i], lvl = shopLvl(it.id);
+  if (lvl >= it.max_level) return; if (S.crystals < it.cost) { toast(`Нужно ${it.cost} Хайп-кристаллов`, "hot"); return; }
+  S.crystals -= it.cost; S.shop[it.id] = lvl + 1; toast(`Куплено: ${it.name}`, "lab"); T.dirty = true;
+}
+function claimQuest(i) {
+  if (!questReady(i)) return; const k = ["easy", "medium", "hard"][i];
+  S.quest.claimed[i] = true; const likes = likesGain(L.questRewards[k].likes); let cr = L.questRewards[k].hype_crystals || 0;
+  if (shopLvl("daily_crystals")) cr++; S.likes += likes; S.crystals += cr; addHype("you", N.stormQuest * hypeMult());
+  toast(`Задание выполнено: +${likes} Лайков${cr ? `, +${cr} кр.` : ""}`, "lab"); sfx("win");
+}
+function grantOffer(i) {
+  const o = L.offers[i];
+  if (o.id === "storm_rainbow") S.pstorms.push(3);
+  else if (o.id === "storm_lava") S.pstorms.push(4);
+  else if (o.id === "storm_viral") S.pstorms.push(5);
+  else if (o.id === "hype_bomb") { addHype("bomb", Math.max(T.storm.thr, 1) * 0.5); toast("ХАЙП-БОМБА! Шкала шторма +50% для всего лобби", "lab"); }
+  else if (o.id === "lab_pack") { S.unlocks.lab_pack = 1; S.pstorms.push(3, 3); }
+  else if (o.id === "fusion_pack") { S.unlocks.fusion_pack = 1; S.pstorms.push(4, 4, 4); }
+  else { toast(`${o.name}: косметика — в Fortnite это шляпа или краска участка`, "bot"); }
+  toast(`Демо-покупка: ${o.name} (в Fortnite — ${o.price} V-Bucks)`, "lab"); T.dirty = true;
+}
+function grantIcon(id, reason) {
+  if (S.units.some(u => u.id === id)) { S.crystals += 10; toast(`${reason}: ${title(id)} уже есть — держи 10 кристаллов`, "lab"); return; }
+  const u = { uid: S.uid++, id, v: 0, ideal: false, slot: freeSlot() }; S.units.push(u);
+  if (!S.discovered.includes(id)) S.discovered.push(id);
+  toast(`${reason}: ты получил икону ${title(id)}!`, "hot"); sfx("win"); T.dirty = true;
+}
+
+// ======================================================================= время
+function advance(dt) {
+  S.t += dt;
+  const inc = income(); S.cash += inc * dt;
+  S.inc.forEach((c, i) => { if (c && S.t >= c.ends) { S.inc[i] = null; hatch(c.id, c.v, true); } });
+  S.fus.forEach((f, i) => { if (f && S.t >= f.ends) { S.fus[i] = null; hatch(f.id, f.v, false); } });
+  if (S.tour && S.t >= S.tour.ends) finishTour();
+  botsTick(dt); stormTick(); pinataTick();
+  if (week() > S.seenWeek) { const w = week(); S.seenWeek = w; setTimeout(() => showPatch(w), 50); }
+}
+// Перемотка: время проходит как офлайн — 25% дохода, не больше лимита
+function skip(seconds, label) {
+  const cap = (N.offlineCap + 4 * shopLvl("offline_cap")) * 3600;
+  const gain = baseIncome() * globalMult() * N.offlineRate * (1 + companionPerk("offline_bonus")) * Math.min(seconds, cap);
+  S.cash += gain; S.t += seconds;
+  T.storm.ready = Math.min(T.storm.ready, S.t + 60); T.storm.hist = []; T.storm.active = false; T.storm.meter = 0; T.storm.contrib = {};
+  Object.keys(T.next).forEach(k => T.next[k] = Math.min(T.next[k], S.t + 30));
+  advance(0);
+  if (label) toast(`${label}: брейнроты заработали ${fmt(gain)} (как офлайн, ${Math.round(N.offlineRate * 100)}%)`, "lab");
+  T.dirty = true; renderAll();
+}
+function skipDay() { const next = (dayIdx() + 1) * 86400 + 8 * 3600; skip(next - S.t, `Перемотка до утра (${DAYS_FULL[(weekday() + 1) % 7]})`); }
+function skipWeek() { const next = (week() + 1) * 604800 + 8 * 3600; skip(next - S.t, "Перемотка до следующего обновления"); }
+function jumpToWeek(w) { if (w <= week()) return; const next = w * 604800 + 8 * 3600; skip(next - S.t, `Перемотка к неделе ${w}`); }
+
+// ======================================================================= пиньята (четверг)
+function pinataTick() {
+  if (T.pinata && T.pinata.practice) return;
+  if (!isThu()) { if (T.pinata && T.pinata.alive) T.pinata.alive = false; return; }
+  if (!T.pinata) T.pinata = { alive: false, next: S.t + 20 };
+  const p = T.pinata;
+  if (!p.alive && S.t >= p.next) { p.alive = true; p.max = N.pinataHits * N.players; p.hp = p.max; p.you = 0; toast("МЕМ-ПИНЬЯТА в центре пьяццы! Бей — награда всем, кто ударил", "hot"); }
+}
+
+// ======================================================================= отрисовка
+function renderHUD() {
+  $("#h-cash").textContent = fmt(S.cash);
+  $("#h-inc").textContent = `+${fmt(income())}/с`;
+  $("#h-likes").textContent = fmt(S.likes);
+  $("#h-cr").textContent = fmt(S.crystals);
+  $("#h-rb").textContent = S.superR ? `${S.rebirth} · взрывов ${S.superR}` : String(S.rebirth);
+  const h = hour(); $("#h-cal").textContent = `Неделя ${week()} · ${DAYS[weekday()]} ${String(Math.floor(h)).padStart(2, "0")}:${String(Math.floor(h % 1 * 60)).padStart(2, "0")}`;
+  document.querySelectorAll("#h-speed button").forEach(b => b.setAttribute("aria-pressed", String(+b.dataset.arg === S.speed)));
+  $("#h-sound").textContent = S.sound ? "Звук: вкл" : "Звук: выкл";
+}
+function renderStorm() {
+  const s = T.storm, el = $("#storm");
+  el.classList.toggle("active", s.active);
+  if (s.active) { $("#st-title").textContent = "ХАЙП-ШТОРМ!"; $("#st-sub").textContent = `доход ×2 · конвейер ×2 · ещё ${ftime(s.ends - S.t)}`; $("#st-bar").style.width = `${Math.max(0, (s.ends - S.t) / stormDuration() * 100)}%`; }
+  else {
+    const p = Math.min(1, s.meter / s.thr); $("#st-title").textContent = `Хайп-шторм ${Math.floor(p * 100)}%`;
+    const wait = s.ready > S.t ? ` · перезарядка ${ftime(s.ready - S.t)}` : "";
+    $("#st-sub").textContent = `шкала общая: ${fmt(s.meter)} / ${fmt(s.thr)} очков${wait}`; $("#st-bar").style.width = `${p * 100}%`;
+  }
+  const tot = Object.values(s.contrib).reduce((a, b) => a + b, 0) || 1;
+  const bestYou = S.units.reduce((b, u) => (!b || RAR[BR[u.id].rarity].income * VAR[u.v].mult > RAR[BR[b.id].rarity].income * VAR[b.v].mult ? u : b), null);
+  const rows = [{ name: "Ты", plot: 1, img: bestYou ? bimg(bestYou.id) : pimg("Capsule_Common"), c: s.contrib.you || 0, you: true, rb: S.rebirth },
+    ...T.bots.map(b => ({ name: b.name, plot: b.plot, img: bimg(b.best), c: s.contrib[b.name] || 0, rb: b.rebirth }))];
+  $("#lobby").innerHTML = rows.map(r => `<div class="lob${r.you ? " you" : ""}" title="Лаборатория #${r.plot}"><img src="${r.img}" alt=""><div><span>${esc(r.name)}</span><small>#${r.plot} · R${r.rb} · ${Math.round(r.c / tot * 100)}%</small></div></div>`).join("");
+}
+function currentUpdate() { return UPDATES.filter(u => u.week <= week()).pop(); }
+function renderEvents() {
+  const out = [];
+  if (isSat()) {
+    const u = currentUpdate(); const mini = u && u.mini ? ` <button class="btn sm hot" data-act="mini" data-arg="${u.mini}">Играть: ${esc(MINIS[u.mini].title)}</button>` : "";
+    out.push(`<div class="ev sat">СУББОТНИЙ ИВЕНТ «${esc(u ? u.name : "")}»: доход ×2, вылупление ×2 · до конца ${ftime(86400 - S.t % 86400)}${mini}</div>`);
+  } else out.push(`<div class="ev">До субботнего ивента: ${ftime(((SAT - weekday() + 7) % 7) * 86400 - S.t % 86400)}</div>`);
+  if (isThu()) {
+    const p = T.pinata; const txt = p && p.alive ? `<button class="btn sm lab" data-act="mini" data-arg="pinata">Бить пиньяту!</button>` : `следующая через ${ftime(p ? p.next - S.t : 20)}`;
+    out.push(`<div class="ev thu">ЧЕТВЕРГ: Мем-пиньята каждые 30 минут, Лайки ×2 · ${txt}</div>`);
+  }
+  out.push(`<div class="ev hint">${esc(nextHint())}</div>`);
+  $("#eventbar").innerHTML = out.join("");
+}
+function nextHint() {
+  if (!S.units.length && !S.carrying && !S.inc.some(Boolean)) return "Шаг 1: нажми на капсулу на конвейере — купи первого брейнрота";
+  if (S.carrying) return "Шаг 2: нажми на пустой инкубатор в своей лаборатории — положи капсулу";
+  if (S.inc.some(Boolean) && S.hatched < 3) return "Шаг 3: кликай по инкубатору — это удары киркой, брейнрот вылупится быстрее";
+  if (canRebirth()) return "Можно переродиться! Вкладка «Перерождение»";
+  if (S.rebirth === 0) return S.cash >= rebirthCost() ? `Кэша на перерождение хватает — не хватает нужных брейнротов: ${missingReqs()} (вкладка «Перерождение»)` : `Цель: перерождение 1 — ещё ${fmt(rebirthCost() - S.cash)} Кэша и 3 нужных брейнрота (вкладка «Перерождение»)`;
+  if (freeSlot() < 0 && S.units.some(u => u.slot < 0)) return "Подиум полон: продавай слабых за Лайки и улучшай сильных, собирай семьи";
+  return S.cash >= rebirthCost() ? `Кэша на перерождение хватает — не хватает нужных брейнротов: ${missingReqs()}` : `Следующее перерождение: ещё ${fmt(rebirthCost() - S.cash)} Кэша · нужных брейнротов не хватает: ${missingReqs()}`;
+}
+function renderBelt() {
+  const box = $("#belt"); box.style.height = `${WINDOWS * ROW_H + 8}px`;
+  const have = new Set();
+  T.belt.forEach((c, i) => {
+    if (!c) return; have.add(String(c.cid));
+    let el = box.querySelector(`[data-cid="${c.cid}"]`);
+    const price = capsulePrice(c.id, c.v), cant = S.cash < price || !!S.carrying;
+    if (!el) {
+      el = document.createElement("button"); el.className = "belt-row"; el.dataset.cid = c.cid; el.dataset.act = "buy"; el.dataset.arg = c.cid;
+      el.style.transform = `translateY(${(i - 1) * ROW_H + 4}px)`; el.style.opacity = "0";
+      el.innerHTML = `<img class="cap" src="${pimg(CAPS[BR[c.id].rarity])}" alt=""><img class="who" src="${bimg(c.id)}" alt=""><span class="nm"><b>${esc(title(c.id))}</b><small style="color:${RCOL[BR[c.id].rarity]}">${esc(rarName(c.id))} · ${esc(varName(c.v))}</small></span><span class="pr"></span>`;
+      box.appendChild(el); void el.offsetWidth;
+    }
+    el.style.transform = `translateY(${i * ROW_H + 4}px)`; el.style.opacity = "1";
+    el.classList.toggle("cant", cant); el.querySelector(".pr").textContent = fmt(price);
+    el.setAttribute("aria-label", `Купить ${title(c.id)}, ${rarName(c.id)}, ${varName(c.v)}, цена ${fmt(price)}`);
+  });
+  box.querySelectorAll(".belt-row").forEach(el => { if (!have.has(el.dataset.cid) && !el.classList.contains("leaving")) el.remove(); });
+  const n = T.next, wk = week();
+  const parts = [`Легендарная через ${ftime(n.legend - S.t)}`, `Радужная через ${ftime(n.rainbow - S.t)}`,
+    wk >= N.gMythicWeek ? `Мифик через ${ftime(n.mythic - S.t)}` : `Мифики — со 2-й недели`, wk >= N.gLavaWeek ? `Лавовая через ${ftime(n.lava - S.t)}` : ""];
+  $("#belt-timers").innerHTML = `<div class="lbl">Мем-портал · табло гарантий</div>` + parts.filter(Boolean).map(esc).join("<br>");
+}
+function renderHands() {
+  const c = S.carrying;
+  $("#hands").innerHTML = c ? `<img src="${pimg(CAPS[BR[c.id].rarity])}" alt=""><img src="${bimg(c.id)}" alt=""><div><div class="lbl">В руках</div><b>${esc(title(c.id))}</b> · ${esc(varName(c.v))}<br><small class="muted">нажми на пустой инкубатор →</small></div>`
+    : `<div><div class="lbl">Руки пустые</div><small class="muted">Капсул в запасе: ${S.reserve.length}/${reserveMax()} — они сами лягут в пустой инкубатор</small></div>`;
+}
+const UPDATES = [
+  { week: 0, name: "Запуск", ids: [], mini: null, what: ["25 брейнротов, конвейер, инкубаторы, подиум", "Семьи и комбо «Банановый рай»", "Хайп-шторм", "Перерождения 1–20", "Мем-пиньята каждый четверг"] },
+  { week: 1, name: "Тунг-Тунг-Сахур", mini: "logs", what: ["Икона Тунг Тунг Тунг Сахур (мини-игра «Поленья»)", "Bombombini Gusini на конвейере", "Комбо «Воздушный налёт»"] },
+  { week: 2, name: "Драконья неделя", mini: null, what: ["Первый мифик Dragon Cannelloni", "Мифик по таймеру раз в час", "Комбо «Ужин с драконом»"] },
+  { week: 3, name: "Лаборатория скрещивания", mini: null, what: ["Скрещивание (с перерождения 3)", "6 секретных рецептов", "Комбо «Итальянский обед» и «Кошки-мышки»"] },
+  { week: 4, name: "Акулий забег", mini: "jump", what: ["Икона Тралалеро Тралала (мини-игра «Акулья башня»)", "Мифик Draghetto Gelato"] },
+  { week: 5, name: "Извержение", mini: "lava", what: ["Вариант Лавовый ×20", "«Вирусный взрыв» и Хайп-кристаллы", "Мини-игра «Лавовый дождь» — Лавовые капсулы", "Гарантированная Лавовая раз в 3 часа"] },
+  { week: 6, name: "Острая неделя", mini: null, what: ["Мифик Drakonino Peperonino", "В субботу шторм длится вдвое дольше"] },
+  { week: 7, name: "Six-Seven", mini: "rhythm", what: ["Икона 67 (ритм-игра «6 или 7»)", "Вариант Вирусный ×50"] },
+  { week: 8, name: "Космос", mini: "stars", what: ["Мифик Girafa Celestre", "Рецепт La Vacca Saturno Saturnita", "Мини-игра «Звездопад»"] },
+  { week: 10, name: "Космический вариант", mini: null, what: ["Вариант Космический ×120", "Анонс сезона 2: новые модели из генератора"] },
+];
+UPDATES.forEach(u => { u.ids = BR.map((b, i) => [b, i]).filter(([b]) => b.week === u.week && (u.week > 0 || b.rarity >= 3)).map(([, i]) => i); });
+function renderStations() {
+  const u = currentUpdate(), p = T.pinata;
+  const st = [
+    ["tab", "fusion", "FusionTable", "Скрещивание", week() >= N.fusionWeek ? (S.rebirth >= N.fusionRebirth ? "3 → 1" : `с перерождения ${N.fusionRebirth}`) : `с ${N.fusionWeek}-й недели`, false],
+    ["tab", "lucky", "MemeMachine", "Мем-автомат", S.luckyDay === dayIdx() ? "завтра" : "бесплатно сегодня", S.luckyDay !== dayIdx()],
+    ["tab", "tours", "TourBus", "Гастроли", S.tour ? ftime(S.tour.ends - S.t) : "свободен", false],
+    ["mini", "pinata", "Pinata", "Мем-пиньята", isThu() ? (p && p.alive ? "БЕЙ!" : "скоро") : "по четвергам", !!(isThu() && p && p.alive)],
+    ["tab", "guide", "HypeTower", "Хайп-башня", "как устроен шторм", !!stormActive()],
+    u && u.mini ? ["mini", u.mini, MINIS[u.mini].img, MINIS[u.mini].title, isSat() ? "ивент идёт!" : "ивент недели", isSat()] : ["tab", "updates", "SahurTotem", "Обновления", "что выйдет", false],
+  ];
+  $("#stations").innerHTML = st.map(([act, arg, img, name, sub, live]) => `<button class="st${live ? " live" : ""}" data-act="${act}" data-arg="${arg}"><img src="${pimg(img)}" alt=""><span>${esc(name)}</span><small>${esc(sub)}</small></button>`).join("");
+}
+function renderIncs() {
+  const key = JSON.stringify([incCount(), S.inc.map(c => c && [c.id, c.v]), !!(S.carrying || S.reserve.length)]);
+  if (key === T.incKey) {
+    S.inc.forEach((c, i) => { if (!c) return; const box = document.querySelector(`[data-inc="${i}"]`); if (!box) return;
+      const p = Math.max(0, Math.min(100, (1 - (c.ends - S.t) / c.total) * 100)); const ring = box.querySelector(".ring"); if (ring) ring.style.setProperty("--p", p.toFixed(1));
+      const m = box.querySelector(".mono"); if (m) m.textContent = ftime(c.ends - S.t); });
+    return;
+  }
+  T.incKey = key;
+  const out = [];
+  for (let i = 0; i < N.incMax; i++) {
+    const c = S.inc[i], locked = i >= incCount();
+    if (locked) { out.push(`<button class="inc locked" data-act="inc" data-arg="${i}" data-inc="${i}"><img class="shell" src="${pimg("Incubator")}" alt=""><span class="tx">Закрыт<br><small>Хайп-магазин</small></span></button>`); continue; }
+    if (!c) { out.push(`<button class="inc empty" data-act="inc" data-arg="${i}" data-inc="${i}"><img class="shell" src="${pimg("Incubator")}" alt=""><span class="tx">Пусто<br><small>${S.carrying || S.reserve.length ? "нажми — положить капсулу" : "купи капсулу"}</small></span></button>`); continue; }
+    const p = Math.max(0, Math.min(100, (1 - (c.ends - S.t) / c.total) * 100));
+    out.push(`<button class="inc" data-act="inc" data-arg="${i}" data-inc="${i}" aria-label="Инкубатор ${i + 1}: ${esc(title(c.id))}, осталось ${ftime(c.ends - S.t)}. Нажми, чтобы ударить"><img class="shell" src="${pimg("Incubator")}" alt=""><span class="ring" style="--p:${p.toFixed(1)}"></span><img class="inside" src="${pimg(CAPS[BR[c.id].rarity])}" alt=""><span class="tx">${esc(title(c.id))}<br><span class="mono">${ftime(c.ends - S.t)}</span></span></button>`);
+  }
+  $("#incs").innerHTML = out.join("");
+}
+function renderPodium() {
+  const lim = slotCount(), bySlot = {}; S.units.forEach(u => { if (u.slot >= 0) bySlot[u.slot] = u; });
+  const key = JSON.stringify([lim, S.units.map(u => [u.uid, u.v, u.slot, u.ideal]), S.companions, week()]);
+  if (key !== T.podiumKey) {
+    T.podiumKey = key; const cells = [];
+    for (let s = 0; s < N.slotsMax; s++) {
+      const u = bySlot[s];
+      if (s >= lim) cells.push(`<div class="slot locked">R${s - N.slotsStart + 1}</div>`);
+      else if (!u) cells.push(`<div class="slot empty">пусто</div>`);
+      else cells.push(`<button class="slot filled${u.ideal ? " ideal" : ""}" data-act="unit" data-arg="${u.uid}" title="${esc(title(u.id))} · ${esc(varName(u.v))}"><span class="inc-lbl" data-uinc="${u.uid}"></span><span class="ped" style="--ped:${PED[u.v]}"></span><img src="${bimg(u.id)}" alt="${esc(title(u.id))}"></button>`);
+    }
+    $("#podium").innerHTML = cells.join("");
+    const ids = podiumIds();
+    const fams = FAM.map((f, fi) => ({ f, fi, cnt: f.members.filter(m => ids.includes(m)).length })).filter(x => x.f.key !== "icons" && x.cnt > 0);
+    const combos = L.combos.filter(c => c.week <= week()).map(c => ({ c, cnt: c.members.filter(m => ids.includes(m)).length })).filter(x => x.cnt > 0);
+    $("#fams").innerHTML = fams.map(({ f, cnt }) => { const b = (L.familyBonus[Math.min(cnt, 4)] || 0) + (cnt >= 2 && cnt >= f.members.length ? L.familyFull : 0);
+      return `<span class="chip fam-chip${cnt >= f.members.length ? " full" : ""}" title="${esc(f.members.map(title).join(", "))}">${esc(f.name)} ${cnt}/${f.members.length} <b>${b ? "+" + Math.round(b * 100) + "%" : "—"}</b></span>`; }).join("")
+      + combos.map(({ c, cnt }) => `<span class="chip fam-chip${cnt === 3 ? " full" : ""}" title="${esc(c.members.map(title).join(" + "))}">Комбо «${esc(c.name)}» ${cnt}/3 <b>${cnt === 3 ? "+30%" : ""}</b></span>`).join("")
+      || `<span class="muted">Ставь брейнротов одной семьи рядом — все получат бонус. Семьи — во вкладке «Как играть».</span>`;
+    $("#comps").innerHTML = S.companions.map(uid => { const u = byUid(uid); return u ? `<span class="chip" title="Компаньон: ${esc(companionText(u))}"><img src="${bimg(u.id)}" alt="">${esc(title(u.id))}</span>` : ""; }).join("") || `<span class="chip muted">компаньона нет</span>`;
+  }
+  const onP = S.units.filter(u => u.slot >= 0).length;
+  $("#pod-title").textContent = `Подиум ${onP}/${lim}`;
+  $("#pod-sub").textContent = `в запасе ${S.units.length - onP} · доход ${fmt(income())}/с`;
+  S.units.forEach(u => { if (u.slot >= 0) { const el = document.querySelector(`[data-uinc="${u.uid}"]`); if (el) el.textContent = `+${fmt(unitIncome(u) * stormMult() * eventMult())}/с`; } });
+}
+function companionText(u) {
+  const b = BR[u.id];
+  if (b.family === FAM.findIndex(f => f.key === "icons")) return b.perk || "особый перк";
+  const perk = FAM[b.family].perk; return (L.perkText[perk] || perk).replace("X", Math.round(L.companionPerk[b.rarity] * (1 + 0.1 * u.v) * 100) + "%");
+}
+
+// ---------- панель
+const TABS = [["guide", "Как играть"], ["storage", "Запас"], ["rebirth", "Перерождение"], ["fusion", "Скрещивание"], ["lucky", "Автомат"], ["tours", "Гастроли"],
+  ["shop", "Магазин"], ["quests", "Задания"], ["dex", "Мемопедия"], ["updates", "Обновления"]];
+function renderTabs() {
+  const dots = { rebirth: canRebirth() || canSuper(), quests: [0, 1, 2].some(questReady), lucky: S.luckyDay !== dayIdx() && S.units.length > 0 };
+  $("#tabs").innerHTML = TABS.map(([k, n]) => `<button role="tab" aria-selected="${S.tab === k}" data-act="tab" data-arg="${k}">${n}${dots[k] ? '<span class="dot"></span>' : ""}</button>`).join("");
+}
+function unitRow(u, act, extra = "") {
+  return `<button class="row${extra}" data-act="${act}" data-arg="${u.uid}"><img src="${bimg(u.id)}" alt=""><span class="grow"><b>${esc(title(u.id))}${u.ideal ? " · ИДЕАЛЬНЫЙ" : ""}</b><small><span style="color:${RCOL[BR[u.id].rarity]}">${esc(rarName(u.id))}</span> · ${esc(varName(u.v))} · ${fmt(unitIncome(u))}/с${u.slot >= 0 ? " · на подиуме" : ""}${S.companions.includes(u.uid) ? " · компаньон" : ""}</small></span></button>`;
+}
+const sortedUnits = () => [...S.units].sort((a, b) => (b.slot >= 0) - (a.slot >= 0) || unitBase(b.id, b.v) - unitBase(a.id, a.v));
+function panelHTML() {
+  const wk = week();
+  switch (S.tab) {
+    case "storage": {
+      const us = sortedUnits();
+      return `<p class="muted">Нажми на брейнрота: поставить на подиум, улучшить за Лайки, продать, взять в компаньоны. Капсул в запасе: ${S.reserve.length}.</p>
+        <div class="acts"><button class="btn gold" data-act="arrange">Лучшая расстановка</button></div>
+        <div class="list">${us.map(u => unitRow(u, "unit")).join("") || '<div class="box">Пока пусто. Купи капсулу на конвейере.</div>'}</div>`;
+    }
+    case "rebirth": {
+      const r = nextReq();
+      const reqs = r.ids.map((id, i) => { const v = reqVariant(r.vars[i]), ok = hasAtLeast(id, v);
+        return `<div class="req"><img src="${bimg(id)}" alt="" width="36" height="36" style="object-fit:contain"><span class="${ok ? "ok" : "no"}">${ok ? "есть" : "нет"}</span><span>${esc(title(id))} — не ниже «${esc(varName(v))}»${BR[id].week > wk ? ` <small class="muted">(выйдет на ${BR[id].week}-й неделе)</small>` : ""}${BR[id].source === "fusion" ? ' <small class="muted">(только скрещиванием)</small>' : ""}</span></div>`; }).join("");
+      const sup = S.rebirth >= N.superRebirth ? `<div class="box ${canSuper() ? "" : "warn"}"><h3>Вирусный взрыв (супер-перерождение)</h3>
+        <p>Сбросит перерождения и Кэш. Брейнроты, Лайки, кристаллы и Хайп-магазин останутся. Получишь <b>${superCrystals()}</b> кристаллов и навсегда ×${N.superMult} дохода. Требования перерождений станут на вариант выше.</p>
+        ${wk < N.superWeek ? `<p class="muted">Откроется на ${N.superWeek}-й неделе.</p>` : !hasRainbowLegend() ? '<p class="muted">Нужен Радужный легендарный брейнрот.</p>' : ""}
+        <div class="acts"><button class="btn hot" data-act="super" ${canSuper() ? "" : "disabled"}>Взорвать!</button></div></div>` : "";
+      if (S.rebirth >= N.rebirthLevels) return `<div class="box">Все ${N.rebirthLevels} перерождений пройдены!</div>${sup}`;
+      return `<div class="box"><h3>Перерождение ${S.rebirth} → ${S.rebirth + 1}</h3>
+        <p>Цена: <b class="num">${fmt(rebirthCost())}</b> Кэша (у тебя ${fmt(S.cash)})</p><div class="list">${reqs}</div>
+        <p class="muted">Награда: доход ×${N.rebirthMult}, +1 место на подиуме. Сгорает только Кэш.</p>
+        <div class="acts"><button class="btn go" data-act="rebirth" ${canRebirth() ? "" : "disabled"}>Переродиться</button></div></div>${sup}`;
+    }
+    case "fusion": {
+      if (wk < N.fusionWeek) return `<div class="box warn"><h3>Лаборатория скрещивания</h3><p>Откроется обновлением на ${N.fusionWeek}-й неделе. Нажми «Следующее обновление» наверху или открой вкладку «Обновления».</p></div>`;
+      if (S.rebirth < N.fusionRebirth) return `<div class="box warn"><h3>Скрещивание</h3><p>Нужно перерождение ${N.fusionRebirth}.</p></div>`;
+      const p = fusionPreview();
+      const tubes = S.fus.slice(0, fusSlots()).map((f, i) => f ? `<div class="row"><img src="${bimg(f.id)}" alt=""><span class="grow"><b>Колба ${i + 1}: ${esc(title(f.id))}</b><small>${esc(varName(f.v))} · ${ftime(f.ends - S.t)}</small></span></div>` : `<div class="row"><span class="grow"><b>Колба ${i + 1} свободна</b></span></div>`).join("");
+      return `<p class="muted">Положи 3 брейнрота: 3 одинаковых → вариант выше, или секретный рецепт → вид, которого нет на конвейере. Выбранные сгорят.</p>
+        <div class="list">${tubes}</div>
+        <div class="box ${p.ok ? "" : "warn"}"><b>${esc(p.note)}</b>${p.ok ? `<p class="num">Цена ${fmt(fusionCost(p))} · время ${ftime(p.min * 60)}</p>` : ""}
+        <div class="acts"><button class="btn lab" data-act="fstart" ${p.ok ? "" : "disabled"}>Скрестить</button><button class="btn" data-act="fclear">Сбросить выбор</button></div></div>
+        <div class="list">${sortedUnits().map(u => unitRow(u, "fpick", S.fusionPick.includes(u.uid) ? " sel" : "")).join("")}</div>`;
+    }
+    case "lucky": {
+      if (S.luckyDay === dayIdx()) return `<div class="box"><h3>Мем-автомат</h3><p>Сегодня уже крутили. Приходи завтра — или нажми «+1 день» наверху.</p></div>`;
+      const cands = sortedUnits().filter(u => VAR[u.v + 1] && VAR[u.v + 1].week <= wk);
+      return `<div class="box"><h3>Мем-автомат</h3><p>Раз в день бесплатно: выбери брейнрота и попробуй поднять вариант. Не повезло — ничего не теряешь. Это не лутбокс: автомат бесплатный.</p></div>
+        <div class="list">${cands.map(u => `<button class="row" data-act="lucky" data-arg="${u.uid}"><img src="${bimg(u.id)}" alt=""><span class="grow"><b>${esc(title(u.id))}</b><small>${esc(varName(u.v))} → ${esc(VAR[u.v + 1].name)} · шанс ${Math.round(L.lucky[u.v + 1] * 100)}%</small></span></button>`).join("") || '<div class="box">Нет брейнротов для улучшения.</div>'}</div>`;
+    }
+    case "tours": {
+      const cur = S.tour ? `<div class="box"><h3>В пути: ${esc(L.tours[S.tour.i].name)}</h3><div class="hp"><i style="width:${(1 - (S.tour.ends - S.t) / S.tour.total) * 100}%"></i></div><p class="num">${ftime(S.tour.ends - S.t)}</p></div>` : "";
+      return `<p class="muted">Брейнроты уезжают на концерты и привозят Лайки и капсулы. Цена — часть твоего дохода. Одни гастроли за раз; «Мировой тур» ставят на ночь.</p>${cur}
+        <div class="list">${L.tours.map((t, i) => `<button class="row" data-act="tour" data-arg="${i}" ${S.tour ? "disabled" : ""}><img src="${pimg("TourBus")}" alt=""><span class="grow"><b>${esc(t.name)}</b><small>${ftime(tourSec(i))} · Лайки ${t.likes[0]}–${t.likes[1]}${t.capsule_chance ? ` · капсула ${Math.round(t.capsule_chance * 100)}%${t.epic_plus ? " Эпик+" : ""}` : ""}</small></span><span class="num">${fmt(tourCost(i))}</span></button>`).join("")}</div>`;
+    }
+    case "shop": {
+      return `<div class="box"><h3>Хайп-магазин · ${S.crystals} кристаллов</h3><p class="muted">Вечные улучшения. Кристаллы дают «Вирусный взрыв», сложное задание, пиньята и дубли икон.</p></div>
+        <div class="list">${L.shop.map((it, i) => { const l = shopLvl(it.id), max = l >= it.max_level; return `<button class="row" data-act="shop" data-arg="${i}" ${max ? "disabled" : ""}><span class="grow"><b>${esc(it.name)}</b><small>уровень ${l}/${it.max_level}</small></span><span class="num">${max ? "куплено" : it.cost + " кр."}</span></button>`; }).join("")}</div>
+        <div class="box warn"><h3>Магазин за V-Bucks (демо)</h3><p>В Fortnite это покупки внутри острова. Здесь покупка бесплатная, чтобы было видно эффект. Случайных товаров нет — только гарантированные.</p></div>
+        <div class="list">${L.offers.map((o, i) => o.from_week && o.from_week > wk ? "" : `<button class="row" data-act="offer" data-arg="${i}"><span class="grow"><b>${esc(o.name)}</b><small>${esc(o.effect)}</small></span><span class="num">${o.price} VB</span></button>`).join("")}</div>
+        ${S.pstorms.length ? `<p class="muted">Личных штормов в запасе: ${S.pstorms.map(varName).join(", ")} — сработают на следующих покупках.</p>` : ""}`;
+    }
+    case "quests": {
+      ensureQuestDay(); const qs = todayQuests(), names = ["Лёгкое", "Среднее", "Сложное"];
+      return `<p class="muted">Три задания в день, у всех игроков одинаковые. Сложное даёт Хайп-кристалл. Новый день — «+1 день» наверху.</p>
+        <div class="list">${qs.map((q, i) => { const p = Math.min(S.quest.prog[i], q.target); const k = ["easy", "medium", "hard"][i];
+          return `<div class="box"><div class="req"><b>${names[i]}:</b><span>${esc(QUEST_TEXT[q.kind](q.target))}</span></div><div class="hp" style="margin:6px 0"><i style="width:${p / q.target * 100}%"></i></div>
+            <div class="acts"><span class="num">${p}/${q.target}</span><span class="muted">+${L.questRewards[k].likes} Лайков${L.questRewards[k].hype_crystals ? ", +1 кр." : ""}</span>
+            ${S.quest.claimed[i] ? '<span class="chip">получено</span>' : `<button class="btn sm go" data-act="quest" data-arg="${i}" ${questReady(i) ? "" : "disabled"}>Забрать</button>`}</div></div>`; }).join("")}</div>`;
+    }
+    case "dex": {
+      return `<p class="muted">Открыто ${S.discovered.length} из ${BR.length} · Идеальных ${S.idealFound.length}. Силуэт — ещё не выводил. У секретных видов есть подсказка к рецепту.</p>
+        <div class="dex">${BR.map((b, i) => { const known = S.discovered.includes(i), soon = b.week > wk, rec = L.recipes.find(r => r.result === i);
+          const sub = known ? FAM[b.family].name : soon ? `неделя ${b.week}` : rec ? `«${rec.hint}»` : b.source === "event" ? "только ивент" : FAM[b.family].name;
+          return `<div class="dx${known ? "" : " unk"}${soon ? " soon" : ""}" title="${known ? esc(b.title) : "???"}"><img src="${bimg(i)}" alt="${known ? esc(b.title) : "неизвестный брейнрот"}"><span>${known ? esc(b.title) : "???"}</span><span class="rar" style="color:${RCOL[b.rarity]}">${esc(RAR[b.rarity].name)}</span><span class="rar muted">${esc(sub)}${S.idealFound.includes(i) ? " · идеальный" : ""}</span></div>`; }).join("")}</div>`;
+    }
+    case "updates": {
+      return `<p class="muted">Каждый понедельник выходит обновление, каждую субботу — ивент (доход ×2, вылупление ×2 и мини-игра), каждый четверг — Мем-пиньята. Перематывай время кнопками наверху или прыгай к нужной неделе.</p>
+        <div class="timeline">${UPDATES.map(u => { const st = u.week < wk ? "past" : u.week === wk || (currentUpdate() === u) ? "now" : "";
+          return `<div class="upd ${st}"><div class="top"><h3>Неделя ${u.week} · ${esc(u.name)}</h3>${u.week <= wk ? `<span class="chip">${currentUpdate() === u ? "сейчас" : "вышло"}</span>` : `<button class="btn sm gold" data-act="jump" data-arg="${u.week}">Перейти к неделе ${u.week}</button>`}</div>
+            <ul>${u.what.map(x => `<li>${esc(x)}</li>`).join("")}</ul>
+            ${u.ids.length ? `<div class="imgs">${u.ids.map(i => `<img src="${bimg(i)}" alt="${esc(title(i))}" title="${esc(title(i))}">`).join("")}</div>` : ""}
+            ${u.mini ? `<div class="acts" style="margin-top:6px"><button class="btn sm ${u.week <= wk ? "hot" : ""}" data-act="mini" data-arg="${u.mini}" ${u.week <= wk ? "" : "disabled"}>Мини-игра: ${esc(MINIS[u.mini].title)}</button>${S.eventWins[u.mini] ? '<span class="chip">пройдено</span>' : ""}</div>` : ""}</div>`; }).join("")}
+          <div class="upd"><div class="top"><h3>Каждый четверг · Мем-пиньята</h3><button class="btn sm lab" data-act="mini" data-arg="pinata">Попробовать</button></div><p class="muted">Каждые 30 минут пиньята в центре; все, кто бил, получают 5 кристаллов и Радужную капсулу.</p></div>
+          <div class="upd"><div class="top"><h3>Дальше · Сезон 2</h3><span class="chip">скоро</span></div><ul><li>Новые брейнроты из генератора моделей</li><li>Гильдии-«Флотилии» и общая станция</li><li>Новые семьи, комбо и рецепты каждую неделю</li></ul></div>
+        </div>
+        <div class="box"><h3>Сбросить игру</h3><p class="muted">Начать заново с нуля.</p><div class="acts">${T.confirmReset ? '<button class="btn hot" data-act="reset2">Да, стереть прогресс</button><button class="btn" data-act="reset0">Отмена</button>' : '<button class="btn" data-act="reset">Сбросить</button>'}</div></div>`;
+    }
+    default: return guideHTML();
+  }
+}
+function guideHTML() {
+  const g = globalMult(), b = baseIncome();
+  return `<div class="box"><h3>Цикл за 30 секунд</h3><div class="flow">
+      <div class="step"><i>1</i><span><b>Конвейер</b> слева везёт капсулы из Мем-портала. Нажми — купишь за Кэш. В руках одна капсула.</span></div>
+      <div class="step"><i>2</i><span><b>Инкубатор</b>: нажми на пустой — капсула внутри. Кликай по нему — это удары киркой, −0,5 с, иногда КРИТ.</span></div>
+      <div class="step"><i>3</i><span><b>Подиум</b>: брейнрот встаёт сам и каждую секунду приносит Кэш. Одна семья рядом — бонус всем.</span></div>
+      <div class="step"><i>4</i><span><b>Перерождение</b>: сумма + 3 нужных брейнрота. Кэш сгорает, брейнроты остаются, доход ×1,2 и +1 место.</span></div>
+      <div class="step"><i>5</i><span><b>Хайп-шторм</b>: всё лобби наполняет общую шкалу. Раз в 12–20 минут — 3 минуты дохода ×2 и редких капсул.</span></div>
+    </div></div>
+    <div class="box"><h3>Твой доход сейчас</h3><div class="formula">подиум (с семьями и комбо)   ${fmt(b)}/с
+× перерождения ${N.rebirthMult}^${S.rebirth}${S.superR ? ` × взрывы ${N.superMult}^${S.superR}` : ""}   ×${g.toFixed(2)} (с Идеальными и компаньонами)
+× шторм ${stormMult()}  × субботний ивент ${eventMult()}
+= ${fmt(income())} Кэша в секунду</div></div>
+    <div class="box"><h3>Три валюты</h3><p><b>Кэш</b> — капсулы и перерождения. <b>Лайки</b> — улучшение вариантов (Базовый → Золотой ×2 → Алмазный ×4 → Радужный ×8 → Лавовый ×20 → Вирусный ×50 → Космический ×120), их дают продажа, задания, гастроли. <b>Хайп-кристаллы</b> — вечные улучшения в Хайп-магазине.</p></div>
+    <div class="box"><h3>Семьи (новая механика)</h3><p class="muted">Разные члены одной семьи на подиуме: 2 → +10%, 3 → +25%, 4+ → +40%, вся семья ещё +15%. Особые комбо из трёх — +30%.</p>
+      <div class="list">${FAM.filter(f => f.key !== "icons").map(f => `<div class="row"><span class="grow"><b>${esc(f.name)}</b><small>${f.members.map(m => esc(title(m))).join(", ")} · компаньон: ${esc((L.perkText[f.perk] || "").replace("X", "…"))}</small></span></div>`).join("")}</div></div>
+    <div class="box"><h3>Хайп-шторм (новая механика)</h3><p>Очки: вылупление 1/3/8/20/50/80 по редкости, удар по инкубатору 0,2, скрещивание 10, собранная семья 25, задание 5. Порог — очки лобби за последние 12 минут. Кто внёс ≥ 5% порога, получает штормовую капсулу. Лобби здесь — 7 ботов-лаборантов.</p></div>
+    <div class="box"><h3>Календарь</h3><p>Понедельник — новое обновление. Четверг — Мем-пиньята и Лайки ×2. Суббота — ивент: доход ×2, вылупление ×2 и мини-игра. Скорость времени ×1…×60 и перемотка — наверху. Перемотка работает как офлайн: брейнроты зарабатывают 25%.</p></div>
+    <p class="muted">Прогресс сохраняется в этом браузере. Числа — из того же конфига, что и Verse-код острова.</p>`;
+}
+function renderPanel() { renderTabs(); $("#pc").innerHTML = panelHTML(); }
+
+// ---------- окна
+function openModal(html) { $("#dialog").innerHTML = html; $("#modal").hidden = false; }
+function closeModal() { if (T.mini) { T.mini.stop(); T.mini = null; } $("#modal").hidden = true; $("#dialog").innerHTML = ""; }
+function unitModal(uid) {
+  const u = byUid(uid); if (!u) { closeModal(); return; }
+  const b = BR[u.id], { parts } = unitBonus(u.id, podiumIds()), cost = upgradeCost(u), nv = VAR[u.v + 1];
+  openModal(`<div class="dialog-head"><h2>${esc(b.title)}</h2><button class="btn sm" data-act="close">Закрыть</button></div>
+    <div class="unit-top"><div class="pic${u.ideal ? " ideal" : ""}"><img src="${bimg(u.id)}" alt=""></div><div>
+      <p><b style="color:${RCOL[b.rarity]}">${esc(RAR[b.rarity].name)}</b> · вариант «${esc(varName(u.v))}» ×${VAR[u.v].mult} · семья «${esc(FAM[b.family].name)}»${u.ideal ? " · ИДЕАЛЬНЫЙ" : ""}</p>
+      <div class="formula">${fmt(RAR[b.rarity].income)}/с (редкость) × ${VAR[u.v].mult} (вариант)
+${parts.length ? parts.map(p => "  + " + p).join("\n") : "  бонусов семьи нет"}
+× ${globalMult().toFixed(2)} (перерождения, Идеальные, компаньоны)
+= ${fmt(unitIncome(u))}/с${u.slot >= 0 ? "" : "  (в запасе — не приносит)"}</div>
+      <p class="muted">Как компаньон: ${esc(companionText(u))}</p></div></div>
+    <div class="acts" style="margin-top:10px">
+      ${u.slot >= 0 ? `<button class="btn" data-act="unplace" data-arg="${uid}">Убрать с подиума</button>` : `<button class="btn go" data-act="place" data-arg="${uid}">На подиум</button>`}
+      <button class="btn gold" data-act="upgrade" data-arg="${uid}" ${canUpgrade(u) ? "" : "disabled"}>${cost && nv ? `Улучшить → ${esc(nv.name)} (${cost} Лайков)` : "Максимальный вариант"}</button>
+      <button class="btn" data-act="comp" data-arg="${uid}">${S.companions.includes(uid) ? "Отпустить компаньона" : "Взять в компаньоны"}</button>
+      <button class="btn hot" data-act="sell" data-arg="${uid}">Продать: +${fmt(sellCash(u))} и ${likesGain(sellLikes(u))} Лайков</button>
+    </div>${cost && nv && nv.week > week() ? `<p class="muted">Вариант «${esc(nv.name)}» выйдет на ${nv.week}-й неделе.</p>` : ""}`);
+}
+function showPatch(w) {
+  const u = UPDATES.find(x => x.week === w);
+  if (!u) { toast(`Неделя ${w}: новых брейнротов нет, но ивенты идут`, "lab"); return; }
+  openModal(`<div class="dialog-head"><h2>Обновление · неделя ${w}: ${esc(u.name)}</h2><button class="btn sm" data-act="close">Отлично</button></div>
+    <ul>${u.what.map(x => `<li>${esc(x)}</li>`).join("")}</ul>
+    ${u.ids.length ? `<div class="upd"><div class="imgs">${u.ids.map(i => `<img src="${bimg(i)}" alt="" title="${esc(title(i))}">`).join("")}</div></div>` : ""}
+    ${u.mini ? `<div class="acts" style="margin-top:10px"><button class="btn hot" data-act="mini" data-arg="${u.mini}">Играть: ${esc(MINIS[u.mini].title)}</button></div>` : ""}
+    <p class="muted">В Fortnite это патч, который выходит сам по дате запуска — поле LaunchEpochSeconds в Verse.</p>`);
+  sfx("win");
+}
+
+// ======================================================================= мини-игры
+const MINIS = {
+  pinata: { title: "Мем-пиньята", img: "Pinata" },
+  logs: { title: "Поленья Сахура", img: "SahurTotem", reward: ICON_SAHUR, week: 1 },
+  jump: { title: "Акулья башня", img: "HypeTower", reward: ICON_TRALA, week: 4 },
+  lava: { title: "Лавовый дождь", img: "Capsule_Mythic", week: 5 },
+  rhythm: { title: "6 или 7", img: "MemeMachine", reward: ICON_67, week: 7 },
+  stars: { title: "Звездопад", img: "Capsule_Iconic", week: 8 },
+};
+const spriteCache = {};
+function sprite(src) { if (!spriteCache[src]) { const im = new Image(); im.src = src; spriteCache[src] = im; } return spriteCache[src]; }
+function miniShell(key, rules, bodyHTML) {
+  const m = MINIS[key];
+  openModal(`<div class="dialog-head"><h2>${esc(m.title)}</h2><button class="btn sm" data-act="close">Выйти</button></div>
+    <p>${rules}</p><div class="game-bar"><span id="g-score">—</span><span id="g-time" class="num"></span></div>${bodyHTML}
+    <div class="acts" style="margin-top:8px" id="g-acts"><button class="btn go" data-act="gstart">Старт</button></div><p id="g-res" class="muted"></p>`);
+}
+function openMini(key) {
+  const m = MINIS[key]; if (!m) return;
+  if (m.week && week() < m.week) { toast(`«${m.title}» выйдет на ${m.week}-й неделе`, "hot"); return; }
+  if (key === "pinata") return openPinata();
+  const G = GAMES[key]; miniShell(key, G.rules, `<div class="game-wrap"><canvas id="gcv" width="640" height="400"></canvas></div>${G.pad || ""}`);
+  T.mini = createGame(key);
+}
+function finishMini(key, win, text) {
+  const m = MINIS[key]; let reward = "";
+  if (win) {
+    if (m.reward !== undefined) { if (!S.eventWins[key]) grantIcon(m.reward, m.title); else { S.crystals += 5; reward = " +5 кристаллов."; } }
+    if (key === "lava") { const n = Math.min(3, Math.max(1, Math.floor(T.miniScore / 6))); for (let i = 0; i < n; i++) addReserve({ id: randomBrainrot(weighted([0, 30, 40, 25, 5]), week()), v: 4 }); reward = ` ${n} Лавовые капсулы в запасе!`; }
+    if (key === "stars") { if (!S.eventWins[key]) { addReserve({ id: KEY.Girafa_Celestre, v: 0 }); reward = " Мифическая капсула Girafa Celestre в запасе!"; } S.crystals += 10; reward += " +10 кристаллов."; }
+    S.eventWins[key] = (S.eventWins[key] || 0) + 1; sfx("win");
+  } else sfx("no");
+  $("#g-res").textContent = (win ? "Победа! " : "Не вышло. ") + text + reward;
+  $("#g-acts").innerHTML = `<button class="btn go" data-act="gstart">Ещё раз</button><button class="btn" data-act="close">Закрыть</button>`;
+  T.dirty = true;
+}
+function openPinata() {
+  if (!T.pinata || !T.pinata.alive) { T.pinata = T.pinata || { next: S.t + 20 }; T.pinata.alive = true; T.pinata.max = N.pinataHits * N.players; T.pinata.hp = T.pinata.max; T.pinata.you = 0; T.pinata.practice = !isThu(); }
+  openModal(`<div class="dialog-head"><h2>Мем-пиньята</h2><button class="btn sm" data-act="close">Выйти</button></div>
+    <p>Бей по пиньяте (клик или пробел) вместе с лобби. Сломали — все, кто ударил, получают ${N.pinataCrystals} кристаллов и Радужную капсулу. ${T.pinata.practice ? "<b>Сегодня не четверг — это тренировка, награда тоже будет.</b>" : ""}</p>
+    <div class="pinata-stage"><img id="pin-img" src="${pimg("Pinata")}" alt="Пиньята" data-act="pinhit"></div>
+    <div class="game-bar"><span>Прочность</span><span class="num" id="pin-hp"></span></div><div class="hp"><i id="pin-bar"></i></div><p class="muted" id="pin-you"></p>`);
+  const p = T.pinata;
+  const tick = setInterval(() => {
+    if (!document.getElementById("pin-hp")) { clearInterval(tick); return; }
+    if (!p.alive) { clearInterval(tick); return; }
+    p.hp -= rint(3, 7); drawPin();
+    if (p.hp <= 0) breakPinata();
+  }, 700);
+  T.mini = { stop() { clearInterval(tick); }, key: "pinata", onKey(e) { if (e.code === "Space") { e.preventDefault(); hitPinata(); } } };
+  drawPin();
+}
+function drawPin() { const p = T.pinata; const hp = $("#pin-hp"); if (!hp) return; hp.textContent = `${Math.max(0, p.hp)} / ${p.max}`; $("#pin-bar").style.width = `${Math.max(0, p.hp / p.max * 100)}%`; $("#pin-you").textContent = `Твоих ударов: ${p.you}`; }
+function hitPinata() {
+  const p = T.pinata; if (!p || !p.alive) return;
+  p.hp -= 1; p.you++; addQuest("pickaxe_hit"); const im = $("#pin-img"); if (im) { im.classList.add("whack"); setTimeout(() => im.classList.remove("whack"), 60); }
+  sfx("hit"); drawPin(); if (p.hp <= 0) breakPinata();
+}
+function breakPinata() {
+  const p = T.pinata; if (!p.alive) return; p.alive = false; p.practice = false; p.next = S.t + N.pinataEvery;
+  if (p.you > 0) { S.crystals += N.pinataCrystals; const id = randomBrainrot(weighted(RAR.slice(0, 5).map(r => r.weight)), week()); addReserve({ id, v: 3 });
+    toast(`Пиньята разбита! +${N.pinataCrystals} кристаллов и Радужная капсула ${title(id)}`, "hot"); sfx("win"); }
+  else toast("Пиньяту разбили без тебя — в следующий раз успей ударить", "bot");
+  const box = $("#pin-you"); if (box) box.textContent = p.you > 0 ? "Разбита! Награда в запасе." : "Разбита без тебя.";
+  T.dirty = true;
+}
+
+const GAMES = {
+  logs: { rules: "Собери 10 поленьев по карте и принеси их к тотему в центре за 75 секунд. Управление: стрелки / WASD или нажимай на карту — лаборант пойдёт туда. Награда — икона Тунг Тунг Тунг Сахур." },
+  jump: { rules: "Прыгай по волнам вверх до флага с Тралалеро (120 м). Управление: стрелки / A-D или кнопки внизу. Упал — попытка заканчивается. Награда — икона Тралалеро Тралала.",
+    pad: `<div class="pad"><button class="btn" data-hold="left">←</button><button class="btn" data-hold="right">→</button></div>` },
+  lava: { rules: "Лови лавовые капсулы постаментом и уворачивайся от камней, 40 секунд. Каждые 6 пойманных — Лавовая капсула (до 3). Управление: стрелки / A-D, мышь или палец.",
+    pad: `<div class="pad"><button class="btn" data-hold="left">←</button><button class="btn" data-hold="right">→</button></div>` },
+  rhythm: { rules: "Ноты «6» и «7» падают по двум дорожкам. Жми клавишу 6 или 7 (или кнопки внизу), когда нота на линии. Нужно 70% попаданий из 32. Награда — икона 67.",
+    pad: `<div class="pad"><button class="btn gold" data-tap="6">6</button><button class="btn lab" data-tap="7">7</button></div>` },
+  stars: { rules: "Звездопад: лови звёзды, уворачивайся от метеоритов, 40 секунд, нужно 20 звёзд. Награда — мифическая капсула Girafa Celestre (один раз) и 10 кристаллов.",
+    pad: `<div class="pad"><button class="btn" data-hold="left">←</button><button class="btn" data-hold="right">→</button></div>` },
+};
+function createGame(key) {
+  const cv = $("#gcv"), ctx = cv.getContext("2d"), W = cv.width, H = cv.height;
+  const keys = {}; let raf = 0, running = false, g = null, last = 0;
+  const hold = { left: false, right: false };
+  const api = { key, stop() { running = false; cancelAnimationFrame(raf); },
+    onKey(e, down) { keys[e.key.toLowerCase()] = down; if (down && g && g.tap && (e.key === "6" || e.key === "7")) g.tap(e.key); if (["arrowleft", "arrowright", "arrowup", "arrowdown", " "].includes(e.key.toLowerCase())) e.preventDefault(); },
+    hold(dir, v) { hold[dir] = v; }, tap(k) { if (g && g.tap) g.tap(k); }, start };
+  const left = () => keys.arrowleft || keys.a || hold.left, right = () => keys.arrowright || keys.d || hold.right;
+  let ptr = null;
+  cv.onpointerdown = e => { const r = cv.getBoundingClientRect(); ptr = { x: (e.clientX - r.left) / r.width * W, y: (e.clientY - r.top) / r.height * H }; if (g && g.pointer) g.pointer(ptr); };
+  cv.onpointermove = e => { if (e.buttons || e.pointerType === "mouse") { const r = cv.getBoundingClientRect(); ptr = { x: (e.clientX - r.left) / r.width * W, y: (e.clientY - r.top) / r.height * H }; if (g && g.move) g.move(ptr); } };
+  function end(win, text) { running = false; finishMini(key, win, text); }
+  function start() {
+    g = MAKERS[key]({ W, H, ctx, left, right, end }); T.miniScore = 0; running = true; last = performance.now();
+    $("#g-acts").innerHTML = ""; $("#g-res").textContent = "";
+    const loop = now => { if (!running) return; const dt = Math.min(0.05, (now - last) / 1000); last = now; g.update(dt); g.draw(); raf = requestAnimationFrame(loop); };
+    raf = requestAnimationFrame(loop);
+  }
+  ctx.fillStyle = "#1a110c"; ctx.fillRect(0, 0, W, H); ctx.fillStyle = "#f6e7c8"; ctx.font = "800 20px Nunito, sans-serif"; ctx.textAlign = "center"; ctx.fillText("Нажми «Старт»", W / 2, H / 2);
+  const im = sprite(pimg(MINIS[key].img)); im.onload = () => { if (!running) ctx.drawImage(im, W / 2 - 60, 40, 120, 120); };
+  return api;
+}
+function hudText(ctx, W, a, b) { ctx.fillStyle = "rgba(20,12,8,.75)"; ctx.fillRect(0, 0, W, 30); ctx.fillStyle = "#f6e7c8"; ctx.font = "800 15px Nunito, sans-serif"; ctx.textAlign = "left"; ctx.fillText(a, 10, 20); ctx.textAlign = "right"; ctx.fillText(b, W - 10, 20); }
+const MAKERS = {
+  logs({ W, H, ctx, left, right, end }) {
+    const totem = { x: W / 2, y: H / 2 }, p = { x: W / 2, y: H / 2 + 60, tx: null, ty: null }; let carry = 0, done = 0, time = 75;
+    const logs = Array.from({ length: 14 }, () => { let x, y; do { x = rnd(30, W - 30); y = rnd(50, H - 30); } while (Math.hypot(x - totem.x, y - totem.y) < 90); return { x, y, got: false }; });
+    const tot = sprite(pimg("SahurTotem")), me = sprite(bimg(ICON_SAHUR));
+    const g = {
+      pointer(pt) { p.tx = pt.x; p.ty = pt.y; }, move() {},
+      update(dt) {
+        time -= dt; let vx = 0, vy = 0; const sp = 190;
+        const K = window.__keys || {};
+        if (left()) vx -= 1; if (right()) vx += 1; if (K.up) vy -= 1; if (K.down) vy += 1;
+        if (vx || vy) { p.tx = null; } else if (p.tx !== null) { const dx = p.tx - p.x, dy = p.ty - p.y, d = Math.hypot(dx, dy); if (d > 4) { vx = dx / d; vy = dy / d; } else p.tx = null; }
+        const len = Math.hypot(vx, vy) || 1; p.x = Math.max(12, Math.min(W - 12, p.x + vx / len * sp * dt)); p.y = Math.max(40, Math.min(H - 12, p.y + vy / len * sp * dt));
+        logs.forEach(l => { if (!l.got && Math.hypot(l.x - p.x, l.y - p.y) < 22) { l.got = true; carry++; sfx("buy"); } });
+        if (carry && Math.hypot(totem.x - p.x, totem.y - p.y) < 50) { done += carry; carry = 0; sfx("hatch"); }
+        T.miniScore = done;
+        if (done >= 10) end(true, `Принесено ${done} поленьев.`); else if (time <= 0) end(false, `Принесено ${done} из 10.`);
+      },
+      draw() {
+        ctx.fillStyle = "#6fbf5a"; ctx.fillRect(0, 0, W, H);
+        ctx.fillStyle = "#e8d9b5"; ctx.beginPath(); ctx.arc(totem.x, totem.y, 70, 0, 7); ctx.fill(); ctx.fillRect(totem.x - 14, 0, 28, H); ctx.fillRect(0, totem.y - 14, W, 28);
+        logs.forEach(l => { if (l.got) return; ctx.fillStyle = "#8b5a33"; ctx.beginPath(); ctx.ellipse(l.x, l.y, 16, 8, 0.4, 0, 7); ctx.fill(); ctx.fillStyle = "#c89b6d"; ctx.beginPath(); ctx.arc(l.x + 12, l.y + 5, 5, 0, 7); ctx.fill(); });
+        if (tot.complete) ctx.drawImage(tot, totem.x - 32, totem.y - 64, 64, 64);
+        if (me.complete) ctx.drawImage(me, p.x - 22, p.y - 40, 44, 44); else { ctx.fillStyle = "#ffd23f"; ctx.beginPath(); ctx.arc(p.x, p.y, 12, 0, 7); ctx.fill(); }
+        hudText(ctx, W, `В руках: ${carry} · у тотема: ${done}/10`, `${Math.ceil(time)} с`);
+        $("#g-score").textContent = `Поленья: ${done + carry}`; $("#g-time").textContent = `${Math.ceil(time)} с`;
+      } };
+    return g;
+  },
+  jump({ W, H, ctx, left, right, end }) {
+    const goal = 120 * 30, p = { x: W / 2, y: H - 60, vy: -520, vx: 0 }; let cam = 0, best = 0, time = 0;
+    const plats = [{ x: W / 2 - 50, y: H - 30, w: 100 }]; let top = H - 30;
+    while (top > -goal - 200) { top -= rnd(55, 90); plats.push({ x: rnd(10, W - 110), y: top, w: rnd(70, 110), move: Math.random() < 0.2 ? rnd(-60, 60) : 0 }); }
+    const shark = sprite(bimg(ICON_TRALA));
+    return {
+      update(dt) {
+        time += dt; p.vx = (left() ? -260 : 0) + (right() ? 260 : 0); p.x = (p.x + p.vx * dt + W) % W; p.vy += 980 * dt; const oy = p.y; p.y += p.vy * dt;
+        plats.forEach(pl => { if (pl.move) { pl.x += pl.move * dt; if (pl.x < 0 || pl.x + pl.w > W) pl.move *= -1; }
+          if (p.vy > 0 && oy <= pl.y && p.y >= pl.y && p.x > pl.x - 8 && p.x < pl.x + pl.w + 8) { p.y = pl.y; p.vy = -560; sfx("hit"); } });
+        cam = Math.min(cam, p.y - H * 0.45); const h = Math.max(0, (H - 60 - p.y) / 30); best = Math.max(best, h); T.miniScore = best;
+        if (best >= 120) end(true, `Высота 120 м за ${Math.round(time)} с.`); else if (p.y - cam > H + 40) end(false, `Высота ${Math.floor(best)} м из 120.`);
+      },
+      draw() {
+        const sky = ctx.createLinearGradient(0, 0, 0, H); sky.addColorStop(0, "#7fd0ff"); sky.addColorStop(1, "#1d5fb8"); ctx.fillStyle = sky; ctx.fillRect(0, 0, W, H);
+        ctx.save(); ctx.translate(0, -cam);
+        plats.forEach(pl => { if (pl.y - cam < -20 || pl.y - cam > H + 20) return; ctx.fillStyle = "#e9f7ff"; ctx.beginPath(); ctx.roundRect(pl.x, pl.y, pl.w, 12, 6); ctx.fill(); ctx.fillStyle = "#4fa8ff"; ctx.fillRect(pl.x + 4, pl.y + 8, pl.w - 8, 4); });
+        const gy = H - 60 - goal; ctx.fillStyle = "#ffd23f"; ctx.fillRect(0, gy, W, 6); if (shark.complete) ctx.drawImage(shark, W / 2 - 40, gy - 80, 80, 80);
+        ctx.fillStyle = "#ff4f7b"; ctx.beginPath(); ctx.arc(p.x, p.y - 12, 12, 0, 7); ctx.fill(); ctx.fillStyle = "#fff"; ctx.fillRect(p.x - 5, p.y - 16, 4, 4); ctx.fillRect(p.x + 2, p.y - 16, 4, 4);
+        ctx.restore(); hudText(ctx, W, `Высота: ${Math.floor(best)} / 120 м`, `${Math.floor(time)} с`);
+        $("#g-score").textContent = `Высота ${Math.floor(best)} м`; $("#g-time").textContent = `${Math.floor(time)} с`;
+      } };
+  },
+  lava: catcher({ good: "Capsule_Mythic", goodColor: "#ff5a00", bad: "#3a2a22", need: 6, time: 40, sky: ["#2b120a", "#6b1d0a"], basket: 4, label: "Капсулы" }),
+  stars: catcher({ good: null, goodColor: "#ffe58a", bad: "#8a7fb0", need: 20, time: 40, sky: ["#0b0620", "#2a0f5c"], basket: 6, label: "Звёзды", star: true }),
+  rhythm({ W, H, ctx, end }) {
+    const notes = []; let t = 0, hits = 0, miss = 0; const lineY = H - 70, speed = 230;
+    for (let i = 0; i < 32; i++) notes.push({ k: Math.random() < 0.5 ? "6" : "7", at: 1.2 + i * 0.85 + (Math.random() < 0.25 ? 0.42 : 0), done: false });
+    let flash = { k: null, ok: false, t: 0 };
+    const g = {
+      tap(k) { const n = notes.find(n => !n.done && n.k === k && Math.abs((t - n.at) * speed) < 36); if (n) { n.done = true; hits++; flash = { k, ok: true, t: 0.2 }; sfx("buy"); } else { flash = { k, ok: false, t: 0.2 }; sfx("no"); } },
+      update(dt) { t += dt; flash.t -= dt; notes.forEach(n => { if (!n.done && (t - n.at) * speed > 40) { n.done = true; miss++; } }); T.miniScore = hits;
+        if (notes.every(n => n.done)) { const acc = hits / notes.length; end(acc >= 0.7, `Точность ${Math.round(acc * 100)}% (${hits}/${notes.length}).`); } },
+      draw() {
+        ctx.fillStyle = "#1a110c"; ctx.fillRect(0, 0, W, H);
+        ["6", "7"].forEach((k, i) => { const x = W / 2 + (i ? 70 : -70); ctx.fillStyle = flash.t > 0 && flash.k === k ? (flash.ok ? "#57c84d" : "#e03a3e") : "#33231a"; ctx.fillRect(x - 50, 30, 100, H - 30);
+          ctx.fillStyle = "#f6e7c8"; ctx.font = "800 28px Unbounded, sans-serif"; ctx.textAlign = "center"; ctx.fillText(k, x, H - 18); });
+        ctx.fillStyle = "#ffd23f"; ctx.fillRect(W / 2 - 130, lineY - 2, 260, 4);
+        notes.forEach(n => { if (n.done) return; const y = lineY - (n.at - t) * speed; if (y < 20 || y > H) return; const x = W / 2 + (n.k === "7" ? 70 : -70);
+          ctx.fillStyle = n.k === "6" ? "#ffd23f" : "#33e1d6"; ctx.beginPath(); ctx.roundRect(x - 36, y - 16, 72, 32, 10); ctx.fill(); ctx.fillStyle = "#1a110c"; ctx.font = "800 20px Unbounded, sans-serif"; ctx.fillText(n.k, x, y + 8); });
+        hudText(ctx, W, `Попадания: ${hits} · промахи: ${miss}`, `${notes.filter(n => !n.done).length} нот`);
+        $("#g-score").textContent = `Попадания ${hits}/32`; $("#g-time").textContent = "";
+      } };
+    return g;
+  },
+};
+function catcher(o) {
+  return ({ W, H, ctx, left, right, end }) => {
+    const b = { x: W / 2, w: 90 }; let time = o.time, got = 0, lives = 3, spawn = 0; const items = [];
+    const good = o.good ? sprite(pimg(o.good)) : null;
+    const g = {
+      move(pt) { b.x = pt.x; }, pointer(pt) { b.x = pt.x; },
+      update(dt) {
+        time -= dt; if (left()) b.x -= 380 * dt; if (right()) b.x += 380 * dt; b.x = Math.max(b.w / 2, Math.min(W - b.w / 2, b.x));
+        spawn -= dt; if (spawn <= 0) { spawn = rnd(0.35, 0.7); items.push({ x: rnd(20, W - 20), y: -20, vy: rnd(140, 240), bad: Math.random() < 0.3 }); }
+        for (const it of items) { it.y += it.vy * dt; if (!it.hit && it.y > H - 50 && it.y < H - 20 && Math.abs(it.x - b.x) < b.w / 2 + 10) { it.hit = true; if (it.bad) { lives--; sfx("no"); } else { got++; sfx("buy"); } } }
+        for (let i = items.length - 1; i >= 0; i--) if (items[i].hit || items[i].y > H + 30) items.splice(i, 1);
+        T.miniScore = got;
+        if (lives <= 0) end(got >= o.need, `Поймано ${got}. Камни закончили игру.`); else if (time <= 0) end(got >= o.need, `Поймано ${got} (нужно ${o.need}).`);
+      },
+      draw() {
+        const sky = ctx.createLinearGradient(0, 0, 0, H); sky.addColorStop(0, o.sky[0]); sky.addColorStop(1, o.sky[1]); ctx.fillStyle = sky; ctx.fillRect(0, 0, W, H);
+        items.forEach(it => { if (it.bad) { ctx.fillStyle = o.bad; ctx.beginPath(); ctx.arc(it.x, it.y, 13, 0, 7); ctx.fill(); }
+          else if (good && good.complete) ctx.drawImage(good, it.x - 16, it.y - 20, 32, 40);
+          else { ctx.fillStyle = o.goodColor; ctx.beginPath(); for (let i = 0; i < 10; i++) { const a = i * Math.PI / 5 - Math.PI / 2, r = i % 2 ? 6 : 14; ctx.lineTo(it.x + Math.cos(a) * r, it.y + Math.sin(a) * r); } ctx.fill(); } });
+        ctx.fillStyle = "#3a4060"; ctx.beginPath(); ctx.roundRect(b.x - b.w / 2, H - 34, b.w, 16, 8); ctx.fill(); ctx.fillStyle = "#ffd23f"; ctx.fillRect(b.x - b.w / 2 + 6, H - 34, b.w - 12, 4);
+        hudText(ctx, W, `${o.label}: ${got} / ${o.need} · жизни: ${lives}`, `${Math.ceil(time)} с`);
+        $("#g-score").textContent = `${o.label}: ${got}`; $("#g-time").textContent = `${Math.ceil(time)} с`;
+      } };
+    return g;
+  };
+}
+
+// ======================================================================= события ввода
+document.addEventListener("click", e => {
+  const el = e.target.closest("[data-act]"); if (!el || el.disabled) return;
+  const a = el.dataset.act, arg = el.dataset.arg, n = Number(arg);
+  if (S.sound && !AC) sfx("none");
+  switch (a) {
+    case "buy": buyCapsule(n); break;
+    case "inc": incInteract(n); break;
+    case "unit": unitModal(n); return;
+    case "place": place(n); unitModal(n); break;
+    case "unplace": unplace(n); unitModal(n); break;
+    case "upgrade": upgrade(n); unitModal(n); break;
+    case "sell": sell(n); closeModal(); break;
+    case "comp": toggleCompanion(n); unitModal(n); break;
+    case "arrange": autoArrange(); break;
+    case "rebirth": doRebirth(); break;
+    case "super": doSuper(); break;
+    case "fpick": if (S.fusionPick.includes(n)) S.fusionPick = S.fusionPick.filter(x => x !== n); else if (S.fusionPick.length < 3) S.fusionPick.push(n); break;
+    case "fclear": S.fusionPick = []; break;
+    case "fstart": startFusion(); break;
+    case "lucky": luckyRoll(n); break;
+    case "tour": startTour(n); break;
+    case "shop": buyShop(n); break;
+    case "offer": grantOffer(n); break;
+    case "quest": claimQuest(n); break;
+    case "tab": S.tab = arg; closeModal(); if (window.innerWidth < 1250) setTimeout(() => $(".panel").scrollIntoView({ behavior: "smooth", block: "start" }), 30); break;
+    case "mini": openMini(arg); return;
+    case "gstart": if (T.mini && T.mini.start) T.mini.start(); return;
+    case "pinhit": hitPinata(); return;
+    case "close": closeModal(); break;
+    case "speed": S.speed = n; break;
+    case "sound": S.sound = !S.sound; if (S.sound) sfx("buy"); break;
+    case "skipday": skipDay(); break;
+    case "skipweek": skipWeek(); break;
+    case "jump": jumpToWeek(n); break;
+    case "reset": T.confirmReset = true; break;
+    case "reset0": T.confirmReset = false; break;
+    case "reset2": T.confirmReset = false; S = fresh(); initAll(); toast("Игра начата заново"); break;
+  }
+  T.dirty = true; renderAll(); save();
+});
+document.addEventListener("keydown", e => {
+  if (T.mini && T.mini.onKey) T.mini.onKey(e, true);
+  window.__keys = window.__keys || {}; if (e.key === "ArrowUp" || e.key.toLowerCase() === "w") window.__keys.up = true; if (e.key === "ArrowDown" || e.key.toLowerCase() === "s") window.__keys.down = true;
+  if (e.key === "Escape" && !$("#modal").hidden) closeModal();
+});
+document.addEventListener("keyup", e => { if (T.mini && T.mini.onKey) T.mini.onKey(e, false); window.__keys = window.__keys || {}; if (e.key === "ArrowUp" || e.key.toLowerCase() === "w") window.__keys.up = false; if (e.key === "ArrowDown" || e.key.toLowerCase() === "s") window.__keys.down = false; });
+document.addEventListener("pointerdown", e => { const h = e.target.closest("[data-hold]"); if (h && T.mini && T.mini.hold) { T.mini.hold(h.dataset.hold, true); e.preventDefault(); } const tp = e.target.closest("[data-tap]"); if (tp && T.mini && T.mini.tap) { T.mini.tap(tp.dataset.tap); e.preventDefault(); } });
+document.addEventListener("pointerup", () => { if (T.mini && T.mini.hold) { T.mini.hold("left", false); T.mini.hold("right", false); } });
+$("#modal").addEventListener("click", e => { if (e.target === $("#modal")) closeModal(); });
+
+// ======================================================================= цикл
+function renderAll() { renderHUD(); renderStorm(); renderEvents(); renderBelt(); renderHands(); renderStations(); renderIncs(); renderPodium(); renderPanel(); }
+let lastFrame = performance.now(), saveAcc = 0, uiAcc = 0, panelAcc = 0;
+function frame(now) {
+  const real = Math.min(0.25, (now - lastFrame) / 1000); lastFrame = now;
+  advance(real * S.speed);
+  T.beltAcc += real * Math.min(S.speed, 4);
+  const step = stormActive() ? N.stormBelt : N.beltStep;
+  if (T.beltAcc >= step) { T.beltAcc -= step; if (T.beltAcc > step) T.beltAcc = 0; beltStep(false); }
+  uiAcc += real; panelAcc += real; saveAcc += real;
+  if (uiAcc >= 0.1) { uiAcc = 0; renderHUD(); renderStorm(); renderIncs(); renderPodium(); renderHands(); }
+  if (panelAcc >= 1 || T.dirty) {
+    const wasDirty = T.dirty; panelAcc = 0; T.dirty = false; renderEvents(); renderStations(); renderBelt();
+    // списки без таймеров перерисовываем только при изменениях, чтобы не сбивать наведение и прокрутку
+    if (wasDirty || !["storage", "dex", "updates", "guide", "shop"].includes(S.tab)) renderPanel(); else renderTabs();
+  }
+  if (saveAcc >= 5) { saveAcc = 0; save(); }
+  requestAnimationFrame(frame);
+}
+function initAll() { initBots(); initStorm(); T.pinata = null; T.podiumKey = ""; T.incKey = ""; $("#belt").innerHTML = ""; initBelt(); T.dirty = true; renderAll(); }
+function start(data) {
+  S = (data && data.save) ? Object.assign(fresh(), data.save) : (load() || fresh());
+  const away = (Date.now() - (S.lastReal || Date.now())) / 1000;
+  initBots(); initStorm(); initBelt();
+  if (away > 60 && S.units.length) {
+    const before = S.cash; skip(away, null); const gain = S.cash - before;
+    openModal(`<div class="dialog-head"><h2>С возвращением!</h2><button class="btn sm go" data-act="close">Забрать</button></div>
+      <p>Тебя не было ${ftime(away)}. Брейнроты заработали <b class="num">${fmt(gain)}</b> Кэша (офлайн — ${Math.round(N.offlineRate * 100)}% дохода, до ${N.offlineCap} ч). Инкубаторы, скрещивание и гастроли тоже шли.</p>`);
+  }
+  S.seenWeek = Math.max(S.seenWeek, week());
+  renderAll(); requestAnimationFrame(frame);
+  window.claude?.hot?.snapshot?.(() => ({ save: S }));
+}
+window.addEventListener("beforeunload", save);
+document.addEventListener("visibilitychange", () => { if (document.hidden) save(); });
+if (window.claude?.hot?.ready) window.claude.hot.ready(start); else start(window.claude?.hot?.data ?? {});
+})();
+</script>

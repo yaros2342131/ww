@@ -6,6 +6,7 @@
 |---|---|
 | Разбор Droid Tycoon, концепт, деньги | [docs/brainrot-lab-tycoon.md](docs/brainrot-lab-tycoon.md) |
 | **Готовый тайкун: механики, карта, модели, Verse, сборка** | [docs/brainrot-lab/](docs/brainrot-lab/README.md) |
+| **Играбельный прототип в браузере** | [web/brainrot-lab/](web/brainrot-lab) — открой `index.html` через локальный сервер (`python -m http.server` в этой папке) |
 | Verse-код | [verse/](verse) |
 | Баланс (один источник чисел) | [config/brainrot_lab_tycoon.json](config/brainrot_lab_tycoon.json) |
 | 40 моделей брейнротов | [models/brainrots/](models/brainrots/README.md) |
@@ -17,4 +18,6 @@
 python tools/gen_verse_data.py                  # конфиг → verse/lab_data.verse
 python tools/economy_sim.py --week 0            # темп перерождений и шторма
 python models/lab_props/tools/build_props.py    # пересобрать пропсы (нужен bpy 4.2)
+python web/tools/build_web_data.py               # конфиг → web/brainrot-lab/data.js (браузерная версия)
+python web/tools/render_sprites.py              # спрайты брейнротов и пропсов для браузера (нужен bpy 4.2)
 ```

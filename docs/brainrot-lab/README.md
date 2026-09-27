@@ -17,6 +17,7 @@
 | Баланс | [`../../config/brainrot_lab_tycoon.json`](../../config/brainrot_lab_tycoon.json) | один источник чисел → `tools/gen_verse_data.py` → Verse |
 | Проверка темпа | [`../../tools/economy_sim.py`](../../tools/economy_sim.py) | бот-симуляция перерождений и шторма |
 | Пропсы | [`../../models/lab_props/`](../../models/lab_props) | FBX + текстуры + превью, пакет `LabProps_UEFN.zip` |
+| Прототип в браузере | [`../../web/brainrot-lab/`](../../web/brainrot-lab) | все системы, лобби из 7 ботов, календарь обновлений, 6 мини-игр; те же числа из конфига |
 
 ## Как собрать остров — по порядку
 
