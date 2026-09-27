@@ -271,6 +271,39 @@ def sign_board():
             box((0, 0, 1.8), (2.9, 0.12, 1.2), m_wood, 0.03), box((0, -0.07, 1.8), (2.7, 0.04, 1.0), m_board, 0.01)]
 
 
+JUNK = {  # мем-мусор: цвет «сияния» кучи по виду
+    'Gold': ('#FFD54A', '#B8860B'),
+    'Rainbow': ('#FF4FD8', '#3B8BFF'),
+    'Lava': ('#FF5A00', '#2B120A'),
+}
+
+
+def junk_pile(kind):
+    """Куча мем-мусора: коробки из-под пиццы, банки, мятые листки, сверху светящийся осколок."""
+    glow, dark = JUNK[kind]
+    m_box, m_can = mat('jp_box', '#C8A27A', 0.8), mat('jp_can', '#9AA3B5', 0.3)
+    m_paper, m_glow = mat('jp_paper', '#F4F1EA', 0.7), mat('jp_glow_' + kind, glow, 0.15)
+    m_dark = mat('jp_dark_' + kind, dark, 0.5)
+    p = [sphere((0, 0, 0.18), (0.7, 0.6, 0.28), m_dark, 24, 10)]
+    for i, (x, y, z, r) in enumerate(((-0.3, -0.1, 0.35, 0.3), (0.28, 0.12, 0.33, -0.4), (0.0, 0.25, 0.42, 0.9))):
+        p.append(box((x, y, z), (0.42, 0.42, 0.07), m_box, 0.01, rot=(0.2, 0.1, r)))
+    for x, y in ((0.35, -0.3), (-0.4, 0.3), (0.1, -0.42)):
+        p.append(cyl((x, y, 0.12), 0.07, 0.2, m_can, 12, rot=(1.2, 0, x * 3)))
+    for x, y in ((-0.1, -0.35), (0.45, 0.25)):
+        p.append(sphere((x, y, 0.2), 0.1, m_paper, 10, 6))
+    p += [star((0, 0, 0.72), 0.2, 0.09, 0.08, m_glow, points=5), sphere((0, 0, 0.55), 0.09, m_glow, 12, 6)]
+    return p
+
+
+def like_heart():
+    """Табличка «Лайкнуть лабораторию»: сердце на стойке."""
+    m_red, m_pole, m_base = mat('lh_red', '#FF4F7B', 0.3), mat('lh_pole', '#C9CED8', 0.3), mat('lh_base', '#3A4060', 0.5)
+    p = [cyl((0, 0, 0.05), 0.35, 0.1, m_base, 24), cyl((0, 0, 0.7), 0.04, 1.3, m_pole, 12),
+         sphere((-0.17, 0, 1.55), (0.22, 0.1, 0.22), m_red, 20, 10), sphere((0.17, 0, 1.55), (0.22, 0.1, 0.22), m_red, 20, 10),
+         cyl((0, 0, 1.36), 0.3, 0.36, m_red, 4, rot=(math.pi, 0, math.pi / 4), r2=0.0)]
+    return p
+
+
 PROPS = {
     'Incubator': (incubator, 9000),
     'ConveyorSegment': (conveyor, 5000),
@@ -291,6 +324,9 @@ PROPS = {
 }
 for _r in RARITY:
     PROPS[f'Capsule_{_r}'] = ((lambda r=_r: capsule(r)), 6000)
+for _k in JUNK:
+    PROPS[f'JunkPile_{_k}'] = ((lambda k=_k: junk_pile(k)), 4000)
+PROPS['LikeHeart'] = (like_heart, 3000)
 for _v in VARIANTS:
     PROPS[f'Pedestal_{_v}'] = ((lambda v=_v: pedestal(v)), 4000)
 
@@ -365,6 +401,8 @@ README = """Пропсы Брейнрот Лаборатории для UEFN —
 
 Для Verse (SpawnProp) каждому мешу нужен Creative Prop: ПКМ по мешу → создать Blueprint-класс
 на базе Creative Prop (BuildingProp) — такой ассет попадает в @editable-массивы lab_manager_device.
+Кучи мем-мусора (JunkPile_Gold/Rainbow/Lava) ставятся руками в одну точку для каждой кучи
+и указываются в lab_junk_device → Piles → Props (Золотой, Радужный, Лавовый).
 Порядок массивов: CapsuleProps = Common, Rare, Epic, Legendary, Mythic, Iconic;
 PedestalProps = Base, Gold, Diamond, Rainbow, Lava, Viral, Cosmic; AuraProps = IdealAura.
 

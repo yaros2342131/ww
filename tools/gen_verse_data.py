@@ -15,9 +15,9 @@ OUT = ROOT / "verse" / "lab_data.verse"
 RARITIES = ["common", "rare", "epic", "legendary", "mythic", "iconic"]
 VARIANTS = ["base", "gold", "diamond", "rainbow", "lava", "viral", "cosmic"]
 PERKS = ["hatch_speed", "pickaxe_crit", "belt_discount", "likes_bonus", "variant_up", "cash_bonus",
-         "offline_bonus", "tour_speed", "fusion_speed", "hype_bonus", "ideal_luck", "unique"]
+         "offline_bonus", "tour_speed", "fusion_speed", "junk_bonus", "ideal_luck", "unique"]
 SOURCES = ["belt", "fusion", "event"]
-QUESTS = ["hatch", "buy_capsule", "pickaxe_hit", "sell", "storm", "tour", "upgrade", "hatch_epic", "fusion"]
+QUESTS = ["hatch", "buy_capsule", "pickaxe_hit", "sell", "junk", "tour", "upgrade", "hatch_epic", "fusion", "like"]
 WEEKDAYS = ["sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday"]
 
 
@@ -52,7 +52,7 @@ def main():
     w("")
     w("rarity_def := struct:")
     for fld, t in [("Name", "string = \"\""), ("Income", "float = 0.0"), ("Payback", "float = 0.0"),
-                   ("Hatch", "float = 0.0"), ("Weight", "float = 0.0"), ("Hype", "float = 0.0"), ("SellLikes", "int = 0")]:
+                   ("Hatch", "float = 0.0"), ("Weight", "float = 0.0"), ("SellLikes", "int = 0")]:
         w(f"    {fld}:{t}")
     w("")
     w("variant_def := struct:")
@@ -129,7 +129,7 @@ def main():
     for r in RARITIES:
         d = rar[r]
         w(f"    rarity_def{{Name := {s(d['name'])}, Income := {f(d['income_per_sec'])}, Payback := {f(d['payback_sec'] or 0)}, "
-          f"Hatch := {f(d['hatch_sec'])}, Weight := {f(d['belt_weight'])}, Hype := {f(d['hype_points'])}, SellLikes := {int(d['sell_likes'] or 0)}}}")
+          f"Hatch := {f(d['hatch_sec'])}, Weight := {f(d['belt_weight'])}, SellLikes := {int(d['sell_likes'] or 0)}}}")
     w("")
     w("LabVariants:[]variant_def = array:")
     for v in c["variants"]:
@@ -208,11 +208,11 @@ def main():
     w("")
 
     # ---- скаляры
-    reb, sr, st, fu = c["rebirth"], c["super_rebirth"], c["hype_storm"], c["fusion"]
+    reb, sr, fu = c["rebirth"], c["super_rebirth"], c["fusion"]
     belt, inc, ev = c["belt"], c["incubators"], c["events"]
+    junk, likes = c["meme_junk"], c["guest_likes"]
     g = {x["what"]: x for x in belt["guaranteed"]}
-    swm = st["effects"]["belt_weight_mult"]
-    cw = st["contributor_reward"]["rarity_weights"]
+    cw = c["epic_plus_weights"]
     scalars = [
         ("LabStartCash", f(c["start_cash"])),
         ("LabSellCashShare", f(c["sell"]["cash_share"])),
@@ -246,17 +246,13 @@ def main():
         ("LabHitSpeedup", f(inc["pickaxe_hit_speedup_sec"])),
         ("LabCritChance", f(inc["crit_chance"])),
         ("LabCritMult", f(inc["crit_mult"])),
-        ("LabStormHitPoints", f(st["points"]["pickaxe_hit"])),
-        ("LabStormFusionPoints", f(st["points"]["fusion"])),
-        ("LabStormFamilyPoints", f(st["points"]["family_set_completed"])),
-        ("LabStormQuestPoints", f(st["points"]["daily_quest"])),
-        ("LabStormWindowSec", f(st["threshold_window_min"] * 60)),
-        ("LabStormFloorPerPlayer", f(st["threshold_floor_per_player"])),
-        ("LabStormDurationSec", f(st["duration_sec"])),
-        ("LabStormCooldownSec", f(st["cooldown_min_sec"])),
-        ("LabStormIncomeMult", f(st["effects"]["income_mult"])),
-        ("LabStormBeltStepSec", f(st["effects"]["belt_spawn_interval_sec"])),
-        ("LabStormContribShare", f(st["contributor_reward"]["min_share_of_threshold"])),
+        ("LabJunkRespawnSec", f(junk["pile_respawn_sec"])),
+        ("LabJunkHits", str(junk["hits_to_collect"])),
+        ("LabSpicyWeek", str(junk["spicy_week"]["week"])),
+        ("LabSpicyRespawnMult", f(junk["spicy_week"]["respawn_mult"])),
+        ("LabSpicyLavaWeight", f(junk["spicy_week"]["lava_weight"])),
+        ("LabOwnerLikes", str(likes["owner_likes"])),
+        ("LabGuestLikes", str(likes["guest_likes"])),
         ("LabFusionUnlockRebirth", str(fu["unlock_rebirth"])),
         ("LabFusionWeek", str(fu["available_from_week"])),
         ("LabFusionVariantMin", f(fu["variant_upgrade"]["time_min"])),
@@ -281,10 +277,13 @@ def main():
         typ = "float" if "." in val or "e" in val else "int"
         w(f"{name}:{typ} = {val}")
     w("")
-    w("# Множитель шанса редкости на конвейере во время шторма (по индексу редкости)")
-    w(f"LabStormWeightMult:[]float = {floats([swm[r] for r in RARITIES[:5]] + [0])}")
-    w("# Веса редкости штормовой капсулы")
-    w(f"LabStormCapsuleWeights:[]float = {floats([0, 0, cw['epic'], cw['legendary'], cw['mythic'], 0])}")
+    w("# Веса редкости для наград «Эпик или выше» (гастроли на ночь)")
+    w(f"LabEpicPlusWeights:[]float = {floats([0, 0, cw['epic'], cw['legendary'], cw['mythic'], 0])}")
+    w("# Мем-мусор: вес, вариант сёрджа, неделя появления (по порядку видов)")
+    w(f"LabJunkNames:[]string = array{{{', '.join(s(k['name']) for k in junk['kinds'])}}}")
+    w(f"LabJunkWeights:[]float = {floats([k['weight'] for k in junk['kinds']])}")
+    w(f"LabJunkVariant:[]int = {ints([VARIANTS.index(k['surge_variant']) for k in junk['kinds']])}")
+    w(f"LabJunkWeek:[]int = {ints([k['from_week'] for k in junk['kinds']])}")
     lo, hi = sr["crystals_at_rebirth"]["12"], sr["crystals_at_rebirth"]["35"]
     top, start = reb["levels"], sr["unlock"]["rebirth"]
     table = [round(lo * (hi / lo) ** ((r - start) / (top - start))) for r in range(start, top + 1)]

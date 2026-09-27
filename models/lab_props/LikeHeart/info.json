@@ -1,0 +1,11 @@
+{
+  "name": "LikeHeart",
+  "tris": 862,
+  "size_cm": [
+    78,
+    70,
+    177
+  ],
+  "fbx": "SM_LikeHeart.fbx",
+  "texture": "T_LikeHeart_BaseColor.png"
+}

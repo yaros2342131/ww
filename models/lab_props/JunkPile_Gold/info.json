@@ -1,0 +1,11 @@
+{
+  "name": "JunkPile_Gold",
+  "tris": 1488,
+  "size_cm": [
+    140,
+    120,
+    102
+  ],
+  "fbx": "SM_JunkPile_Gold.fbx",
+  "texture": "T_JunkPile_Gold_BaseColor.png"
+}

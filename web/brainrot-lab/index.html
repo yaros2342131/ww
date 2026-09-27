@@ -63,26 +63,37 @@ h3 { font-size: 13px; }
 .chip { display: inline-flex; align-items: center; gap: 6px; padding: 3px 9px; border-radius: 999px; background: var(--mocha-2);
   border: 1px solid var(--line); font-size: 12px; font-weight: 800; white-space: nowrap; }
 
-/* ---------- storm strip */
-.storm { margin-block: 12px; border-radius: var(--radius); background: var(--mocha); border: 1px solid var(--line); padding: 10px 14px;
-  display: grid; grid-template-columns: minmax(220px, 1.1fr) 2fr; gap: 10px 18px; align-items: center; position: relative; overflow: hidden; }
-.storm.active { border-color: var(--lab); box-shadow: 0 0 0 2px rgba(51,225,214,.35) inset; }
-.storm-title { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; }
-.storm-title b { font-family: var(--display); font-size: 16px; color: var(--lab); }
-.meter { height: 16px; border-radius: 999px; background: #241811; border: 1px solid var(--line); overflow: hidden; margin-top: 6px; }
-.meter i { display: block; height: 100%; width: 0; background: linear-gradient(90deg, #1fa89f, var(--lab), #b6fff9); transition: width .3s; }
-.storm.active .meter i { background: repeating-linear-gradient(135deg, var(--lab) 0 12px, #b6fff9 12px 24px); animation: slide 1s linear infinite; }
-@keyframes slide { to { background-position: 34px 0; } }
+/* ---------- lobby strip: 8 лабораторий и лайки */
+.lobbybar { margin-block: 12px; border-radius: var(--radius); background: var(--mocha); border: 1px solid var(--line); padding: 10px 14px;
+  display: grid; grid-template-columns: minmax(200px, .9fr) 2.4fr; gap: 10px 18px; align-items: center; }
+.lobbybar-title b { font-family: var(--display); font-size: 16px; color: var(--pomodoro); }
+.lobbybar-title p { margin: 2px 0 0; font-size: 12px; }
 .lobby { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6px; }
 @media (max-width: 560px) { .lobby { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 .lob { display: flex; align-items: center; gap: 6px; background: var(--mocha-2); border: 1px solid var(--line); border-radius: 10px; padding: 3px 6px; min-width: 0; }
 .lob img { width: 28px; height: 28px; object-fit: contain; flex: none; }
-.lob span { font-size: 11px; font-weight: 800; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.lob > div { flex: 1 1 auto; min-width: 0; }
+.lob span { display: block; font-size: 11px; font-weight: 800; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .lob small { display: block; font-size: 10px; color: var(--crema-dim); font-family: var(--mono); }
 .lob.you { border-color: var(--limone); }
-.flash { position: absolute; inset: 0; pointer-events: none; background: radial-gradient(circle at 70% 20%, rgba(182,255,249,.45), transparent 55%); opacity: 0; }
-.storm.active .flash { animation: flash 2.4s infinite; }
-@keyframes flash { 0%, 88%, 100% { opacity: 0; } 90% { opacity: 1; } 93% { opacity: .2; } 95% { opacity: .8; } }
+.like { flex: none; display: grid; place-items: center; width: 34px; height: 30px; border-radius: 8px; background: #3b1420; border: 1px solid var(--pomodoro); padding: 0; }
+.like img { width: 24px; height: 24px; }
+.like.done { background: transparent; border-color: var(--line); opacity: .55; }
+.like:hover:not(.done) { background: var(--pomodoro-deep); }
+
+/* ---------- мем-мусор на пьяцце */
+.junkbox { margin-top: 10px; border-radius: 12px; background: #2b2410; border: 1px solid #6b5f1b; padding: 8px; }
+.junkbox .lbl { color: #fff3b0; }
+.junks { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6px; margin-top: 6px; }
+.pile { position: relative; aspect-ratio: 1 / .9; border-radius: 10px; background: #3a3115; border: 1px dashed #6b5f1b; display: flex; flex-direction: column;
+  align-items: center; justify-content: flex-end; padding: 2px; overflow: hidden; user-select: none; }
+.pile.on { border-style: solid; border-color: var(--limone); background: radial-gradient(circle at 50% 70%, rgba(255,210,63,.25), transparent 65%), #3a3115; }
+.pile img { position: absolute; left: 12%; top: 4%; width: 76%; height: 76%; object-fit: contain; transition: transform .08s; }
+.pile.hit img { transform: scale(.88) rotate(5deg); }
+.pile small { position: relative; z-index: 2; font-size: 10px; font-weight: 800; background: rgba(20,12,8,.8); border-radius: 6px; padding: 0 5px; white-space: nowrap; }
+.pile.off small { color: var(--crema-dim); font-family: var(--mono); }
+.belt-row.surge { animation: surge 1.4s ease-out; }
+@keyframes surge { 0% { box-shadow: 0 0 0 0 rgba(255,210,63,.9); background: rgba(120,90,10,.95); } 100% { box-shadow: 0 0 0 14px rgba(255,210,63,0); } }
 
 .eventbar { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 12px; }
 .ev { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; border-radius: 12px; padding: 8px 12px; font-weight: 800;
@@ -94,7 +105,7 @@ h3 { font-size: 13px; }
 /* ---------- main grid */
 .grid { display: grid; gap: 14px; grid-template-columns: minmax(290px, 1fr) minmax(360px, 1.35fr) minmax(310px, 1.05fr); align-items: start; }
 @media (max-width: 1250px) { .grid { grid-template-columns: minmax(280px, 1fr) minmax(340px, 1.3fr); } .panel { grid-column: 1 / -1; } }
-@media (max-width: 820px) { .grid { grid-template-columns: 1fr; } .storm { grid-template-columns: 1fr; } }
+@media (max-width: 820px) { .grid { grid-template-columns: 1fr; } .lobbybar { grid-template-columns: 1fr; } }
 .card { background: var(--mocha); border: 1px solid var(--line); border-radius: var(--radius); padding: 14px; min-width: 0; }
 .card-head { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; margin-bottom: 10px; flex-wrap: wrap; }
 
@@ -117,12 +128,13 @@ h3 { font-size: 13px; }
 .belt-row.cant .pr { color: #ff8f8f; }
 .belt-row.leaving { opacity: 0; }
 .belt-end { text-align: center; font-size: 11px; color: var(--crema-dim); margin-top: 4px; }
-.hands { margin-top: 10px; display: flex; align-items: center; gap: 10px; padding: 8px 10px; border-radius: 12px; background: var(--mocha-2); border: 1px solid var(--line); min-height: 58px; }
+.hands { margin-top: 10px; display: flex; flex-wrap: wrap; align-items: center; gap: 10px; padding: 8px 10px; border-radius: 12px; background: var(--mocha-2); border: 1px solid var(--line); min-height: 58px; }
 .hands img { width: 42px; height: 42px; object-fit: contain; }
-.stations { margin-top: 12px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+.stations { margin-top: 12px; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
 .st { background: var(--mocha-2); border: 1px solid var(--line); border-radius: 12px; padding: 6px 4px 8px; display: flex; flex-direction: column;
   align-items: center; gap: 2px; font-weight: 800; font-size: 12px; text-align: center; position: relative; }
 .st img { width: 58px; height: 58px; object-fit: contain; }
+.st > span { max-width: 100%; overflow-wrap: anywhere; }
 .st small { font-size: 10.5px; color: var(--crema-dim); font-weight: 700; }
 .st.live { border-color: var(--lab); box-shadow: 0 0 0 2px rgba(51,225,214,.3); }
 .st.live::after { content: "LIVE"; position: absolute; top: 4px; right: 6px; font-size: 9px; background: var(--pomodoro); color: #fff; padding: 1px 5px; border-radius: 6px; }
@@ -261,12 +273,8 @@ button.row:hover { border-color: var(--crema-dim); }
 </header>
 
 <div class="wrap">
-  <section class="storm" id="storm" aria-live="polite">
-    <div class="flash"></div>
-    <div>
-      <div class="storm-title"><b id="st-title">Хайп-шторм</b><span class="muted" id="st-sub"></span></div>
-      <div class="meter"><i id="st-bar"></i></div>
-    </div>
+  <section class="lobbybar" aria-label="Лобби: 8 лабораторий">
+    <div class="lobbybar-title"><b>Лобби · 8 лабораторий</b><p class="muted" id="lob-sub"></p></div>
     <div class="lobby" id="lobby"></div>
   </section>
 
@@ -282,6 +290,7 @@ button.row:hover { border-color: var(--crema-dim); }
       <div class="belt" id="belt" aria-label="Конвейер: нажми на капсулу, чтобы купить"></div>
       <div class="belt-end">↓ непроданные капсулы уезжают обратно в портал</div>
       <div class="hands" id="hands"></div>
+      <div class="junkbox"><div class="lbl" id="junk-title">Мем-мусор на пьяцце</div><div class="junks" id="junks"></div></div>
       <div class="stations" id="stations"></div>
     </section>
 
@@ -338,14 +347,16 @@ const title = id => BR[id].title;
 function fresh() {
   return { v: 1, cash: N.startCash, likes: 0, crystals: 0, rebirth: 0, superR: 0, uid: 1, units: [], reserve: [], carrying: null,
     inc: [null, null, null, null], fus: [null, null], tour: null, discovered: [], idealFound: [], recipesFound: [], familiesDone: [],
-    shop: {}, unlocks: {}, companions: [], pstorms: [], t: 8 * 3600, quest: { day: -1, prog: [0, 0, 0], claimed: [false, false, false] },
+    shop: {}, unlocks: {}, companions: [], psurges: [], junk: null, likeDay: -1, liked: [], visitDay: -1, visits: [], t: 8 * 3600, quest: { day: -1, prog: [0, 0, 0], claimed: [false, false, false] },
     luckyDay: -1, eventWins: {}, hatched: 0, lastReal: Date.now(), speed: 1, sound: false, seenWeek: 0, fusionPick: [], tab: "guide" };
 }
 let S;
-const T = { belt: [], cid: 1, beltAcc: 0, next: {}, bots: [], storm: null, pinata: null, lastRender: 0, lastHit: 0, podiumKey: "", mini: null, dirty: true };
+const T = { belt: [], cid: 1, beltAcc: 0, next: {}, bots: [], piles: [], botJunk: [], pileKey: "", pinata: null, lastRender: 0, lastHit: 0, podiumKey: "", mini: null, dirty: true };
 
 function save() { try { S.lastReal = Date.now(); localStorage.setItem(SAVE_KEY, JSON.stringify(S)); } catch (e) { /* хранилище недоступно — игра работает без сохранения */ } }
-function load() { try { const raw = localStorage.getItem(SAVE_KEY); if (!raw) return null; const s = JSON.parse(raw); return Object.assign(fresh(), s); } catch (e) { return null; } }
+function load() { try { const raw = localStorage.getItem(SAVE_KEY); if (!raw) return null; const s = JSON.parse(raw); return migrate(Object.assign(fresh(), s)); } catch (e) { return null; } }
+// старые сохранения: «личные штормы» стали сёрджами
+function migrate(s) { if (s.pstorms) { s.psurges = [...(s.psurges || []), ...s.pstorms]; delete s.pstorms; } return s; }
 
 // ======================================================================= календарь
 const week = () => Math.floor(S.t / 604800);
@@ -354,7 +365,7 @@ const weekday = () => dayIdx() % 7;
 const hour = () => (S.t % 86400) / 3600;
 const isSat = () => weekday() === SAT;
 const isThu = () => weekday() === THU;
-const stormActive = () => T.storm && T.storm.active;
+const isSpicy = () => week() === N.spicyWeek && isSat();
 
 // ======================================================================= экономика
 const shopLvl = k => S.shop[k] || 0;
@@ -393,13 +404,12 @@ function globalMult() {
   return m;
 }
 function baseIncome() { const ids = podiumIds(); return S.units.filter(u => u.slot >= 0).reduce((a, u) => a + unitBase(u.id, u.v) * (1 + unitBonus(u.id, ids).bonus), 0); }
-const stormMult = () => stormActive() ? N.stormIncome : 1;
 const eventMult = () => isSat() ? N.eventIncome : 1;
-const income = () => baseIncome() * globalMult() * stormMult() * eventMult();
+const income = () => baseIncome() * globalMult() * eventMult();
 const unitIncome = u => unitBase(u.id, u.v) * (1 + unitBonus(u.id, podiumIds()).bonus) * globalMult();
 const capsulePrice = (id, v) => capsuleBase(id, v) * (1 - Math.min(0.4, companionPerk("belt_discount")));
 const likesGain = base => Math.floor(base * (1 + companionPerk("likes_bonus")) * (isThu() ? N.miniLikes : 1));
-const hypeMult = () => 1 + companionPerk("hype_bonus") + (hasComp(ICON_TRALA) ? 0.25 : 0);
+const junkDouble = () => companionPerk("junk_bonus") + (hasComp(ICON_TRALA) ? 0.25 : 0);
 const hatchSec = id => RAR[BR[id].rarity].hatch * (1 - Math.min(0.6, companionPerk("hatch_speed") + 0.1 * shopLvl("hatch_speed"))) / (isSat() ? N.eventHatch : 1);
 const critChance = () => N.crit + companionPerk("pickaxe_crit") + 0.05 * shopLvl("pickaxe_crit") + (hasComp(ICON_SAHUR) ? 0.5 * N.crit : 0);
 const critMult = () => hasComp(ICON_SAHUR) ? N.critMult * 1.5 : N.critMult;
@@ -434,67 +444,102 @@ function sfx(type) {
   try {
     AC = AC || new (window.AudioContext || window.webkitAudioContext)();
     const o = AC.createOscillator(), g = AC.createGain(); o.connect(g); g.connect(AC.destination);
-    const f = { buy: [520, 780], hatch: [660, 990], crit: [880, 1320], storm: [220, 440], hit: [300, 240], win: [520, 1040], no: [200, 150] }[type] || [440, 440];
-    o.type = type === "storm" ? "sawtooth" : "triangle"; const t = AC.currentTime;
+    const f = { buy: [520, 780], hatch: [660, 990], crit: [880, 1320], boom: [220, 440], hit: [300, 240], win: [520, 1040], no: [200, 150] }[type] || [440, 440];
+    o.type = type === "boom" ? "sawtooth" : "triangle"; const t = AC.currentTime;
     o.frequency.setValueAtTime(f[0], t); o.frequency.exponentialRampToValueAtTime(f[1], t + 0.12);
-    g.gain.setValueAtTime(0.08, t); g.gain.exponentialRampToValueAtTime(0.001, t + (type === "storm" ? 0.6 : 0.18));
+    g.gain.setValueAtTime(0.08, t); g.gain.exponentialRampToValueAtTime(0.001, t + (type === "boom" ? 0.6 : 0.18));
     o.start(t); o.stop(t + 0.62);
   } catch (e) { /* звук не обязателен */ }
 }
 
 // ======================================================================= задания
 const QUEST_TEXT = { hatch: n => `Выведи ${n} брейнротов`, buy_capsule: n => `Купи ${n} капсул`, pickaxe_hit: n => `Сделай ${n} ударов по инкубаторам`,
-  sell: n => `Продай ${n} брейнротов`, storm: n => `Поучаствуй в Хайп-шторме (${n})`, tour: n => `Отправь на гастроли (${n})`,
+  sell: n => `Продай ${n} брейнротов`, junk: n => `Сдай мем-мусор Сахуру (${n})`, like: n => `Лайкни ${n} чужие лаборатории`, tour: n => `Отправь на гастроли (${n})`,
   upgrade: n => `Улучши вариант (${n})`, hatch_epic: n => `Выведи ${n} Эпических или выше`, fusion: n => `Скрести брейнротов (${n})` };
 function todayQuests() { const d = dayIdx(); return ["easy", "medium", "hard"].map(k => L.quests[k][d % L.quests[k].length]); }
 function ensureQuestDay() { if (S.quest.day !== dayIdx()) S.quest = { day: dayIdx(), prog: [0, 0, 0], claimed: [false, false, false] }; }
 function addQuest(kind, n = 1) { ensureQuestDay(); todayQuests().forEach((q, i) => { if (q.kind === kind) S.quest.prog[i] += n; }); }
 const questReady = i => { ensureQuestDay(); const q = todayQuests()[i]; return S.quest.prog[i] >= q.target && !S.quest.claimed[i]; };
 
-// ======================================================================= Хайп-шторм и лобби
+// ======================================================================= лобби и лайки от гостей
 const BOT_NAMES = ["Pizza_Nonna", "Brr_Master", "Capy_Lover", "Frigo77", "NoobiniKing", "Shark_Runner", "Bombardino_Pro"];
 function initBots() {
-  T.bots = BOT_NAMES.map((name, i) => ({ name, plot: i + 2, rate: rnd(0.12, 0.32), best: randomBrainrot(rint(0, 2), 0), rebirth: rint(0, 3), income: rnd(20, 300) }));
+  T.bots = BOT_NAMES.map((name, i) => ({ name, plot: i + 2, best: randomBrainrot(rint(0, 2), 0), rebirth: rint(0, 3) }));
+  T.botJunk = []; T.lobbyKey = "";
 }
-function initStorm() { T.storm = { meter: 0, hist: [], contrib: {}, active: false, ends: 0, ready: S.t + 120, thr: N.stormFloor * N.players }; }
-function addHype(who, pts) {
-  if (pts <= 0 || !T.storm) return;
-  T.storm.meter += pts; T.storm.hist.push([S.t, pts]); T.storm.contrib[who] = (T.storm.contrib[who] || 0) + pts;
-}
-function stormDuration() { return N.stormDur * (week() === 6 && isSat() ? 2 : 1); }
-function stormTick() {
-  const s = T.storm; const w = N.stormWindow;
-  while (s.hist.length && s.hist[0][0] < S.t - w) s.hist.shift();
-  s.thr = Math.max(N.stormFloor * N.players, s.hist.reduce((a, h) => a + h[1], 0));
-  if (s.active) { if (S.t >= s.ends) stormEnd(); }
-  else if (S.t >= s.ready && s.meter >= s.thr) stormStart();
-}
-function stormStart() {
-  const s = T.storm; s.active = true; s.ends = S.t + stormDuration(); s.ready = s.ends + N.stormCooldown;
-  const need = s.thr * N.stormShare, you = (s.contrib.you || 0) >= need;
-  s.lastWinners = Object.entries(s.contrib).filter(([, v]) => v >= need).map(([k]) => k);
-  s.contrib = {}; s.meter = 0;
-  toast("ХАЙП-ШТОРМ! 3 минуты: доход ×2, конвейер вдвое быстрее, редкие капсулы чаще", "lab"); sfx("storm");
-  if (you) {
-    const id = randomBrainrot(weighted(N.stormCapsule), week());
-    addReserve({ id, v: 0 }); addQuest("storm");
-    toast(`За вклад в шторм: капсула ${title(id)} (${rarName(id)}) в запасе`, "lab");
-  } else toast(`Твой вклад меньше ${Math.round(N.stormShare * 100)}% порога — в следующий раз бей по инкубаторам и выводи брейнротов`, "bot");
-}
-function stormEnd() { T.storm.active = false; toast("Шторм закончился. Копим хайп дальше!", "bot"); }
 function botsTick(dt) {
-  const wk = week(), grow = 1 + 0.05 * Math.min(S.rebirth, 20);
+  const wk = week();
   for (const b of T.bots) {
-    addHype(b.name, b.rate * grow * dt);
-    b.income *= 1 + 0.0004 * dt;
     if (Math.random() < 0.004 * dt) {
       const r = weighted([55, 28, 12, 4.5, wk >= N.gMythicWeek ? 0.8 : 0]); const id = randomBrainrot(r, wk);
-      addHype(b.name, RAR[BR[id].rarity].hype);
       if (RAR[BR[id].rarity].income >= RAR[BR[b.best].rarity].income) b.best = id;
       if (r >= 4) toast(`${b.name} вывел Мифика: ${title(id)}!`, "bot");
     }
     if (Math.random() < 0.00025 * dt) { b.rebirth++; toast(`${b.name} переродился — перерождение ${b.rebirth}`, "bot"); }
   }
+  // боты тоже носят мусор Сахуру — сёрдж на общем конвейере может купить любой
+  T.botJunk = T.botJunk.filter(j => { if (S.t < j.at) return true; deliverSurge(L.junk[j.kind], 1, j.bot.plot, j.bot.name); return false; });
+  // гости заходят в твою лабораторию и лайкают её: каждый не чаще раза в день
+  if (S.visitDay !== dayIdx()) {
+    S.visitDay = dayIdx(); S.gotLikes = 0; const d0 = dayIdx() * 86400;
+    S.visits = T.bots.filter(() => Math.random() < 0.6).map(b => ({ name: b.name, at: Math.max(S.t + rnd(20, 240), d0 + rnd(9, 23) * 3600) }));
+  }
+  S.visits = S.visits.filter(v => {
+    if (S.t < v.at) return true;
+    if (!S.units.some(u => u.slot >= 0)) { v.at = S.t + 600; return true; }   // на пустой подиум не смотрят
+    S.likes += N.ownerLikes; S.gotLikes = (S.gotLikes || 0) + 1; T.dirty = true;
+    toast(`${v.name} зашёл в гости и лайкнул твою лабораторию: +${N.ownerLikes} Лайков`, "lab"); return false;
+  });
+}
+const likedToday = plot => S.likeDay === dayIdx() && S.liked.includes(plot);
+function likePlot(plot) {
+  const b = T.bots.find(x => x.plot === plot); if (!b) return;
+  if (S.likeDay !== dayIdx()) { S.likeDay = dayIdx(); S.liked = []; }
+  if (S.liked.includes(plot)) { toast("Сегодня ты уже лайкал эту лабораторию — завтра снова можно", "bot"); return; }
+  S.liked.push(plot); S.likes += N.guestLikes; addQuest("like"); sfx("buy");
+  toast(`Лайк лаборатории #${plot} (${b.name})! +${N.guestLikes} Лайков тебе, +${N.ownerLikes} хозяину`, "lab");
+}
+
+// ======================================================================= мем-мусор и сёрдж (как Chopper в Droid Tycoon)
+const JUNK_IMG = L.junk.map(k => ({ 1: "JunkPile_Gold", 3: "JunkPile_Rainbow", 4: "JunkPile_Lava" })[k.variant] || "JunkPile_Gold");
+function initJunk() { T.piles = Array.from({ length: N.junkSpots }, () => ({ kind: -1, left: 0, at: S.t + rnd(2, 20) })); T.pileKey = ""; }
+function spawnPile(p) {
+  const wk = week(), spicy = isSpicy();
+  p.kind = weighted(L.junk.map(k => k.week > wk ? 0 : spicy && k.variant === 4 ? N.spicyLava : k.weight)); p.left = N.junkHits;
+}
+function clearPile(p) { p.kind = -1; p.at = S.t + N.junkRespawn * (isSpicy() ? N.spicyRespawn : 1); }
+function junkTick() { T.piles.forEach(p => { if (p.kind < 0 && S.t >= p.at) spawnPile(p); }); }
+function hitPile(i) {
+  const now = performance.now(); if (now - T.lastHit < 90) return; T.lastHit = now;
+  const p = T.piles[i]; if (!p || p.kind < 0) return;
+  p.left--; sfx("hit");
+  const box = document.querySelector(`[data-pile="${i}"]`); if (box) { box.classList.add("hit"); setTimeout(() => box.classList.remove("hit"), 80); }
+  if (p.left > 0) return;
+  if (S.junk) { p.left = 1; toast("Руки заняты мусором — сначала отнеси его Сахуру", "hot"); sfx("no"); return; }
+  const count = Math.random() < junkDouble() ? 2 : 1, k = L.junk[p.kind];
+  S.junk = { kind: p.kind, count }; clearPile(p); sfx("buy"); T.dirty = true;
+  toast(`Подобран: ${k.name}${count > 1 ? " ×2" : ""}. Неси Сахуру — станция «Сахур» ниже`, "lab");
+}
+// капсула ближе всех к порталу с вариантом ниже становится вариантом мусора
+function applySurge(v) {
+  for (let i = 0; i < WINDOWS; i++) {
+    const c = T.belt[i]; if (!c || c.v >= v) continue;
+    const el = document.querySelector(`[data-cid="${c.cid}"]`); if (el) el.remove();
+    T.belt[i] = { cid: T.cid++, id: c.id, v, surge: true }; return T.belt[i];
+  }
+  return null;
+}
+function deliverSurge(k, count, plot, name) {
+  let hit = null; for (let n = 0; n < count; n++) hit = applySurge(k.variant) || hit;
+  if (!hit) return false;
+  toast(`СЁРДЖ! Лаборатория #${plot} (${name}) сдала Сахуру ${k.name}: капсула ${title(hit.id)} на конвейере теперь «${varName(k.variant)}»`, plot === 1 ? "hot" : "lab");
+  renderBelt(); return true;
+}
+function deliverJunk() {
+  if (!S.junk) { toast(`Нет мусора — разбей кучу мем-мусора на пьяцце (${N.junkHits} ударов)`, "hot"); sfx("no"); return; }
+  const k = L.junk[S.junk.kind], count = S.junk.count; S.junk = null; addQuest("junk");
+  if (deliverSurge(k, count, 1, "ты")) sfx("win");
+  else toast(`Сахур принял мусор, но на конвейере нет капсулы ниже «${varName(k.variant)}»`, "bot");
 }
 
 // ======================================================================= конвейер
@@ -505,8 +550,8 @@ function initBelt() {
 }
 function rollVariant() { const x = Math.random(), rb = VAR[3].belt, dm = VAR[2].belt, gd = VAR[1].belt; return x < rb ? 3 : x < rb + dm ? 2 : x < rb + dm + gd ? 1 : 0; }
 function rollCapsule(quiet) {
-  const wk = week(), st = stormActive();
-  let r = weighted(RAR.slice(0, 5).map((d, i) => d.weight * (st ? N.stormWeights[i] : 1))), v = rollVariant();
+  const wk = week();
+  let r = weighted(RAR.slice(0, 5).map(d => d.weight)), v = rollVariant();
   if (S.t >= T.next.legend) { T.next.legend = S.t + N.gLegend; r = Math.max(r, 3); }
   if (wk >= N.gMythicWeek && S.t >= T.next.mythic) { T.next.mythic = S.t + N.gMythic; r = 4; }
   if (S.t >= T.next.rainbow) { T.next.rainbow = S.t + N.gRainbow; v = Math.max(v, 3); }
@@ -522,7 +567,12 @@ function beltStep(quiet) {
   if (!quiet && Math.random() < 0.3) {
     const i = rint(2, WINDOWS - 1), c = T.belt[i];
     if (c) { const bot = pick(T.bots); T.belt[i] = null; const el = document.querySelector(`[data-cid="${c.cid}"]`); if (el) { el.classList.add("leaving"); setTimeout(() => el.remove(), 420); }
-      if (BR[c.id].rarity >= 3) toast(`${bot.name} купил ${title(c.id)} с конвейера`, "bot"); addHype(bot.name, 0.5); }
+      if (BR[c.id].rarity >= 3) toast(`${bot.name} купил ${title(c.id)} с конвейера`, "bot"); }
+  }
+  // иногда бот забирает кучу мем-мусора и через полминуты сдаёт её Сахуру
+  if (!quiet && Math.random() < 0.07) {
+    const act = T.piles.filter(p => p.kind >= 0);
+    if (act.length) { const p = pick(act); T.botJunk.push({ bot: pick(T.bots), kind: p.kind, at: S.t + rnd(10, 30) }); clearPile(p); }
   }
   renderBelt();
 }
@@ -533,7 +583,7 @@ function buyCapsule(cid) {
   const price = capsulePrice(c.id, c.v);
   if (S.cash < price) { toast(`Не хватает Кэша: нужно ${fmt(price)}`, "hot"); sfx("no"); return; }
   S.cash -= price; let v = c.v;
-  if (S.pstorms.length) { v = Math.max(v, S.pstorms.shift()); toast(`Личный шторм сработал: ${varName(v)}!`, "lab"); }
+  if (S.psurges.length) { v = Math.max(v, S.psurges.shift()); toast(`Твой сёрдж сработал: ${varName(v)}!`, "lab"); }
   if (v < 3 && Math.random() < 0.02 * shopLvl("belt_luck")) { v++; toast("Удача конвейера: вариант выше!", "lab"); }
   S.carrying = { id: c.id, v }; T.belt[i] = null; addQuest("buy_capsule"); sfx("buy");
   const el = document.querySelector(`[data-cid="${cid}"]`); if (el) el.remove();
@@ -558,7 +608,7 @@ function hitInc(i) {
   const now = performance.now(); if (now - T.lastHit < 90) return; T.lastHit = now;
   const cur = S.inc[i]; if (!cur) return;
   const crit = Math.random() < critChance(), amt = crit ? N.hit * critMult() : N.hit;
-  cur.ends -= amt; addHype("you", N.stormHit * hypeMult()); addQuest("pickaxe_hit");
+  cur.ends -= amt; addQuest("pickaxe_hit");
   const box = document.querySelector(`[data-inc="${i}"]`);
   if (box) { box.classList.add("hit"); setTimeout(() => box.classList.remove("hit"), 80);
     const f = document.createElement("span"); f.className = "float" + (crit ? " crit" : ""); f.textContent = crit ? `КРИТ −${amt.toFixed(1)} с` : `−${amt.toFixed(1)} с`;
@@ -572,7 +622,6 @@ function hatch(id, v, fromInc) {
   if (isNew) S.discovered.push(id);
   if (ideal && !S.idealFound.includes(id)) S.idealFound.push(id);
   addQuest("hatch"); if (BR[id].rarity >= 2) addQuest("hatch_epic");
-  addHype("you", RAR[BR[id].rarity].hype * hypeMult());
   const t = `${title(id)} (${varName(v)})`;
   toast(u.slot >= 0 ? `${t} вылупился и встал на подиум!` : `${t} вылупился! Подиум полон — он в запасе`, "lab");
   if (isNew) toast(`Новый вид в Мемопедии: ${title(id)}`, "lab");
@@ -583,7 +632,7 @@ function checkFamilies() {
   const ids = podiumIds();
   FAM.forEach((f, fi) => {
     if (f.key === "icons" || S.familiesDone.includes(fi)) return;
-    if (f.members.every(m => ids.includes(m))) { S.familiesDone.push(fi); addHype("you", N.stormFamily * hypeMult()); toast(`Собрана вся семья «${f.name}»! +25 очков шторму`, "lab"); }
+    if (f.members.every(m => ids.includes(m))) { S.familiesDone.push(fi); toast(`Собрана вся семья «${f.name}»! Её брейнроты получают ещё +${Math.round(L.familyFull * 100)}%`, "lab"); }
   });
 }
 
@@ -619,7 +668,7 @@ function doSuper() {
   if (!canSuper()) return; const g = superCrystals();
   S.crystals += g; S.superR++; S.rebirth = 0; S.cash = N.startCash;
   const lim = slotCount(); S.units.forEach(u => { if (u.slot >= lim) u.slot = -1; });
-  T.dirty = true; sfx("storm"); toast(`ВИРУСНЫЙ ВЗРЫВ! +${g} Хайп-кристаллов, доход ×${N.superMult} навсегда`, "hot");
+  T.dirty = true; sfx("boom"); toast(`ВИРУСНЫЙ ВЗРЫВ! +${g} Хайп-кристаллов, доход ×${N.superMult} навсегда`, "hot");
 }
 
 // ======================================================================= скрещивание
@@ -645,7 +694,7 @@ function startFusion() {
   const cost = fusionCost(p); if (S.cash < cost) { toast(`Не хватает Кэша: нужно ${fmt(cost)}`, "hot"); return; }
   S.cash -= cost; S.fusionPick.forEach(removeUnit); S.fusionPick = [];
   S.fus[slot] = { id: p.id, v: p.v, ends: S.t + p.min * 60, total: p.min * 60 };
-  addHype("you", N.stormFusion * hypeMult()); addQuest("fusion");
+  addQuest("fusion");
   if (p.recipe >= 0 && !S.recipesFound.includes(p.recipe)) { S.recipesFound.push(p.recipe); toast(`Ты первым в лобби открыл секретный рецепт: ${title(p.id)}!`, "hot"); }
   toast(`Скрещивание началось: ${title(p.id)} через ${ftime(p.min * 60)}`, "lab"); T.dirty = true;
 }
@@ -658,7 +707,7 @@ function luckyRoll(uid) {
   if (Math.random() < L.lucky[u.v + 1]) { u.v++; toast(`Мем-автомат: ${title(u.id)} теперь ${nv.name}!`, "hot"); sfx("win"); T.dirty = true; }
   else { toast("Мем-автомат: не повезло. Приходи завтра!", "bot"); sfx("no"); }
 }
-const tourCost = i => Math.max(100, income() / (stormMult() * eventMult()) * L.tours[i].cost_income_min * 60);
+const tourCost = i => Math.max(100, income() / eventMult() * L.tours[i].cost_income_min * 60);
 const tourSec = i => L.tours[i].duration_min * 60 * (1 - Math.min(0.5, companionPerk("tour_speed")));
 function startTour(i) {
   if (S.tour) { toast("Гастроли уже идут", "hot"); return; }
@@ -670,7 +719,7 @@ function finishTour() {
   const t = L.tours[S.tour.i]; S.tour = null;
   const likes = likesGain(rint(t.likes[0], t.likes[1])); S.likes += likes;
   let txt = `Гастроли «${t.name}» закончились: +${likes} Лайков`;
-  if (Math.random() < t.capsule_chance) { const r = t.epic_plus ? weighted(N.stormCapsule) : weighted(RAR.slice(0, 5).map(x => x.weight)); const id = randomBrainrot(r, week()); addReserve({ id, v: 0 }); txt += ` и капсула ${title(id)} в запасе`; }
+  if (Math.random() < t.capsule_chance) { const r = t.epic_plus ? weighted(N.epicPlus) : weighted(RAR.slice(0, 5).map(x => x.weight)); const id = randomBrainrot(r, week()); addReserve({ id, v: 0 }); txt += ` и капсула ${title(id)} в запасе`; }
   toast(txt, "lab");
 }
 function buyShop(i) {
@@ -681,17 +730,16 @@ function buyShop(i) {
 function claimQuest(i) {
   if (!questReady(i)) return; const k = ["easy", "medium", "hard"][i];
   S.quest.claimed[i] = true; const likes = likesGain(L.questRewards[k].likes); let cr = L.questRewards[k].hype_crystals || 0;
-  if (shopLvl("daily_crystals")) cr++; S.likes += likes; S.crystals += cr; addHype("you", N.stormQuest * hypeMult());
+  if (shopLvl("daily_crystals")) cr++; S.likes += likes; S.crystals += cr;
   toast(`Задание выполнено: +${likes} Лайков${cr ? `, +${cr} кр.` : ""}`, "lab"); sfx("win");
 }
 function grantOffer(i) {
   const o = L.offers[i];
-  if (o.id === "storm_rainbow") S.pstorms.push(3);
-  else if (o.id === "storm_lava") S.pstorms.push(4);
-  else if (o.id === "storm_viral") S.pstorms.push(5);
-  else if (o.id === "hype_bomb") { addHype("bomb", Math.max(T.storm.thr, 1) * 0.5); toast("ХАЙП-БОМБА! Шкала шторма +50% для всего лобби", "lab"); }
-  else if (o.id === "lab_pack") { S.unlocks.lab_pack = 1; S.pstorms.push(3, 3); }
-  else if (o.id === "fusion_pack") { S.unlocks.fusion_pack = 1; S.pstorms.push(4, 4, 4); }
+  if (o.id === "surge_rainbow") S.psurges.push(3);
+  else if (o.id === "surge_lava") S.psurges.push(4);
+  else if (o.id === "surge_viral") S.psurges.push(5);
+  else if (o.id === "lab_pack") { S.unlocks.lab_pack = 1; S.psurges.push(3, 3); }
+  else if (o.id === "fusion_pack") { S.unlocks.fusion_pack = 1; S.psurges.push(4, 4, 4); }
   else { toast(`${o.name}: косметика — в Fortnite это шляпа или краска участка`, "bot"); }
   toast(`Демо-покупка: ${o.name} (в Fortnite — ${o.price} V-Bucks)`, "lab"); T.dirty = true;
 }
@@ -709,7 +757,7 @@ function advance(dt) {
   S.inc.forEach((c, i) => { if (c && S.t >= c.ends) { S.inc[i] = null; hatch(c.id, c.v, true); } });
   S.fus.forEach((f, i) => { if (f && S.t >= f.ends) { S.fus[i] = null; hatch(f.id, f.v, false); } });
   if (S.tour && S.t >= S.tour.ends) finishTour();
-  botsTick(dt); stormTick(); pinataTick();
+  botsTick(dt); junkTick(); pinataTick();
   if (week() > S.seenWeek) { const w = week(); S.seenWeek = w; setTimeout(() => showPatch(w), 50); }
 }
 // Перемотка: время проходит как офлайн — 25% дохода, не больше лимита
@@ -717,7 +765,7 @@ function skip(seconds, label) {
   const cap = (N.offlineCap + 4 * shopLvl("offline_cap")) * 3600;
   const gain = baseIncome() * globalMult() * N.offlineRate * (1 + companionPerk("offline_bonus")) * Math.min(seconds, cap);
   S.cash += gain; S.t += seconds;
-  T.storm.ready = Math.min(T.storm.ready, S.t + 60); T.storm.hist = []; T.storm.active = false; T.storm.meter = 0; T.storm.contrib = {};
+  T.piles.forEach(p => { if (p.kind < 0) p.at = Math.min(p.at, S.t + rnd(2, 10)); }); T.botJunk = [];
   Object.keys(T.next).forEach(k => T.next[k] = Math.min(T.next[k], S.t + 30));
   advance(0);
   if (label) toast(`${label}: брейнроты заработали ${fmt(gain)} (как офлайн, ${Math.round(N.offlineRate * 100)}%)`, "lab");
@@ -747,20 +795,26 @@ function renderHUD() {
   document.querySelectorAll("#h-speed button").forEach(b => b.setAttribute("aria-pressed", String(+b.dataset.arg === S.speed)));
   $("#h-sound").textContent = S.sound ? "Звук: вкл" : "Звук: выкл";
 }
-function renderStorm() {
-  const s = T.storm, el = $("#storm");
-  el.classList.toggle("active", s.active);
-  if (s.active) { $("#st-title").textContent = "ХАЙП-ШТОРМ!"; $("#st-sub").textContent = `доход ×2 · конвейер ×2 · ещё ${ftime(s.ends - S.t)}`; $("#st-bar").style.width = `${Math.max(0, (s.ends - S.t) / stormDuration() * 100)}%`; }
-  else {
-    const p = Math.min(1, s.meter / s.thr); $("#st-title").textContent = `Хайп-шторм ${Math.floor(p * 100)}%`;
-    const wait = s.ready > S.t ? ` · перезарядка ${ftime(s.ready - S.t)}` : "";
-    $("#st-sub").textContent = `шкала общая: ${fmt(s.meter)} / ${fmt(s.thr)} очков${wait}`; $("#st-bar").style.width = `${p * 100}%`;
+function renderLobby() {
+  const bestYou = S.units.reduce((b, u) => (!b || unitBase(u.id, u.v) > unitBase(b.id, b.v) ? u : b), null);
+  const key = JSON.stringify([bestYou && bestYou.id, S.rebirth, S.gotLikes, T.bots.map(b => [b.best, b.rebirth, likedToday(b.plot)])]);
+  const done = T.bots.filter(b => likedToday(b.plot)).length;
+  $("#lob-sub").textContent = `Лайкни чужую лабораторию: +${N.guestLikes} тебе, +${N.ownerLikes} хозяину, раз в день на каждую · сегодня ${done}/${T.bots.length}`;
+  if (key === T.lobbyKey) return; T.lobbyKey = key;
+  const you = `<div class="lob you" title="Твоя лаборатория #1"><img src="${bestYou ? bimg(bestYou.id) : pimg("Capsule_Common")}" alt=""><div><span>Ты</span><small>#1 · R${S.rebirth} · ♥ ${S.gotLikes || 0} сегодня</small></div></div>`;
+  $("#lobby").innerHTML = you + T.bots.map(b => { const d = likedToday(b.plot);
+    return `<div class="lob" title="Лаборатория #${b.plot}"><img src="${bimg(b.best)}" alt=""><div><span>${esc(b.name)}</span><small>#${b.plot} · R${b.rebirth}</small></div><button class="like${d ? " done" : ""}" data-act="like" data-arg="${b.plot}" aria-label="${d ? "Уже лайкнуто сегодня" : `Лайкнуть лабораторию #${b.plot}`}" title="${d ? "Уже лайкнуто сегодня" : `Лайк: +${N.guestLikes} тебе`}"><img src="${pimg("LikeHeart")}" alt=""></button></div>`; }).join("");
+}
+function renderJunk() {
+  const box = $("#junks"), key = JSON.stringify(T.piles.map(p => p.kind));
+  if (key !== T.pileKey) {
+    T.pileKey = key;
+    box.innerHTML = T.piles.map((p, i) => p.kind >= 0
+      ? `<button class="pile on" data-act="pile" data-arg="${i}" data-pile="${i}" aria-label="Бить кучу: ${esc(L.junk[p.kind].name)}"><img src="${pimg(JUNK_IMG[p.kind])}" alt=""><small class="pl"></small></button>`
+      : `<div class="pile off" data-pile="${i}"><small class="pl"></small></div>`).join("");
   }
-  const tot = Object.values(s.contrib).reduce((a, b) => a + b, 0) || 1;
-  const bestYou = S.units.reduce((b, u) => (!b || RAR[BR[u.id].rarity].income * VAR[u.v].mult > RAR[BR[b.id].rarity].income * VAR[b.v].mult ? u : b), null);
-  const rows = [{ name: "Ты", plot: 1, img: bestYou ? bimg(bestYou.id) : pimg("Capsule_Common"), c: s.contrib.you || 0, you: true, rb: S.rebirth },
-    ...T.bots.map(b => ({ name: b.name, plot: b.plot, img: bimg(b.best), c: s.contrib[b.name] || 0, rb: b.rebirth }))];
-  $("#lobby").innerHTML = rows.map(r => `<div class="lob${r.you ? " you" : ""}" title="Лаборатория #${r.plot}"><img src="${r.img}" alt=""><div><span>${esc(r.name)}</span><small>#${r.plot} · R${r.rb} · ${Math.round(r.c / tot * 100)}%</small></div></div>`).join("");
+  T.piles.forEach((p, i) => { const el = box.querySelector(`[data-pile="${i}"] .pl`); if (el) el.textContent = p.kind >= 0 ? `ещё ${p.left}` : ftime(p.at - S.t); });
+  $("#junk-title").textContent = `Мем-мусор · бей кучу (${N.junkHits} ударов) и неси Сахуру${isSpicy() ? " · ОСТРАЯ СУББОТА: мусора вдвое больше" : ""}`;
 }
 function currentUpdate() { return UPDATES.filter(u => u.week <= week()).pop(); }
 function renderEvents() {
@@ -780,6 +834,7 @@ function nextHint() {
   if (!S.units.length && !S.carrying && !S.inc.some(Boolean)) return "Шаг 1: нажми на капсулу на конвейере — купи первого брейнрота";
   if (S.carrying) return "Шаг 2: нажми на пустой инкубатор в своей лаборатории — положи капсулу";
   if (S.inc.some(Boolean) && S.hatched < 3) return "Шаг 3: кликай по инкубатору — это удары киркой, брейнрот вылупится быстрее";
+  if (S.junk) return "Мусор в руках: нажми станцию «Сахур» на пьяцце — капсула на конвейере станет лучше";
   if (canRebirth()) return "Можно переродиться! Вкладка «Перерождение»";
   if (S.rebirth === 0) return S.cash >= rebirthCost() ? `Кэша на перерождение хватает — не хватает нужных брейнротов: ${missingReqs()} (вкладка «Перерождение»)` : `Цель: перерождение 1 — ещё ${fmt(rebirthCost() - S.cash)} Кэша и 3 нужных брейнрота (вкладка «Перерождение»)`;
   if (freeSlot() < 0 && S.units.some(u => u.slot < 0)) return "Подиум полон: продавай слабых за Лайки и улучшай сильных, собирай семьи";
@@ -794,7 +849,8 @@ function renderBelt() {
     const price = capsulePrice(c.id, c.v), cant = S.cash < price || !!S.carrying;
     if (!el) {
       el = document.createElement("button"); el.className = "belt-row"; el.dataset.cid = c.cid; el.dataset.act = "buy"; el.dataset.arg = c.cid;
-      el.style.transform = `translateY(${(i - 1) * ROW_H + 4}px)`; el.style.opacity = "0";
+      el.style.transform = `translateY(${(c.surge ? i : i - 1) * ROW_H + 4}px)`; el.style.opacity = "0";
+      if (c.surge) { el.classList.add("surge"); c.surge = false; }
       el.innerHTML = `<img class="cap" src="${pimg(CAPS[BR[c.id].rarity])}" alt=""><img class="who" src="${bimg(c.id)}" alt=""><span class="nm"><b>${esc(title(c.id))}</b><small style="color:${RCOL[BR[c.id].rarity]}">${esc(rarName(c.id))} · ${esc(varName(c.v))}</small></span><span class="pr"></span>`;
       box.appendChild(el); void el.offsetWidth;
     }
@@ -809,18 +865,19 @@ function renderBelt() {
   $("#belt-timers").innerHTML = `<div class="lbl">Мем-портал · табло гарантий</div>` + parts.filter(Boolean).map(esc).join("<br>");
 }
 function renderHands() {
-  const c = S.carrying;
-  $("#hands").innerHTML = c ? `<img src="${pimg(CAPS[BR[c.id].rarity])}" alt=""><img src="${bimg(c.id)}" alt=""><div><div class="lbl">В руках</div><b>${esc(title(c.id))}</b> · ${esc(varName(c.v))}<br><small class="muted">нажми на пустой инкубатор →</small></div>`
-    : `<div><div class="lbl">Руки пустые</div><small class="muted">Капсул в запасе: ${S.reserve.length}/${reserveMax()} — они сами лягут в пустой инкубатор</small></div>`;
+  const c = S.carrying, j = S.junk;
+  const junk = j ? `<img src="${pimg(JUNK_IMG[j.kind])}" alt=""><div><div class="lbl">Мусор в руках${j.count > 1 ? " ×2" : ""}</div><b>${esc(L.junk[j.kind].name)}</b><br><small class="muted">нажми «Сахур» ниже → сёрдж</small></div>` : "";
+  $("#hands").innerHTML = (c ? `<img src="${pimg(CAPS[BR[c.id].rarity])}" alt=""><img src="${bimg(c.id)}" alt=""><div><div class="lbl">В руках</div><b>${esc(title(c.id))}</b> · ${esc(varName(c.v))}<br><small class="muted">нажми на пустой инкубатор →</small></div>`
+    : `<div><div class="lbl">Руки пустые</div><small class="muted">Капсул в запасе: ${S.reserve.length}/${reserveMax()} — они сами лягут в пустой инкубатор</small></div>`) + junk;
 }
 const UPDATES = [
-  { week: 0, name: "Запуск", ids: [], mini: null, what: ["25 брейнротов, конвейер, инкубаторы, подиум", "Семьи и комбо «Банановый рай»", "Хайп-шторм", "Перерождения 1–20", "Мем-пиньята каждый четверг"] },
+  { week: 0, name: "Запуск", ids: [], mini: null, what: ["25 брейнротов, конвейер, инкубаторы, подиум", "Семьи и комбо «Банановый рай»", "Мем-мусор: Сахур делает сёрдж на конвейере (как Chopper)", "Лайки от гостей", "Перерождения 1–20", "Мем-пиньята каждый четверг"] },
   { week: 1, name: "Тунг-Тунг-Сахур", mini: "logs", what: ["Икона Тунг Тунг Тунг Сахур (мини-игра «Поленья»)", "Bombombini Gusini на конвейере", "Комбо «Воздушный налёт»"] },
   { week: 2, name: "Драконья неделя", mini: null, what: ["Первый мифик Dragon Cannelloni", "Мифик по таймеру раз в час", "Комбо «Ужин с драконом»"] },
   { week: 3, name: "Лаборатория скрещивания", mini: null, what: ["Скрещивание (с перерождения 3)", "6 секретных рецептов", "Комбо «Итальянский обед» и «Кошки-мышки»"] },
   { week: 4, name: "Акулий забег", mini: "jump", what: ["Икона Тралалеро Тралала (мини-игра «Акулья башня»)", "Мифик Draghetto Gelato"] },
-  { week: 5, name: "Извержение", mini: "lava", what: ["Вариант Лавовый ×20", "«Вирусный взрыв» и Хайп-кристаллы", "Мини-игра «Лавовый дождь» — Лавовые капсулы", "Гарантированная Лавовая раз в 3 часа"] },
-  { week: 6, name: "Острая неделя", mini: null, what: ["Мифик Drakonino Peperonino", "В субботу шторм длится вдвое дольше"] },
+  { week: 5, name: "Извержение", mini: "lava", what: ["Вариант Лавовый ×20", "«Вирусный взрыв» и Хайп-кристаллы", "Мини-игра «Лавовый дождь» — Лавовые капсулы", "Гарантированная Лавовая раз в 3 часа", "Лавовый мем-мусор"] },
+  { week: 6, name: "Острая неделя", mini: null, what: ["Мифик Drakonino Peperonino", "В субботу мем-мусор появляется вдвое чаще, Лавового больше"] },
   { week: 7, name: "Six-Seven", mini: "rhythm", what: ["Икона 67 (ритм-игра «6 или 7»)", "Вариант Вирусный ×50"] },
   { week: 8, name: "Космос", mini: "stars", what: ["Мифик Girafa Celestre", "Рецепт La Vacca Saturno Saturnita", "Мини-игра «Звездопад»"] },
   { week: 10, name: "Космический вариант", mini: null, what: ["Вариант Космический ×120", "Анонс сезона 2: новые модели из генератора"] },
@@ -829,14 +886,14 @@ UPDATES.forEach(u => { u.ids = BR.map((b, i) => [b, i]).filter(([b]) => b.week =
 function renderStations() {
   const u = currentUpdate(), p = T.pinata;
   const st = [
-    ["tab", "fusion", "FusionTable", "Скрещивание", week() >= N.fusionWeek ? (S.rebirth >= N.fusionRebirth ? "3 → 1" : `с перерождения ${N.fusionRebirth}`) : `с ${N.fusionWeek}-й недели`, false],
-    ["tab", "lucky", "MemeMachine", "Мем-автомат", S.luckyDay === dayIdx() ? "завтра" : "бесплатно сегодня", S.luckyDay !== dayIdx()],
-    ["tab", "tours", "TourBus", "Гастроли", S.tour ? ftime(S.tour.ends - S.t) : "свободен", false],
-    ["mini", "pinata", "Pinata", "Мем-пиньята", isThu() ? (p && p.alive ? "БЕЙ!" : "скоро") : "по четвергам", !!(isThu() && p && p.alive)],
-    ["tab", "guide", "HypeTower", "Хайп-башня", "как устроен шторм", !!stormActive()],
-    u && u.mini ? ["mini", u.mini, MINIS[u.mini].img, MINIS[u.mini].title, isSat() ? "ивент идёт!" : "ивент недели", isSat()] : ["tab", "updates", "SahurTotem", "Обновления", "что выйдет", false],
+    ["tab", "fusion", pimg("FusionTable"), "Скрещивание", week() >= N.fusionWeek ? (S.rebirth >= N.fusionRebirth ? "3 → 1" : `с перерождения ${N.fusionRebirth}`) : `с ${N.fusionWeek}-й недели`, false],
+    ["tab", "lucky", pimg("MemeMachine"), "Мем-автомат", S.luckyDay === dayIdx() ? "завтра" : "бесплатно сегодня", S.luckyDay !== dayIdx()],
+    ["tab", "tours", pimg("TourBus"), "Гастроли", S.tour ? ftime(S.tour.ends - S.t) : "свободен", false],
+    ["mini", "pinata", pimg("Pinata"), "Мем-пиньята", isThu() ? (p && p.alive ? "БЕЙ!" : "скоро") : "по четвергам", !!(isThu() && p && p.alive)],
+    ["deliver", "", bimg(ICON_SAHUR), "Сахур", S.junk ? "сдать мусор!" : "ждёт мусор", !!S.junk],
+    u && u.mini ? ["mini", u.mini, pimg(MINIS[u.mini].img), MINIS[u.mini].title, isSat() ? "ивент идёт!" : "ивент недели", isSat()] : ["tab", "updates", pimg("CafeUmbrella"), "Обновления", "что выйдет", false],
   ];
-  $("#stations").innerHTML = st.map(([act, arg, img, name, sub, live]) => `<button class="st${live ? " live" : ""}" data-act="${act}" data-arg="${arg}"><img src="${pimg(img)}" alt=""><span>${esc(name)}</span><small>${esc(sub)}</small></button>`).join("");
+  $("#stations").innerHTML = st.map(([act, arg, img, name, sub, live]) => `<button class="st${live ? " live" : ""}" data-act="${act}" data-arg="${arg}"><img src="${img}" alt=""><span>${esc(name)}</span><small>${esc(sub)}</small></button>`).join("");
 }
 function renderIncs() {
   const key = JSON.stringify([incCount(), S.inc.map(c => c && [c.id, c.v]), !!(S.carrying || S.reserve.length)]);
@@ -881,7 +938,7 @@ function renderPodium() {
   const onP = S.units.filter(u => u.slot >= 0).length;
   $("#pod-title").textContent = `Подиум ${onP}/${lim}`;
   $("#pod-sub").textContent = `в запасе ${S.units.length - onP} · доход ${fmt(income())}/с`;
-  S.units.forEach(u => { if (u.slot >= 0) { const el = document.querySelector(`[data-uinc="${u.uid}"]`); if (el) el.textContent = `+${fmt(unitIncome(u) * stormMult() * eventMult())}/с`; } });
+  S.units.forEach(u => { if (u.slot >= 0) { const el = document.querySelector(`[data-uinc="${u.uid}"]`); if (el) el.textContent = `+${fmt(unitIncome(u) * eventMult())}/с`; } });
 }
 function companionText(u) {
   const b = BR[u.id];
@@ -950,7 +1007,7 @@ function panelHTML() {
         <div class="list">${L.shop.map((it, i) => { const l = shopLvl(it.id), max = l >= it.max_level; return `<button class="row" data-act="shop" data-arg="${i}" ${max ? "disabled" : ""}><span class="grow"><b>${esc(it.name)}</b><small>уровень ${l}/${it.max_level}</small></span><span class="num">${max ? "куплено" : it.cost + " кр."}</span></button>`; }).join("")}</div>
         <div class="box warn"><h3>Магазин за V-Bucks (демо)</h3><p>В Fortnite это покупки внутри острова. Здесь покупка бесплатная, чтобы было видно эффект. Случайных товаров нет — только гарантированные.</p></div>
         <div class="list">${L.offers.map((o, i) => o.from_week && o.from_week > wk ? "" : `<button class="row" data-act="offer" data-arg="${i}"><span class="grow"><b>${esc(o.name)}</b><small>${esc(o.effect)}</small></span><span class="num">${o.price} VB</span></button>`).join("")}</div>
-        ${S.pstorms.length ? `<p class="muted">Личных штормов в запасе: ${S.pstorms.map(varName).join(", ")} — сработают на следующих покупках.</p>` : ""}`;
+        ${S.psurges.length ? `<p class="muted">Сёрджей в запасе: ${S.psurges.map(varName).join(", ")} — сработают на следующих покупках.</p>` : ""}`;
     }
     case "quests": {
       ensureQuestDay(); const qs = todayQuests(), names = ["Лёгкое", "Среднее", "Сложное"];
@@ -988,16 +1045,17 @@ function guideHTML() {
       <div class="step"><i>2</i><span><b>Инкубатор</b>: нажми на пустой — капсула внутри. Кликай по нему — это удары киркой, −0,5 с, иногда КРИТ.</span></div>
       <div class="step"><i>3</i><span><b>Подиум</b>: брейнрот встаёт сам и каждую секунду приносит Кэш. Одна семья рядом — бонус всем.</span></div>
       <div class="step"><i>4</i><span><b>Перерождение</b>: сумма + 3 нужных брейнрота. Кэш сгорает, брейнроты остаются, доход ×1,2 и +1 место.</span></div>
-      <div class="step"><i>5</i><span><b>Хайп-шторм</b>: всё лобби наполняет общую шкалу. Раз в 12–20 минут — 3 минуты дохода ×2 и редких капсул.</span></div>
+      <div class="step"><i>5</i><span><b>Мем-мусор</b>: разбей кучу на пьяцце, отнеси Сахуру — капсула на конвейере станет Золотой, Радужной или Лавовой.</span></div>
     </div></div>
     <div class="box"><h3>Твой доход сейчас</h3><div class="formula">подиум (с семьями и комбо)   ${fmt(b)}/с
 × перерождения ${N.rebirthMult}^${S.rebirth}${S.superR ? ` × взрывы ${N.superMult}^${S.superR}` : ""}   ×${g.toFixed(2)} (с Идеальными и компаньонами)
-× шторм ${stormMult()}  × субботний ивент ${eventMult()}
+× субботний ивент ${eventMult()}
 = ${fmt(income())} Кэша в секунду</div></div>
     <div class="box"><h3>Три валюты</h3><p><b>Кэш</b> — капсулы и перерождения. <b>Лайки</b> — улучшение вариантов (Базовый → Золотой ×2 → Алмазный ×4 → Радужный ×8 → Лавовый ×20 → Вирусный ×50 → Космический ×120), их дают продажа, задания, гастроли. <b>Хайп-кристаллы</b> — вечные улучшения в Хайп-магазине.</p></div>
-    <div class="box"><h3>Семьи (новая механика)</h3><p class="muted">Разные члены одной семьи на подиуме: 2 → +10%, 3 → +25%, 4+ → +40%, вся семья ещё +15%. Особые комбо из трёх — +30%.</p>
+    <div class="box"><h3>Семьи (брейнрот-механика)</h3><p class="muted">Разные члены одной семьи на подиуме: 2 → +10%, 3 → +25%, 4+ → +40%, вся семья ещё +15%. Особые комбо из трёх — +30%.</p>
       <div class="list">${FAM.filter(f => f.key !== "icons").map(f => `<div class="row"><span class="grow"><b>${esc(f.name)}</b><small>${f.members.map(m => esc(title(m))).join(", ")} · компаньон: ${esc((L.perkText[f.perk] || "").replace("X", "…"))}</small></span></div>`).join("")}</div></div>
-    <div class="box"><h3>Хайп-шторм (новая механика)</h3><p>Очки: вылупление 1/3/8/20/50/80 по редкости, удар по инкубатору 0,2, скрещивание 10, собранная семья 25, задание 5. Порог — очки лобби за последние 12 минут. Кто внёс ≥ 5% порога, получает штормовую капсулу. Лобби здесь — 7 ботов-лаборантов.</p></div>
+    <div class="box"><h3>Мем-мусор и сёрдж (как Chopper в Droid Tycoon)</h3><p>На пьяцце ${N.junkSpots} мест для куч. Кучу бьют ${N.junkHits} раз, мусор в руках — один. Сахур у портала превращает его в сёрдж: ближайшая к порталу капсула с вариантом ниже становится ${L.junk.map(k => `${varName(k.variant)} (${k.weight}%${k.week ? `, с ${k.week}-й недели` : ""})`).join(", ")}. Купить её может любой — боты тоже носят мусор. Пустое место снова зарастает мусором через ${N.junkRespawn} с. Компаньоны семьи «Космос» и Тралалеро дают шанс на двойной мусор.</p></div>
+    <div class="box"><h3>Лайки от гостей</h3><p>В лобби 8 лабораторий. Лайк чужой — +${N.guestLikes} Лайков тебе и +${N.ownerLikes} хозяину, раз в день на каждую. Гости заходят и к тебе, если на подиуме кто-то стоит. Лобби здесь — 7 ботов-лаборантов.</p></div>
     <div class="box"><h3>Календарь</h3><p>Понедельник — новое обновление. Четверг — Мем-пиньята и Лайки ×2. Суббота — ивент: доход ×2, вылупление ×2 и мини-игра. Скорость времени ×1…×60 и перемотка — наверху. Перемотка работает как офлайн: брейнроты зарабатывают 25%.</p></div>
     <p class="muted">Прогресс сохраняется в этом браузере. Числа — из того же конфига, что и Verse-код острова.</p>`;
 }
@@ -1263,6 +1321,9 @@ document.addEventListener("click", e => {
     case "shop": buyShop(n); break;
     case "offer": grantOffer(n); break;
     case "quest": claimQuest(n); break;
+    case "like": likePlot(n); break;
+    case "pile": hitPile(n); renderJunk(); renderHands(); return;
+    case "deliver": deliverJunk(); break;
     case "tab": S.tab = arg; closeModal(); if (window.innerWidth < 1250) setTimeout(() => $(".panel").scrollIntoView({ behavior: "smooth", block: "start" }), 30); break;
     case "mini": openMini(arg); return;
     case "gstart": if (T.mini && T.mini.start) T.mini.start(); return;
@@ -1290,29 +1351,29 @@ document.addEventListener("pointerup", () => { if (T.mini && T.mini.hold) { T.mi
 $("#modal").addEventListener("click", e => { if (e.target === $("#modal")) closeModal(); });
 
 // ======================================================================= цикл
-function renderAll() { renderHUD(); renderStorm(); renderEvents(); renderBelt(); renderHands(); renderStations(); renderIncs(); renderPodium(); renderPanel(); }
+function renderAll() { renderHUD(); renderLobby(); renderJunk(); renderEvents(); renderBelt(); renderHands(); renderStations(); renderIncs(); renderPodium(); renderPanel(); }
 let lastFrame = performance.now(), saveAcc = 0, uiAcc = 0, panelAcc = 0;
 function frame(now) {
   const real = Math.min(0.25, (now - lastFrame) / 1000); lastFrame = now;
   advance(real * S.speed);
   T.beltAcc += real * Math.min(S.speed, 4);
-  const step = stormActive() ? N.stormBelt : N.beltStep;
+  const step = N.beltStep;
   if (T.beltAcc >= step) { T.beltAcc -= step; if (T.beltAcc > step) T.beltAcc = 0; beltStep(false); }
   uiAcc += real; panelAcc += real; saveAcc += real;
-  if (uiAcc >= 0.1) { uiAcc = 0; renderHUD(); renderStorm(); renderIncs(); renderPodium(); renderHands(); }
+  if (uiAcc >= 0.1) { uiAcc = 0; renderHUD(); renderJunk(); renderIncs(); renderPodium(); renderHands(); }
   if (panelAcc >= 1 || T.dirty) {
-    const wasDirty = T.dirty; panelAcc = 0; T.dirty = false; renderEvents(); renderStations(); renderBelt();
+    const wasDirty = T.dirty; panelAcc = 0; T.dirty = false; renderLobby(); renderEvents(); renderStations(); renderBelt();
     // списки без таймеров перерисовываем только при изменениях, чтобы не сбивать наведение и прокрутку
     if (wasDirty || !["storage", "dex", "updates", "guide", "shop"].includes(S.tab)) renderPanel(); else renderTabs();
   }
   if (saveAcc >= 5) { saveAcc = 0; save(); }
   requestAnimationFrame(frame);
 }
-function initAll() { initBots(); initStorm(); T.pinata = null; T.podiumKey = ""; T.incKey = ""; $("#belt").innerHTML = ""; initBelt(); T.dirty = true; renderAll(); }
+function initAll() { initBots(); initJunk(); T.pinata = null; T.podiumKey = ""; T.incKey = ""; $("#belt").innerHTML = ""; initBelt(); T.dirty = true; renderAll(); }
 function start(data) {
-  S = (data && data.save) ? Object.assign(fresh(), data.save) : (load() || fresh());
+  S = (data && data.save) ? migrate(Object.assign(fresh(), data.save)) : (load() || fresh());
   const away = (Date.now() - (S.lastReal || Date.now())) / 1000;
-  initBots(); initStorm(); initBelt();
+  initBots(); initJunk(); initBelt();
   if (away > 60 && S.units.length) {
     const before = S.cash; skip(away, null); const gain = S.cash - before;
     openModal(`<div class="dialog-head"><h2>С возвращением!</h2><button class="btn sm go" data-act="close">Забрать</button></div>

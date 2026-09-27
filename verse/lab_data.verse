@@ -7,7 +7,6 @@ rarity_def := struct:
     Payback:float = 0.0
     Hatch:float = 0.0
     Weight:float = 0.0
-    Hype:float = 0.0
     SellLikes:int = 0
 
 variant_def := struct:
@@ -95,7 +94,7 @@ Perk_CashBonus:int = 5
 Perk_OfflineBonus:int = 6
 Perk_TourSpeed:int = 7
 Perk_FusionSpeed:int = 8
-Perk_HypeBonus:int = 9
+Perk_JunkBonus:int = 9
 Perk_IdealLuck:int = 10
 Perk_Unique:int = 11
 # Типы ежедневных заданий
@@ -103,20 +102,21 @@ Quest_Hatch:int = 0
 Quest_BuyCapsule:int = 1
 Quest_PickaxeHit:int = 2
 Quest_Sell:int = 3
-Quest_Storm:int = 4
+Quest_Junk:int = 4
 Quest_Tour:int = 5
 Quest_Upgrade:int = 6
 Quest_HatchEpic:int = 7
 Quest_Fusion:int = 8
+Quest_Like:int = 9
 # Источник брейнрота: 0 конвейер, 1 скрещивание, 2 ивент
 
 LabRarities:[]rarity_def = array:
-    rarity_def{Name := "Обычный", Income := 5.0, Payback := 120.0, Hatch := 10.0, Weight := 55.0, Hype := 1.0, SellLikes := 1}
-    rarity_def{Name := "Редкий", Income := 40.0, Payback := 240.0, Hatch := 30.0, Weight := 28.0, Hype := 3.0, SellLikes := 4}
-    rarity_def{Name := "Эпический", Income := 250.0, Payback := 480.0, Hatch := 60.0, Weight := 12.0, Hype := 8.0, SellLikes := 15}
-    rarity_def{Name := "Легендарный", Income := 1500.0, Payback := 900.0, Hatch := 120.0, Weight := 4.5, Hype := 20.0, SellLikes := 60}
-    rarity_def{Name := "Мифический", Income := 10000.0, Payback := 1800.0, Hatch := 300.0, Weight := 0.5, Hype := 50.0, SellLikes := 250}
-    rarity_def{Name := "Икона", Income := 25000.0, Payback := 0.0, Hatch := 300.0, Weight := 0.0, Hype := 80.0, SellLikes := 0}
+    rarity_def{Name := "Обычный", Income := 5.0, Payback := 120.0, Hatch := 10.0, Weight := 55.0, SellLikes := 1}
+    rarity_def{Name := "Редкий", Income := 40.0, Payback := 240.0, Hatch := 30.0, Weight := 28.0, SellLikes := 4}
+    rarity_def{Name := "Эпический", Income := 250.0, Payback := 480.0, Hatch := 60.0, Weight := 12.0, SellLikes := 15}
+    rarity_def{Name := "Легендарный", Income := 1500.0, Payback := 900.0, Hatch := 120.0, Weight := 4.5, SellLikes := 60}
+    rarity_def{Name := "Мифический", Income := 10000.0, Payback := 1800.0, Hatch := 300.0, Weight := 0.5, SellLikes := 250}
+    rarity_def{Name := "Икона", Income := 25000.0, Payback := 0.0, Hatch := 300.0, Weight := 0.0, SellLikes := 0}
 
 LabVariants:[]variant_def = array:
     variant_def{Name := "Базовый", Mult := 1.0, BeltChance := 0.0, Week := 0}
@@ -285,31 +285,31 @@ LabTours:[]tour_def = array:
 LabQuestsEasy:[]quest_def = array:
     quest_def{Kind := 0, Target := 5}
     quest_def{Kind := 1, Target := 5}
+    quest_def{Kind := 9, Target := 2}
     quest_def{Kind := 2, Target := 100}
     quest_def{Kind := 3, Target := 3}
 LabQuestsMedium:[]quest_def = array:
     quest_def{Kind := 0, Target := 20}
-    quest_def{Kind := 4, Target := 1}
+    quest_def{Kind := 4, Target := 2}
     quest_def{Kind := 5, Target := 1}
     quest_def{Kind := 6, Target := 1}
     quest_def{Kind := 2, Target := 400}
 LabQuestsHard:[]quest_def = array:
     quest_def{Kind := 7, Target := 3}
-    quest_def{Kind := 4, Target := 3}
+    quest_def{Kind := 4, Target := 5}
     quest_def{Kind := 8, Target := 1}
     quest_def{Kind := 0, Target := 60}
 LabQuestLikes:[]int = array{20, 60, 150}
 LabQuestCrystals:[]int = array{0, 0, 1}
 
 LabOffers:[]offer_def = array:
-    offer_def{Key := "storm_rainbow", Name := "Личный шторм: Радужный", Price := 200, Effect := "следующая твоя капсула на конвейере — Радужная", Week := 0}
-    offer_def{Key := "storm_lava", Name := "Личный шторм: Лавовый", Price := 300, Effect := "следующая твоя капсула — Лавовая", Week := 5}
-    offer_def{Key := "storm_viral", Name := "Личный шторм: Вирусный", Price := 400, Effect := "следующая твоя капсула — Вирусная", Week := 7}
-    offer_def{Key := "hype_bomb", Name := "Хайп-бомба (для всего лобби)", Price := 150, Effect := "+50% к Хайп-метру лобби и объявление «Хайп-бомба!» для всех", Week := 0}
+    offer_def{Key := "surge_rainbow", Name := "Сёрдж: Радужный", Price := 200, Effect := "следующая твоя капсула с конвейера — Радужная", Week := 0}
+    offer_def{Key := "surge_lava", Name := "Сёрдж: Лавовый", Price := 300, Effect := "следующая твоя капсула — Лавовая", Week := 5}
+    offer_def{Key := "surge_viral", Name := "Сёрдж: Вирусный", Price := 400, Effect := "следующая твоя капсула — Вирусная", Week := 7}
     offer_def{Key := "hat", Name := "Шляпа для брейнрота", Price := 250, Effect := "косметика", Week := 0}
     offer_def{Key := "plot_paint", Name := "Покраска участка", Price := 300, Effect := "косметика", Week := 0}
-    offer_def{Key := "lab_pack", Name := "Набор лаборанта", Price := 1200, Effect := "+1 инкубатор навсегда и 2 личных Радужных шторма; инкубатор есть и за кристаллы", Week := 0}
-    offer_def{Key := "fusion_pack", Name := "Набор скрещивания", Price := 1800, Effect := "скрещивание ×2 быстрее навсегда, 2-й стол скрещивания, 3 Лавовых шторма", Week := 3}
+    offer_def{Key := "lab_pack", Name := "Набор лаборанта", Price := 1200, Effect := "+1 инкубатор навсегда и 2 Радужных сёрджа; инкубатор есть и за кристаллы", Week := 0}
+    offer_def{Key := "fusion_pack", Name := "Набор скрещивания", Price := 1800, Effect := "скрещивание ×2 быстрее навсегда, 2-й стол скрещивания, 3 Лавовых сёрджа", Week := 3}
 
 # Мем-автомат: шанс перейти на вариант с индексом i (0 не используется)
 LabLuckyChance:[]float = array{0.0, 0.5, 0.3, 0.15, 0.07, 0.03, 0.01}
@@ -347,17 +347,13 @@ LabIncubatorsMax:int = 4
 LabHitSpeedup:float = 0.5
 LabCritChance:float = 0.05
 LabCritMult:float = 5.0
-LabStormHitPoints:float = 0.2
-LabStormFusionPoints:float = 10.0
-LabStormFamilyPoints:float = 25.0
-LabStormQuestPoints:float = 5.0
-LabStormWindowSec:float = 720.0
-LabStormFloorPerPlayer:float = 20.0
-LabStormDurationSec:float = 180.0
-LabStormCooldownSec:float = 600.0
-LabStormIncomeMult:float = 2.0
-LabStormBeltStepSec:float = 2.0
-LabStormContribShare:float = 0.05
+LabJunkRespawnSec:float = 45.0
+LabJunkHits:int = 5
+LabSpicyWeek:int = 6
+LabSpicyRespawnMult:float = 0.5
+LabSpicyLavaWeight:float = 20.0
+LabOwnerLikes:int = 20
+LabGuestLikes:int = 10
 LabFusionUnlockRebirth:int = 3
 LabFusionWeek:int = 3
 LabFusionVariantMin:float = 2.0
@@ -377,10 +373,13 @@ LabPinataEverySec:float = 1800.0
 LabPinataHitsPerPlayer:int = 60
 LabPinataCrystals:int = 5
 
-# Множитель шанса редкости на конвейере во время шторма (по индексу редкости)
-LabStormWeightMult:[]float = array{1.0, 1.0, 2.0, 3.0, 3.0, 0.0}
-# Веса редкости штормовой капсулы
-LabStormCapsuleWeights:[]float = array{0.0, 0.0, 70.0, 25.0, 5.0, 0.0}
+# Веса редкости для наград «Эпик или выше» (гастроли на ночь)
+LabEpicPlusWeights:[]float = array{0.0, 0.0, 70.0, 25.0, 5.0, 0.0}
+# Мем-мусор: вес, вариант сёрджа, неделя появления (по порядку видов)
+LabJunkNames:[]string = array{"Золотой мем-мусор", "Радужный мем-мусор", "Лавовый мем-мусор"}
+LabJunkWeights:[]float = array{70.0, 25.0, 5.0}
+LabJunkVariant:[]int = array{1, 3, 4}
+LabJunkWeek:[]int = array{0, 0, 5}
 # Кристаллы за «Вирусный взрыв»: индекс = перерождение − 12
 LabSuperCrystals:[]int = array{11, 13, 15, 17, 20, 24, 28, 32, 38, 44, 51, 60, 70, 81, 95, 111, 129, 151, 176, 205, 239, 279, 325, 379}
 # Сила перка компаньона по редкости

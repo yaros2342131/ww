@@ -12,7 +12,6 @@
     python tools/economy_sim.py --week 8 --seeds 20 --hours 200
 """
 import argparse
-import collections
 import json
 import random
 import statistics
@@ -61,47 +60,48 @@ def run(seed, hours, week, grab, players):
     upgrade = c["upgrade_costs_likes"]
     rng = random.Random(seed)
     tiers = [t for t in TIERS if pool[t]]
-    reb, storm = c["rebirth"], c["hype_storm"]
+    reb, junk = c["rebirth"], c["meme_junk"]
     belt, inc_cfg = c["belt"], c["incubators"]
-    window = storm["threshold_window_min"] * 60
-    floor = storm["threshold_floor_per_player"] * players
-    recent = collections.deque()   # (время, очки) за последние window секунд — от них считается порог
-    storms = 0          # штормы за первые 10 ч: дальше бот упирается в стену и простаивает
+    kinds = [k for k in junk["kinds"] if k["from_week"] <= week]
+    junk_every = 180.0   # бот раз в ~3 минуты разбивает кучу и сдаёт мусор Сахуру
+    next_junk, surge = junk_every, 0
+    surges = 0
 
     cash = float(c["start_cash"])
     likes = 0
     best = {}          # id брейнрота -> лучший вариант
     incomes = []       # доход каждого юнита на подиуме/в запасе
     top_sum = 0.0
-    hatching = []      # (время готовности, id, вариант, доход, очки хайпа)
+    hatching = []      # (время готовности, id, вариант, доход)
     level, t, dt = 0, 0.0, float(belt["spawn_interval_sec"])
     next_g = dict(guaranteed)
-    hype, storm_end, storm_ready = 0.0, -1.0, 0.0
     marks = {}
 
     while t < hours * 3600 and level < reb["levels"]:
-        in_storm = t < storm_end
-        weights = [rar[k]["belt_weight"] * (storm["effects"]["belt_weight_mult"][k] if in_storm else 1) for k in tiers]
-        spawns = 2 if in_storm else 1   # в шторм конвейер работает вдвое чаще
+        weights = [rar[k]["belt_weight"] for k in tiers]
+        if t >= next_junk:   # сёрдж: следующая капсула у портала станет этого варианта
+            next_junk += junk_every
+            kind = rng.choices(kinds, [k["weight"] for k in kinds])[0]
+            surge = max(surge, VARIANTS.index(kind["surge_variant"]))
+            surges += 1
         slots = min(reb["podium_slots"]["max"], reb["podium_slots"]["start"] + level * reb["podium_slots"]["per_level"])
 
         done = [h for h in hatching if h[0] <= t]
         if done:
             hatching = [h for h in hatching if h[0] > t]
-            for _, bid, v, income, pts in done:
+            for _, bid, v, income in done:
                 best[bid] = max(best.get(bid, -1), v)
                 incomes.append(income)
                 likes += rar[rarity_of[bid]]["sell_likes"]   # дубли и вытесненные с подиума продаются
-                hype += pts * players   # остальные игроки лобби вносят столько же
-                recent.append((t, pts * players))
             incomes.sort(reverse=True)
             del incomes[reb["podium_slots"]["max"]:]   # лишние всё равно продаются
             top_sum = sum(incomes[:slots])
 
         need = requirement(level + 1, reqs, pool)
-        for _ in range(spawns):
+        for _ in range(1):
             k = rng.choices(tiers, weights)[0]
-            v = roll_variant(rng, var)
+            v = max(roll_variant(rng, var), surge)
+            surge = 0
             for what, every in guaranteed.items():
                 if t >= next_g[what]:
                     next_g[what] += every
@@ -118,22 +118,9 @@ def run(seed, hours, week, grab, players):
                 any(n == bid and bid not in best for n, _ in need)
             if len(hatching) < inc_cfg["start"] and cash >= price and (income > worst or wanted) and rng.random() < grab:
                 cash -= price
-                hatching.append((t + rar[k]["hatch_sec"], bid, v, income, rar[k]["hype_points"]))
+                hatching.append((t + rar[k]["hatch_sec"], bid, v, income))
 
-        if hatching:   # пока идёт вылупление, игрок бьёт киркой ~1 раз в секунду
-            hit_pts = storm["points"]["pickaxe_hit"] * dt * players
-            hype += hit_pts
-            recent.append((t, hit_pts))
-        while recent and recent[0][0] < t - window:
-            recent.popleft()
-        threshold = max(floor, sum(p for _, p in recent))
-        if not in_storm and t >= storm_ready and hype >= threshold:
-            hype = 0.0
-            storms += t < 10 * 3600
-            storm_end = t + storm["duration_sec"]
-            storm_ready = t + storm["cooldown_min_sec"]
-
-        cash += top_sum * reb["income_mult_per_level"] ** level * (storm["effects"]["income_mult"] if in_storm else 1) * dt
+        cash += top_sum * reb["income_mult_per_level"] ** level * dt
 
         for n, mv in need:   # нужный вариант докачиваем за Лайки, как сделал бы живой игрок
             have = best.get(n, -1)
@@ -151,7 +138,7 @@ def run(seed, hours, week, grab, players):
             slots = min(reb["podium_slots"]["max"], reb["podium_slots"]["start"] + level * reb["podium_slots"]["per_level"])
             top_sum = sum(incomes[:slots])
         t += dt
-    return marks, storms / min(10.0, t / 3600)
+    return marks, surges / max(t / 3600, 1e-9)
 
 
 def main():
@@ -171,7 +158,7 @@ def main():
         tail = f"медиана {statistics.median(got):6.2f} ч  ({len(got)}/{a.seeds})" if got else f"не достигнут за {a.hours:g} ч"
         print(f"R{lvl:<2}  цена {cost:>10.3g}  {tail}")
     per_hour = statistics.median(r for _, r in results)
-    print(f"Хайп-шторм в первые 10 ч: {per_hour:.1f} в час (раз в {60 / per_hour:.0f} мин)" if per_hour else "Хайп-шторм: не случился")
+    print(f"Сёрджей от мем-мусора (свои): {per_hour:.0f} в час")
 
 
 if __name__ == "__main__":

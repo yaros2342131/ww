@@ -47,8 +47,10 @@ QuestTitle(Q:quest_def)<transacts>:string =
         "Сделай {N} ударов по инкубаторам"
     else if (Q.Kind = Quest_Sell):
         "Продай {N} брейнротов"
-    else if (Q.Kind = Quest_Storm):
-        "Поучаствуй в Хайп-шторме ({N})"
+    else if (Q.Kind = Quest_Junk):
+        "Сдай мем-мусор Сахуру ({N})"
+    else if (Q.Kind = Quest_Like):
+        "Лайкни {N} чужие лаборатории"
     else if (Q.Kind = Quest_Tour):
         "Отправь брейнротов на гастроли ({N})"
     else if (Q.Kind = Quest_Upgrade):
@@ -99,7 +101,7 @@ lab_player := class:
     var FamiliesDone:[]int = array{}
     var ShopLevels:[]int = array{}
     var Companions:[]int = array{}
-    var PersonalStorms:[]int = array{}
+    var PersonalSurges:[]int = array{}
     var LastSeen:float = 0.0
     var PlaySeconds:float = 0.0
     var QuestDay:int = -1
@@ -107,8 +109,12 @@ lab_player := class:
     var QuestClaimed:[]logic = array{}
     var LuckyDay:int = -1
     var TotalHatched:int = 0
+    var LikeDay:int = -1
+    var LikedPlots:[]int = array{}
 
     # только на время сессии
+    var CarryJunk:int = -1           # вид мем-мусора в руках (−1 = нет)
+    var CarryJunkCount:int = 0
     var PlotIndex:int = -1
     var BaseIncome:float = 0.0       # доход подиума с бонусами семей и комбо, без глобальных множителей
     var FusionPick:[]int = array{}   # выбранные для скрещивания Uid
@@ -133,7 +139,7 @@ lab_player := class:
         set FamiliesDone = S.FamiliesDone
         set ShopLevels = S.ShopLevels
         set Companions = S.Companions
-        set PersonalStorms = S.PersonalStorms
+        set PersonalSurges = S.PersonalSurges
         set LastSeen = S.LastSeen
         set PlaySeconds = S.PlaySeconds
         set QuestDay = S.QuestDay
@@ -141,6 +147,8 @@ lab_player := class:
         set QuestClaimed = S.QuestClaimed
         set LuckyDay = S.LuckyDay
         set TotalHatched = S.TotalHatched
+        set LikeDay = S.LikeDay
+        set LikedPlots = S.LikedPlots
         EnsureArrays()
 
     ToSave(Now:float):lab_save =
@@ -164,7 +172,7 @@ lab_player := class:
             FamiliesDone := Self.FamiliesDone
             ShopLevels := Self.ShopLevels
             Companions := Self.Companions
-            PersonalStorms := Self.PersonalStorms
+            PersonalSurges := Self.PersonalSurges
             LastSeen := Now
             PlaySeconds := Self.PlaySeconds
             QuestDay := Self.QuestDay
@@ -172,6 +180,8 @@ lab_player := class:
             QuestClaimed := Self.QuestClaimed
             LuckyDay := Self.LuckyDay
             TotalHatched := Self.TotalHatched
+            LikeDay := Self.LikeDay
+            LikedPlots := Self.LikedPlots
 
     # Таймеров и уровней магазина всегда столько, сколько может понадобиться
     EnsureArrays():void =
@@ -318,9 +328,10 @@ lab_player := class:
     LikesGain(Base:int, EventMult:float)<transacts>:int =
         FloorInt(Base * (1.0 + CompanionPerk(Perk_LikesBonus)) * EventMult)
 
-    HypeMult()<transacts>:float =
+    # Шанс поднять двойной мем-мусор: перк «Космоса» и Тралалеро
+    JunkDoubleChance()<transacts>:float =
         Icon := if (HasCompanion(BrainrotIdx_TralaleroTralala)?) then 0.25 else 0.0
-        1.0 + CompanionPerk(Perk_HypeBonus) + Icon
+        CompanionPerk(Perk_JunkBonus) + Icon
 
     # ------------------------------------------------ вылупление
     HatchSeconds(Id:int, EventMult:float)<transacts>:float =

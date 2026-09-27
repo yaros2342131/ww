@@ -1,5 +1,5 @@
 # Главное устройство острова. Ставится одно на карту.
-# Связывает участки, конвейер, шторм, станции хаба, HUD и меню; раз в секунду начисляет доход,
+# Связывает участки, конвейер, мем-мусор, станции хаба, HUD и меню; раз в секунду начисляет доход,
 # раз в 20 секунд сохраняет прогресс.
 using { /Fortnite.com/Devices }
 using { /Fortnite.com/Characters }
@@ -63,7 +63,6 @@ purchase_hook := class<abstract>:
 lab_manager_device := class(creative_device):
     @editable Plots:[]lab_plot_device = array{}
     @editable Belt:lab_belt_device = lab_belt_device{}
-    @editable Storm:lab_storm_device = lab_storm_device{}
 
     # Ассеты-пропсы. Порядок BrainrotProps — как в config/brainrot_lab_tycoon.json (brainrots)
     @editable BrainrotProps:[]creative_prop_asset = array{}
@@ -94,7 +93,6 @@ lab_manager_device := class(creative_device):
         for (I -> P : Plots):
             P.Init(Self)
         Belt.Init(Self)
-        Storm.Init(Self)
         MenuKey.PressedEvent.Subscribe(OnMenuKey)
         FusionButton.InteractedWithEvent.Subscribe(OnFusionButton)
         LuckyButton.InteractedWithEvent.Subscribe(OnLuckyButton)
@@ -150,9 +148,13 @@ lab_manager_device := class(creative_device):
 
     IncomeMult():float =
         Now := LabNow()
-        StormMult := if (Storm.IsActive()?) then LabStormIncomeMult else 1.0
-        EventMult := if (MainEventActive[Now]) then LabMainEventIncomeMult else 1.0
-        StormMult * EventMult
+        if (MainEventActive[Now]) then LabMainEventIncomeMult else 1.0
+
+    # «Острая неделя»: в субботу этой недели мем-мусор чаще и Лавового больше
+    IsSpicy():logic =
+        Now := LabNow()
+        Week := CurrentWeek()
+        if (Week = LabSpicyWeek, MainEventActive[Now]) then true else false
 
     EventLine(Now:float):string =
         if (MainEventActive[Now]):
@@ -230,9 +232,7 @@ lab_manager_device := class(creative_device):
         Now := LabNow()
         Week := CurrentWeek()
         Mult := IncomeMult()
-        Storm.Tick(Sessions.Length)
         Belt.UpdateBoard(Week)
-        StormText := Storm.Line()
         Event := EventLine(Now)
         for (P -> S : Sessions):
             D := S.Data
@@ -241,7 +241,6 @@ lab_manager_device := class(creative_device):
             set D.PlaySeconds += 1.0
             CheckTimers(S, Now, Week)
             UpdateHud(S, Income)
-            S.Hud.SetStorm(StormText)
             S.Hud.SetEvent(Event)
             if (Plot := Plots[D.PlotIndex]):
                 Plot.RefreshIncubators(Now)
@@ -254,6 +253,14 @@ lab_manager_device := class(creative_device):
         Hands := if (C := D.Carrying?) then "В руках: {BrainrotTitle(C.Id)} ({VariantName(C.Variant)}) — неси в инкубатор" else "Руки пустые · капсул в запасе: {D.Reserve.Length}"
         Hint := if (D.CanRebirth[]) then "Можно переродиться! Станция на участке" else "До перерождения: {FormatNum(Max(0.0, D.RebirthCost() - D.Cash))} · меню — клавиша"
         S.Hud.SetStats(CashLine, Info, Hands, Hint)
+        S.Hud.SetJunk(JunkLine(D))
+
+    JunkLine(D:lab_player):string =
+        if (Name := LabJunkNames[D.CarryJunk]):
+            Extra := if (D.CarryJunkCount > 1) then " (x{D.CarryJunkCount})" else ""
+            "В руках: {Name}{Extra} — неси Сахуру у портала"
+        else:
+            "Мем-мусор: разбей кучу на площади и сдай Сахуру — капсула у портала станет редкой"
 
     # Инкубаторы, колбы скрещивания и гастроли, у которых вышло время
     CheckTimers(S:lab_session, Now:float, Week:int):void =
@@ -282,7 +289,6 @@ lab_manager_device := class(creative_device):
         D.AddQuest(Quest_Hatch, 1, Day)
         if (RarityOf(Id) >= RarityIdx_Epic):
             D.AddQuest(Quest_HatchEpic, 1, Day)
-        Storm.AddPoints(option{D.Player}, GetRarity(RarityOf(Id)).Hype * D.HypeMult())
         Title := "{BrainrotTitle(Id)} ({VariantName(V)})"
         if (Rec.Slot >= 0):
             S.Hud.Toast("{Title} вылупился и встал на подиум!")
@@ -298,13 +304,12 @@ lab_manager_device := class(creative_device):
         CheckFamilies(S, Week)
         RefreshPlot(S)
 
-    # Семья впервые собрана целиком — очки шторму и сообщение
+    # Семья впервые собрана целиком — сообщение всему лобби
     CheckFamilies(S:lab_session, Week:int):void =
         D := S.Data
         Ids := D.PodiumIds()
         for (F -> Fam : LabFamilies, F <> FamilyIdx_Icons, not ContainsInt(D.FamiliesDone, F)?, CountPresent(Fam.Members, Ids) = Fam.Members.Length):
             set D.FamiliesDone += array{F}
-            Storm.AddPoints(option{D.Player}, LabStormFamilyPoints * D.HypeMult())
             AnnounceAll("Лаборатория #{D.PlotIndex + 1} собрала всю семью «{Fam.Name}»!")
 
     RefreshPlot(S:lab_session):void =
@@ -318,7 +323,7 @@ lab_manager_device := class(creative_device):
             set D.Likes += Likes
             var Text:string = "Гастроли «{T.Name}» закончились: +{Likes} Лайков"
             if (Chance(T.CapsuleChance)?):
-                Rarity := if (T.EpicPlus?) then PickWeighted(LabStormCapsuleWeights) else PickWeighted(for (R : LabRarities): R.Weight)
+                Rarity := if (T.EpicPlus?) then PickWeighted(LabEpicPlusWeights) else PickWeighted(for (R : LabRarities): R.Weight)
                 Id := RandomBrainrot(Rarity, Week)
                 D.AddReserve(capsule_rec{Id := Id, Variant := 0})
                 set Text += " и капсула {BrainrotTitle(Id)} в запасе"
@@ -350,10 +355,10 @@ lab_manager_device := class(creative_device):
                 return false
             set D.Cash -= Price
             var V:int = Variant
-            # «Личный шторм» за V-Bucks: вариант не ниже купленного
-            if (First := D.PersonalStorms[0]):
+            # «Сёрдж» за V-Bucks: вариант не ниже купленного
+            if (First := D.PersonalSurges[0]):
                 set V = Max(V, First)
-                set D.PersonalStorms = for (I -> X : D.PersonalStorms, I > 0): X
+                set D.PersonalSurges = for (I -> X : D.PersonalSurges, I > 0): X
             # «Удача конвейера» из Хайп-магазина: +2% за уровень, что капсула станет на вариант выше
             if (V < VariantIdx_Rainbow, Chance(D.ShopLevel(Shop_BeltLuck) * 0.02)?):
                 set V += 1
@@ -382,7 +387,7 @@ lab_manager_device := class(creative_device):
                     else:
                         S.Hud.Toast("Нет капсулы: купи её на конвейере в центре")
             else:
-                # чужой инкубатор: удар помогает хозяину, очки шторма — тебе
+                # чужой инкубатор: удар помогает хозяину
                 Boost(S, Plot, Index)
 
     IncubatorHit(Plot:lab_plot_device, Agent:agent, Index:int):void =
@@ -399,7 +404,6 @@ lab_manager_device := class(creative_device):
             Crit := Chance(HD.CritChance())
             Amount := if (Crit?) then LabHitSpeedup * HD.CritMult() else LabHitSpeedup
             Owner.SetIncubator(Index, timer_rec{Active := true, Kind := T.Kind, Variant := T.Variant, EndsAt := T.EndsAt - Amount, Total := T.Total})
-            Storm.AddPoints(option{HD.Player}, LabStormHitPoints * HD.HypeMult())
             HD.AddQuest(Quest_PickaxeHit, 1, LabDay(LabNow()))
             if (Crit?):
                 Hitter.Hud.Toast("КРИТ! Минус {FloorInt(Amount)} с")
@@ -483,17 +487,65 @@ lab_manager_device := class(creative_device):
         for (P -> S : Sessions):
             S.Hud.Toast(Text)
 
-    OnStormStart(Winners:[]player):void =
-        AnnounceAll("ХАЙП-ШТОРМ! 3 минуты: доход x2, конвейер быстрее, редкие капсулы чаще")
-        Week := CurrentWeek()
-        Day := LabDay(LabNow())
-        for (P : Winners, S := Sessions[P]):
-            Id := RandomBrainrot(PickWeighted(LabStormCapsuleWeights), Week)
-            S.Data.AddReserve(capsule_rec{Id := Id, Variant := 0})
-            S.Data.AddQuest(Quest_Storm, 1, Day)
-            S.Hud.Toast("За вклад в шторм: капсула {BrainrotTitle(Id)} в запасе!")
+    # ------------------------------------------------ мем-мусор (как Chopper в Droid Tycoon)
+    PickUpJunk(Agent:agent, Kind:int):logic =
+        if (P := player[Agent], S := Sessions[P]):
+            D := S.Data
+            if (D.CarryJunk >= 0):
+                S.Hud.Toast("Руки заняты мусором — сначала отнеси его Сахуру")
+                return false
+            Count := if (Chance(D.JunkDoubleChance())?) then 2 else 1
+            set D.CarryJunk = Kind
+            set D.CarryJunkCount = Count
+            Extra := if (Count > 1) then " x2" else ""
+            if (Name := LabJunkNames[Kind]):
+                S.Hud.Toast("Подобран: {Name}{Extra}. Неси Сахуру у портала!")
+            return true
+        false
 
-    OnStormEnd():void = AnnounceAll("Шторм закончился. Копим хайп дальше!")
+    DeliverJunk(Agent:agent):void =
+        if (P := player[Agent], S := Sessions[P]):
+            D := S.Data
+            if (V := LabJunkVariant[D.CarryJunk], Name := LabJunkNames[D.CarryJunk]):
+                var Done:int = 0
+                for (I := 1..D.CarryJunkCount):
+                    Ok := Belt.ApplySurge(V)
+                    if (Ok?):
+                        set Done += 1
+                set D.CarryJunk = -1
+                set D.CarryJunkCount = 0
+                D.AddQuest(Quest_Junk, 1, LabDay(LabNow()))
+                if (Done > 0):
+                    AnnounceAll("Сёрдж! Лаборатория #{D.PlotIndex + 1} сдала {Name}: капсула у портала стала «{VariantName(V)}»")
+                else:
+                    S.Hud.Toast("Сахур принял мусор, но на конвейере нет капсулы ниже «{VariantName(V)}»")
+            else:
+                S.Hud.Toast("Нет мусора — разбей кучу мем-мусора на площади")
+
+    # ------------------------------------------------ лайки от гостей
+    LikePlot(Plot:lab_plot_device, Agent:agent):void =
+        if (P := player[Agent], S := Sessions[P]):
+            if (Owner := Plot.Owner?):
+                if (Owner.Player = P):
+                    S.Hud.Toast("Свою лабораторию лайкать нельзя — зови друзей!")
+                    return
+                D := S.Data
+                Day := LabDay(LabNow())
+                if (D.LikeDay <> Day):
+                    set D.LikeDay = Day
+                    set D.LikedPlots = array{}
+                if (ContainsInt(D.LikedPlots, Plot.PlotNumber)?):
+                    S.Hud.Toast("Сегодня ты уже лайкал эту лабораторию")
+                    return
+                set D.LikedPlots += array{Plot.PlotNumber}
+                set D.Likes += LabGuestLikes
+                set Owner.Likes += LabOwnerLikes
+                D.AddQuest(Quest_Like, 1, Day)
+                S.Hud.Toast("Лайк! +{LabGuestLikes} Лайков тебе, +{LabOwnerLikes} хозяину")
+                if (OS := Sessions[Owner.Player]):
+                    OS.Hud.Toast("Твою лабораторию лайкнули! +{LabOwnerLikes} Лайков")
+            else:
+                S.Hud.Toast("Эта лаборатория свободна")
 
     # ------------------------------------------------ станции хаба и меню
     OnMenuKey(Agent:agent):void =
@@ -672,7 +724,6 @@ lab_manager_device := class(creative_device):
             set D.FusionPick = array{}
             Sec := Preview.Minutes * 60.0
             D.SetFusion(Slot, timer_rec{Active := true, Kind := Preview.Id, Variant := Preview.Variant, EndsAt := Now + Sec, Total := Sec})
-            Storm.AddPoints(option{D.Player}, LabStormFusionPoints * D.HypeMult())
             D.AddQuest(Quest_Fusion, 1, LabDay(Now))
             RefreshPlot(S)
             if (Preview.Recipe >= 0, not ContainsInt(D.RecipesFound, Preview.Recipe)?):
@@ -736,7 +787,6 @@ lab_manager_device := class(creative_device):
                 set Crystals += 1
             set D.Likes += Likes
             set D.Crystals += Crystals
-            Storm.AddPoints(option{D.Player}, LabStormQuestPoints * D.HypeMult())
             S.Hud.Toast("Задание выполнено: +{Likes} Лайков, +{Crystals} кристаллов")
 
     # ------------------------------------------------ награды извне (ивенты, пиньята, покупки)
@@ -763,20 +813,17 @@ lab_manager_device := class(creative_device):
     GrantOffer(P:player, OfferIndex:int):void =
         if (S := Sessions[P], O := LabOffers[OfferIndex]):
             D := S.Data
-            if (O.Key = "storm_rainbow"):
-                set D.PersonalStorms += array{VariantIdx_Rainbow}
-            else if (O.Key = "storm_lava"):
-                set D.PersonalStorms += array{VariantIdx_Lava}
-            else if (O.Key = "storm_viral"):
-                set D.PersonalStorms += array{VariantIdx_Viral}
-            else if (O.Key = "hype_bomb"):
-                Storm.AddBomb()
-                AnnounceAll("ХАЙП-БОМБА! Шкала шторма +50% для всего лобби")
+            if (O.Key = "surge_rainbow"):
+                set D.PersonalSurges += array{VariantIdx_Rainbow}
+            else if (O.Key = "surge_lava"):
+                set D.PersonalSurges += array{VariantIdx_Lava}
+            else if (O.Key = "surge_viral"):
+                set D.PersonalSurges += array{VariantIdx_Viral}
             else if (O.Key = "lab_pack"):
                 D.GrantUnlock(Unlock_LabPack)
-                set D.PersonalStorms += array{VariantIdx_Rainbow, VariantIdx_Rainbow}
+                set D.PersonalSurges += array{VariantIdx_Rainbow, VariantIdx_Rainbow}
             else if (O.Key = "fusion_pack"):
                 D.GrantUnlock(Unlock_FusionPack)
-                set D.PersonalStorms += array{VariantIdx_Lava, VariantIdx_Lava, VariantIdx_Lava}
+                set D.PersonalSurges += array{VariantIdx_Lava, VariantIdx_Lava, VariantIdx_Lava}
             S.Hud.Toast("Спасибо за покупку: {O.Name}!")
             SavePlayer(S)

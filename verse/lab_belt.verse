@@ -1,4 +1,4 @@
-# Конвейер «Красная дорожка». Капсулы едут шагами: каждые 4 с (в шторм — 2 с) все сдвигаются на одно
+# Конвейер «Красная дорожка». Капсулы едут шагами: каждые 4 с все сдвигаются на одно
 # «окно». Окно — это button_device вдоль ленты: игрок подходит и нажимает «Купить».
 # Порядок окон в массиве Windows — от портала к концу ленты.
 using { /Fortnite.com/Devices }
@@ -50,8 +50,7 @@ lab_belt_device := class(creative_device):
             Step()
             Sleep(StepSeconds())
 
-    StepSeconds():float =
-        if (M := Manager?, M.Storm.IsActive()?) then LabStormBeltStepSec else LabBeltStepSec
+    StepSeconds():float = LabBeltStepSec
 
     WindowPos(I:int):vector3 =
         if (W := Windows[I]) then W.GetTransform().Translation + vector3{Z := CapsuleLift} else vector3{}
@@ -92,10 +91,8 @@ lab_belt_device := class(creative_device):
     RollCapsule(M:lab_manager_device):belt_capsule =
         Week := M.CurrentWeek()
         Now := GetSimulationElapsedTime()
-        InStorm := M.Storm.IsActive()
         Weights := for (R -> Def : LabRarities):
-            StormMult := if (InStorm?, Mu := LabStormWeightMult[R]) then Mu else 1.0
-            if (R < RarityIdx_Iconic) then Def.Weight * StormMult else 0.0
+            if (R < RarityIdx_Iconic) then Def.Weight else 0.0
         var Rarity:int = PickWeighted(Weights)
         var Variant:int = RollVariant()
         # гарантии по таймерам (их показывает табло)
@@ -116,6 +113,19 @@ lab_belt_device := class(creative_device):
         if (RarityOf(Id) >= RarityIdx_Legendary or Variant >= VariantIdx_Rainbow):
             M.AnnounceAll("На конвейере: {BrainrotTitle(Id)} — {RarityName(Id)}, {VariantName(Variant)}!")
         C
+
+    # Сёрдж (сдали мем-мусор Сахуру): ближайшая к порталу капсула ниже этого варианта становится этим вариантом.
+    # Купить её может любой игрок — как сёрдж Chopper'а в Droid Tycoon.
+    ApplySurge(Variant:int):logic =
+        var Done:logic = false
+        for (I -> Entry : Slots, not Done?, C := Entry?, C.Variant < Variant):
+            New := belt_capsule{Id := C.Id, Variant := Variant}
+            set New.Prop = C.Prop
+            if (set Slots[I] = option{New}) {}
+            set Done = true
+        if (M := Manager?):
+            RefreshTexts(M)
+        Done
 
     OnWindow(Agent:agent, Index:int):void =
         if (M := Manager?, Entry := Slots[Index], C := Entry?):

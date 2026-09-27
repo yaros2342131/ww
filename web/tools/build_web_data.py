@@ -19,13 +19,14 @@ def main():
     idx = {k: i for i, k in enumerate(ids)}
     fam_of = {m: i for i, f in enumerate(c["families"]) for m in f["members"]}
     title = {k: json.loads((ROOT / "models" / "brainrots" / k / "info.json").read_text(encoding="utf-8"))["title"] for k in ids}
-    reb, sr, st, fu = c["rebirth"], c["super_rebirth"], c["hype_storm"], c["fusion"]
+    reb, sr, fu = c["rebirth"], c["super_rebirth"], c["fusion"]
+    junk, likes = c["meme_junk"], c["guest_likes"]
     lo, hi = sr["crystals_at_rebirth"]["12"], sr["crystals_at_rebirth"]["35"]
     start, top = sr["unlock"]["rebirth"], reb["levels"]
     g = {x["what"]: x for x in c["belt"]["guaranteed"]}
     data = {
         "rarities": [{"key": r["id"], "name": r["name"], "income": r["income_per_sec"], "payback": r["payback_sec"] or 0,
-                      "hatch": r["hatch_sec"], "weight": r["belt_weight"], "hype": r["hype_points"],
+                      "hatch": r["hatch_sec"], "weight": r["belt_weight"],
                       "sellLikes": r["sell_likes"] or 0} for r in c["rarities"]],
         "variants": [{"key": v["id"], "name": v["name"], "mult": v["income_mult"], "belt": v["belt_chance"] or 0,
                       "week": v["available_from_week"]} for v in c["variants"]],
@@ -51,6 +52,7 @@ def main():
         "superCrystals": [round(lo * (hi / lo) ** ((r - start) / (top - start))) for r in range(start, top + 1)],
         "companionPerk": [c["companion_perk_by_rarity"][r] for r in RAR[:5]] + [0.4],
         "events": c["events"]["schedule"],
+        "junk": [{"name": k["name"], "weight": k["weight"], "variant": VAR.index(k["surge_variant"]), "week": k["from_week"]} for k in junk["kinds"]],
         "n": {
             "startCash": c["start_cash"], "sellShare": c["sell"]["cash_share"], "reserveMax": c["reserve_max"],
             "rebirthFirst": reb["first_cost"], "rebirthGrowth": reb["cost_growth"], "rebirthMult": reb["income_mult_per_level"],
@@ -64,13 +66,10 @@ def main():
             "gLava": g["lava_variant"]["every_min"] * 60, "gLavaWeek": g["lava_variant"]["from_week"],
             "incStart": c["incubators"]["start"], "incMax": c["incubators"]["max"], "hit": c["incubators"]["pickaxe_hit_speedup_sec"],
             "crit": c["incubators"]["crit_chance"], "critMult": c["incubators"]["crit_mult"],
-            "stormHit": st["points"]["pickaxe_hit"], "stormFusion": st["points"]["fusion"],
-            "stormFamily": st["points"]["family_set_completed"], "stormQuest": st["points"]["daily_quest"],
-            "stormWindow": st["threshold_window_min"] * 60, "stormFloor": st["threshold_floor_per_player"],
-            "stormDur": st["duration_sec"], "stormCooldown": st["cooldown_min_sec"], "stormIncome": st["effects"]["income_mult"],
-            "stormBelt": st["effects"]["belt_spawn_interval_sec"], "stormWeights": [st["effects"]["belt_weight_mult"][r] for r in RAR[:5]],
-            "stormShare": st["contributor_reward"]["min_share_of_threshold"],
-            "stormCapsule": [0, 0] + [st["contributor_reward"]["rarity_weights"][r] for r in ("epic", "legendary", "mythic")],
+            "epicPlus": [0, 0] + [c["epic_plus_weights"][r] for r in ("epic", "legendary", "mythic")],
+            "junkRespawn": junk["pile_respawn_sec"], "junkHits": junk["hits_to_collect"], "junkSpots": junk["pile_spots"],
+            "spicyWeek": junk["spicy_week"]["week"], "spicyRespawn": junk["spicy_week"]["respawn_mult"], "spicyLava": junk["spicy_week"]["lava_weight"],
+            "ownerLikes": likes["owner_likes"], "guestLikes": likes["guest_likes"],
             "fusionWeek": fu["available_from_week"], "fusionRebirth": fu["unlock_rebirth"],
             "fusionVarMin": fu["variant_upgrade"]["time_min"], "fusionMin": [0, 0, fu["time_min"]["epic"], fu["time_min"]["legendary"],
                                                                          fu["time_min"]["mythic"], fu["time_min"]["mythic"]],

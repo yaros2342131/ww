@@ -35,6 +35,7 @@ lab_plot_device := class(creative_device):
     @editable Incubators:[]incubator_slot = array{}
     @editable MenuButton:button_device = button_device{}        # «Лаборатория» — главное меню
     @editable RebirthButton:button_device = button_device{}     # станция перерождения
+    @editable LikeButton:button_device = button_device{}        # у входа: гости лайкают лабораторию
     @editable PodiumColumns:int = 6
     @editable PodiumSpacing:float = 260.0
     # Смещение первого места подиума от устройства: X — вперёд, Y — вправо, Z — вверх
@@ -58,6 +59,8 @@ lab_plot_device := class(creative_device):
             Slot.Hits.DamagedEvent.Subscribe(H.OnHit)
         MenuButton.InteractedWithEvent.Subscribe(OnMenuButton)
         RebirthButton.InteractedWithEvent.Subscribe(OnRebirthButton)
+        LikeButton.InteractedWithEvent.Subscribe(OnLikeButton)
+        LikeButton.SetInteractionText(LabText("Лайкнуть лабораторию"))
         MenuButton.SetInteractionText(LabText("Лаборатория"))
         RebirthButton.SetInteractionText(LabText("Перерождение"))
         Release()
@@ -89,6 +92,10 @@ lab_plot_device := class(creative_device):
     OnRebirthButton(Agent:agent):void =
         if (M := Manager?):
             M.OpenScreen(Agent, Act_Rebirth, 0)
+
+    OnLikeButton(Agent:agent):void =
+        if (M := Manager?):
+            M.LikePlot(Self, Agent)
 
     OnIncubatorInteract(Agent:agent, Index:int):void =
         if (M := Manager?):

@@ -1,0 +1,11 @@
+{
+  "name": "JunkPile_Lava",
+  "tris": 1488,
+  "size_cm": [
+    140,
+    120,
+    102
+  ],
+  "fbx": "SM_JunkPile_Lava.fbx",
+  "texture": "T_JunkPile_Lava_BaseColor.png"
+}

@@ -12,12 +12,12 @@
   },
   "start_cash": 1000,
   "rarities": [
-    { "id": "common",    "name": "Обычный",     "income_per_sec": 5,     "payback_sec": 120,  "hatch_sec": 10,  "belt_weight": 55,  "hype_points": 1,  "sell_likes": 1 },
-    { "id": "rare",      "name": "Редкий",      "income_per_sec": 40,    "payback_sec": 240,  "hatch_sec": 30,  "belt_weight": 28,  "hype_points": 3,  "sell_likes": 4 },
-    { "id": "epic",      "name": "Эпический",   "income_per_sec": 250,   "payback_sec": 480,  "hatch_sec": 60,  "belt_weight": 12,  "hype_points": 8,  "sell_likes": 15 },
-    { "id": "legendary", "name": "Легендарный", "income_per_sec": 1500,  "payback_sec": 900,  "hatch_sec": 120, "belt_weight": 4.5, "hype_points": 20, "sell_likes": 60 },
-    { "id": "mythic",    "name": "Мифический",  "income_per_sec": 10000, "payback_sec": 1800, "hatch_sec": 300, "belt_weight": 0.5, "hype_points": 50, "sell_likes": 250 },
-    { "id": "iconic",    "name": "Икона",       "income_per_sec": 25000, "payback_sec": null, "hatch_sec": 300, "belt_weight": 0,   "hype_points": 80, "sell_likes": null }
+    { "id": "common",    "name": "Обычный",     "income_per_sec": 5,     "payback_sec": 120,  "hatch_sec": 10,  "belt_weight": 55,  "sell_likes": 1 },
+    { "id": "rare",      "name": "Редкий",      "income_per_sec": 40,    "payback_sec": 240,  "hatch_sec": 30,  "belt_weight": 28,  "sell_likes": 4 },
+    { "id": "epic",      "name": "Эпический",   "income_per_sec": 250,   "payback_sec": 480,  "hatch_sec": 60,  "belt_weight": 12,  "sell_likes": 15 },
+    { "id": "legendary", "name": "Легендарный", "income_per_sec": 1500,  "payback_sec": 900,  "hatch_sec": 120, "belt_weight": 4.5, "sell_likes": 60 },
+    { "id": "mythic",    "name": "Мифический",  "income_per_sec": 10000, "payback_sec": 1800, "hatch_sec": 300, "belt_weight": 0.5, "sell_likes": 250 },
+    { "id": "iconic",    "name": "Икона",       "income_per_sec": 25000, "payback_sec": null, "hatch_sec": 300, "belt_weight": 0,   "sell_likes": null }
   ],
   "capsule_price_rule": "цена капсулы = income_per_sec × payback_sec × множитель варианта",
   "sell": { "cash_share": 0.3, "likes_rule": "rarities[].sell_likes × (номер варианта + 1)" },
@@ -50,7 +50,7 @@
     { "id": "fruit",   "name": "Фрукты",   "companion_perk": "offline_bonus", "members": ["Strawberrelli_Flamingelli", "Glorbo_Fruttodrillo", "Pipi_Kiwi"] },
     { "id": "savanna", "name": "Саванна",  "companion_perk": "tour_speed",    "members": ["Cacto_Hipopotamo", "Lirili_Larila", "Cocofanto_Elefanto"] },
     { "id": "tech",    "name": "Техника",  "companion_perk": "fusion_speed",  "members": ["Rhino_Toasterino", "Frigo_Camelo", "Talpa_Di_Ferro"] },
-    { "id": "space",   "name": "Космос",   "companion_perk": "hype_bonus",    "members": ["Girafa_Celestre", "La_Vacca_Saturno_Saturnita"] },
+    { "id": "space",   "name": "Космос",   "companion_perk": "junk_bonus",    "members": ["Girafa_Celestre", "La_Vacca_Saturno_Saturnita"] },
     { "id": "street",  "name": "Улица",    "companion_perk": "ideal_luck",    "members": ["Boneca_Ambalabu", "Spioniro_Golubiro"] },
     { "id": "icons",   "name": "Иконы",    "companion_perk": "unique",        "members": ["Tung_Tung_Tung_Sahur", "Tralalero_Tralala", "SixSeven_67"] }
   ],
@@ -76,7 +76,7 @@
     "offline_bonus": "+X% к ставке офлайн-дохода",
     "tour_speed":    "−X% ко времени гастролей",
     "fusion_speed":  "−X% ко времени скрещивания",
-    "hype_bonus":    "+X% очков Хайпа",
+    "junk_bonus":    "X шанс получить двойной мем-мусор",
     "ideal_luck":    "+X% к шансу Идеального (относительно)"
   },
   "companion_slots": { "start": 1, "max": 2 },
@@ -121,7 +121,7 @@
     { "id": "Svinina_Bombardino",         "rarity": "mythic",    "source": "fusion", "release_week": 3 },
     { "id": "La_Vacca_Saturno_Saturnita", "rarity": "mythic",    "source": "fusion", "release_week": 8 },
     { "id": "Tung_Tung_Tung_Sahur",       "rarity": "iconic",    "source": "event",  "release_week": 1, "perk": "+50% к шансу и силе крита кирки (бита)" },
-    { "id": "Tralalero_Tralala",          "rarity": "iconic",    "source": "event",  "release_week": 4, "perk": "+25% к очкам Хайпа и +10% шанс, что брейнрот вылупится на вариант выше" },
+    { "id": "Tralalero_Tralala",          "rarity": "iconic",    "source": "event",  "release_week": 4, "perk": "+25% шанс двойного мем-мусора и +10% шанс, что брейнрот вылупится на вариант выше" },
     { "id": "SixSeven_67",                "rarity": "iconic",    "source": "event",  "release_week": 7, "perk": "×1.067 ко всему доходу + эмоция «six-seven»" }
   ],
   "belt": {
@@ -145,21 +145,29 @@
     "newbie_protection_min": 30,
     "plot_barrier_blocks_projectiles": true
   },
-  "hype_storm": {
-    "points": { "hatch": "rarities[].hype_points", "pickaxe_hit": 0.2, "fusion": 10, "family_set_completed": 25, "daily_quest": 5 },
-    "threshold_rule": "порог = очки, набранные лобби за последние threshold_window_min минут, но не меньше threshold_floor_per_player × игроков; так шторм идёт примерно раз в 12–20 мин на любом этапе, а всплеск активности его приближает",
-    "threshold_window_min": 12,
-    "threshold_floor_per_player": 20,
-    "duration_sec": 180,
-    "cooldown_min_sec": 600,
-    "effects": {
-      "income_mult": 2,
-      "belt_spawn_interval_sec": 2,
-      "belt_weight_mult": { "common": 1, "rare": 1, "epic": 2, "legendary": 3, "mythic": 3 }
-    },
-    "contributor_reward": { "min_share_of_threshold": 0.05, "reward": "1 штормовая капсула (Эпическая или выше), бесплатно", "rarity_weights": { "epic": 70, "legendary": 25, "mythic": 5 } },
-    "target_interval_min": [12, 20]
+  "meme_junk": {
+    "_idea": "аналог Chopper из Droid Tycoon: собираешь мусор, сдаёшь Сахуру — капсула на конвейере становится редкой",
+    "collector": "Tung_Tung_Tung_Sahur",
+    "pile_spots": 8,
+    "pile_respawn_sec": 45,
+    "hits_to_collect": 5,
+    "carry_max": 1,
+    "kinds": [
+      { "id": "gold",    "name": "Золотой мем-мусор",  "weight": 70, "surge_variant": "gold",    "from_week": 0 },
+      { "id": "rainbow", "name": "Радужный мем-мусор", "weight": 25, "surge_variant": "rainbow", "from_week": 0 },
+      { "id": "lava",    "name": "Лавовый мем-мусор",  "weight": 5,  "surge_variant": "lava",    "from_week": 5 }
+    ],
+    "surge_rule": "сдал мусор Сахуру → капсула в первом окне конвейера становится этого варианта (если он выше); купить её может любой игрок",
+    "surge_announce": true,
+    "spicy_week": { "week": 6, "respawn_mult": 0.5, "lava_weight": 20 }
   },
+  "guest_likes": {
+    "_idea": "зашёл на чужой участок, нажал «Лайкнуть лабораторию» — Лайки получают оба",
+    "owner_likes": 20,
+    "guest_likes": 10,
+    "per_plot_per_day": 1
+  },
+  "epic_plus_weights": { "epic": 70, "legendary": 25, "mythic": 5 },
   "fusion": {
     "unlock_rebirth": 3,
     "available_from_week": 3,
@@ -263,13 +271,13 @@
   "daily_quests": {
     "count": 3,
     "pool": {
-      "easy":   [["hatch", 5], ["buy_capsule", 5], ["pickaxe_hit", 100], ["sell", 3]],
-      "medium": [["hatch", 20], ["storm", 1], ["tour", 1], ["upgrade", 1], ["pickaxe_hit", 400]],
-      "hard":   [["hatch_epic", 3], ["storm", 3], ["fusion", 1], ["hatch", 60]]
+      "easy":   [["hatch", 5], ["buy_capsule", 5], ["like", 2], ["pickaxe_hit", 100], ["sell", 3]],
+      "medium": [["hatch", 20], ["junk", 2], ["tour", 1], ["upgrade", 1], ["pickaxe_hit", 400]],
+      "hard":   [["hatch_epic", 3], ["junk", 5], ["fusion", 1], ["hatch", 60]]
     },
     "pick_rule": "задание дня = pool[сложность][(номер дня UTC) mod длина пула] — у всех игроков одинаковые",
     "rewards": { "easy": { "likes": 20 }, "medium": { "likes": 60 }, "hard": { "likes": 150, "hype_crystals": 1 } },
-    "examples": ["Выведи 5 брейнротов", "Собери семью из 3 брейнротов", "Сделай 200 ударов киркой по инкубатору", "Поучаствуй в Хайп-шторме", "Отправь брейнрота на гастроли", "Продай 3 брейнрота"]
+    "examples": ["Выведи 5 брейнротов", "Собери семью из 3 брейнротов", "Сделай 200 ударов киркой по инкубатору", "Сдай мем-мусор Сахуру", "Лайкни 2 чужие лаборатории", "Отправь брейнрота на гастроли", "Продай 3 брейнрота"]
   },
   "tours": {
     "slots": 1,
@@ -282,14 +290,13 @@
     ]
   },
   "vbucks_offers": [
-    { "id": "storm_rainbow",  "name": "Личный шторм: Радужный",      "price": 200,  "type": "consumable", "effect": "следующая твоя капсула на конвейере — Радужная", "paid_random_item": false },
-    { "id": "storm_lava",     "name": "Личный шторм: Лавовый",       "price": 300,  "type": "consumable", "effect": "следующая твоя капсула — Лавовая", "paid_random_item": false, "from_week": 5 },
-    { "id": "storm_viral",    "name": "Личный шторм: Вирусный",      "price": 400,  "type": "consumable", "effect": "следующая твоя капсула — Вирусная", "paid_random_item": false, "from_week": 7 },
-    { "id": "hype_bomb",      "name": "Хайп-бомба (для всего лобби)", "price": 150,  "type": "consumable", "effect": "+50% к Хайп-метру лобби и объявление «Хайп-бомба!» для всех", "paid_random_item": false },
+    { "id": "surge_rainbow",  "name": "Сёрдж: Радужный",             "price": 200,  "type": "consumable", "effect": "следующая твоя капсула с конвейера — Радужная", "paid_random_item": false },
+    { "id": "surge_lava",     "name": "Сёрдж: Лавовый",              "price": 300,  "type": "consumable", "effect": "следующая твоя капсула — Лавовая", "paid_random_item": false, "from_week": 5 },
+    { "id": "surge_viral",    "name": "Сёрдж: Вирусный",             "price": 400,  "type": "consumable", "effect": "следующая твоя капсула — Вирусная", "paid_random_item": false, "from_week": 7 },
     { "id": "hat",            "name": "Шляпа для брейнрота",          "price": 250,  "type": "durable",    "effect": "косметика", "paid_random_item": false },
     { "id": "plot_paint",     "name": "Покраска участка",             "price": 300,  "type": "durable",    "effect": "косметика", "paid_random_item": false },
-    { "id": "lab_pack",       "name": "Набор лаборанта",              "price": 1200, "type": "bundle",     "effect": "+1 инкубатор навсегда и 2 личных Радужных шторма; инкубатор есть и за кристаллы", "paid_random_item": false },
-    { "id": "fusion_pack",    "name": "Набор скрещивания",            "price": 1800, "type": "bundle",     "effect": "скрещивание ×2 быстрее навсегда, 2-й стол скрещивания, 3 Лавовых шторма", "paid_random_item": false, "from_week": 3 }
+    { "id": "lab_pack",       "name": "Набор лаборанта",              "price": 1200, "type": "bundle",     "effect": "+1 инкубатор навсегда и 2 Радужных сёрджа; инкубатор есть и за кристаллы", "paid_random_item": false },
+    { "id": "fusion_pack",    "name": "Набор скрещивания",            "price": 1800, "type": "bundle",     "effect": "скрещивание ×2 быстрее навсегда, 2-й стол скрещивания, 3 Лавовых сёрджа", "paid_random_item": false, "from_week": 3 }
   ],
   "events": {
     "launch_epoch_utc": 0,
@@ -301,8 +308,8 @@
       { "week": 2,  "name": "Драконья неделя",        "what": "первый мифик Dragon Cannelloni, табло «мифик каждый час», комбо «Ужин с драконом»" },
       { "week": 3,  "name": "Лаборатория скрещивания", "what": "открывается скрещивание и 6 секретных рецептов; первооткрыватель на сервере получает значок; комбо «Итальянский обед» и «Кошки-мышки»" },
       { "week": 4,  "name": "Акулий забег",            "what": "паркур-трасса → икона Tralalero Tralala; мифик Draghetto Gelato" },
-      { "week": 5,  "name": "Извержение",              "what": "вариант Лавовый, личный Лавовый шторм, супер-перерождение «Вирусный взрыв» + Хайп-магазин" },
-      { "week": 6,  "name": "Острая неделя",           "what": "мифик Drakonino Peperonino; Хайп-шторм ×2 длиннее на время ивента" },
+      { "week": 5,  "name": "Извержение",              "what": "вариант Лавовый, Лавовый мем-мусор и сёрдж, супер-перерождение «Вирусный взрыв» + Хайп-магазин" },
+      { "week": 6,  "name": "Острая неделя",           "what": "мифик Drakonino Peperonino; в субботу мем-мусор появляется вдвое чаще и Лавового больше" },
       { "week": 7,  "name": "Six-Seven",               "what": "икона 67; вариант Вирусный" },
       { "week": 8,  "name": "Космос",                  "what": "мифик Girafa Celestre, секретный рецепт La Vacca Saturno Saturnita" },
       { "week": 10, "name": "Космический вариант",     "what": "вариант Космический; начало сезона 2 (новые модели)" }

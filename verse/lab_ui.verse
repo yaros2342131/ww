@@ -34,7 +34,7 @@ lab_hud := class:
     InfoText:text_block = text_block{DefaultTextColor := NamedColors.White}
     HandsText:text_block = text_block{DefaultTextColor := NamedColors.Cyan}
     HintText:text_block = text_block{DefaultTextColor := NamedColors.LightGray}
-    StormText:text_block = text_block{DefaultTextColor := NamedColors.Orange}
+    JunkText:text_block = text_block{DefaultTextColor := NamedColors.Orange}
     EventText:text_block = text_block{DefaultTextColor := NamedColors.HotPink}
     ToastBox:stack_box = stack_box{Orientation := orientation.Vertical}
     var Root:?canvas = false
@@ -50,7 +50,7 @@ lab_hud := class:
         Top := stack_box:
             Orientation := orientation.Vertical
             Slots := array:
-                stack_box_slot{Widget := StormText, HorizontalAlignment := horizontal_alignment.Center}
+                stack_box_slot{Widget := JunkText, HorizontalAlignment := horizontal_alignment.Center}
                 stack_box_slot{Widget := EventText, HorizontalAlignment := horizontal_alignment.Center, Padding := margin{Top := 4.0}}
                 stack_box_slot{Widget := ToastBox, HorizontalAlignment := horizontal_alignment.Center, Padding := margin{Top := 14.0}}
         C := canvas:
@@ -82,7 +82,7 @@ lab_hud := class:
         HandsText.SetText(LabText(Hands))
         HintText.SetText(LabText(Hint))
 
-    SetStorm(Text:string):void = StormText.SetText(LabText(Text))
+    SetJunk(Text:string):void = JunkText.SetText(LabText(Text))
     SetEvent(Text:string):void = EventText.SetText(LabText(Text))
 
     # Всплывающее сообщение на 5 секунд

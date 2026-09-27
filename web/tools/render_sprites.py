@@ -18,7 +18,7 @@ OUT = os.path.join(ROOT, 'web', 'brainrot-lab', 'img')
 SIZE = 256
 PROPS = ['Capsule_Common', 'Capsule_Rare', 'Capsule_Epic', 'Capsule_Legendary', 'Capsule_Mythic', 'Capsule_Iconic',
          'Incubator', 'MemePortal', 'FusionTable', 'MemeMachine', 'TourBus', 'Pinata', 'HypeTower', 'SahurTotem',
-         'RebirthAltar', 'CappuccinoFountain', 'LemonTree', 'CafeUmbrella']
+         'RebirthAltar', 'CappuccinoFountain', 'LemonTree', 'CafeUmbrella', 'JunkPile_Gold', 'JunkPile_Rainbow', 'JunkPile_Lava', 'LikeHeart']
 
 
 def reset():

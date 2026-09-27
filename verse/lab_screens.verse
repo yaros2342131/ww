@@ -44,8 +44,8 @@ PerkText(Perk:int)<transacts>:string =
         "быстрее гастроли"
     else if (Perk = Perk_FusionSpeed):
         "быстрее скрещивание"
-    else if (Perk = Perk_HypeBonus):
-        "больше очков Хайпа"
+    else if (Perk = Perk_JunkBonus):
+        "шанс двойного мем-мусора"
     else if (Perk = Perk_IdealLuck):
         "шанс Идеального"
     else:
