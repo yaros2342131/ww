@@ -1,0 +1,11 @@
+{
+  "name": "Pinata",
+  "tris": 1364,
+  "size_cm": [
+    200,
+    110,
+    228
+  ],
+  "fbx": "SM_Pinata.fbx",
+  "texture": "T_Pinata_BaseColor.png"
+}

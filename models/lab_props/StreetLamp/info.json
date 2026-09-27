@@ -1,0 +1,11 @@
+{
+  "name": "StreetLamp",
+  "tris": 236,
+  "size_cm": [
+    105,
+    50,
+    385
+  ],
+  "fbx": "SM_StreetLamp.fbx",
+  "texture": "T_StreetLamp_BaseColor.png"
+}

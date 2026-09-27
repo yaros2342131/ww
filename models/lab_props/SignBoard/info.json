@@ -1,0 +1,11 @@
+{
+  "name": "SignBoard",
+  "tris": 752,
+  "size_cm": [
+    295,
+    17,
+    240
+  ],
+  "fbx": "SM_SignBoard.fbx",
+  "texture": "T_SignBoard_BaseColor.png"
+}

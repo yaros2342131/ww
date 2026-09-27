@@ -1,0 +1,11 @@
+{
+  "name": "FusionTable",
+  "tris": 2268,
+  "size_cm": [
+    320,
+    145,
+    266
+  ],
+  "fbx": "SM_FusionTable.fbx",
+  "texture": "T_FusionTable_BaseColor.png"
+}

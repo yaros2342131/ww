@@ -1,0 +1,11 @@
+{
+  "name": "Pedestal_Gold",
+  "tris": 1716,
+  "size_cm": [
+    132,
+    132,
+    32
+  ],
+  "fbx": "SM_Pedestal_Gold.fbx",
+  "texture": "T_Pedestal_Gold_BaseColor.png"
+}

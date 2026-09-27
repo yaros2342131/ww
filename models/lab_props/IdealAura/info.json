@@ -1,0 +1,11 @@
+{
+  "name": "IdealAura",
+  "tris": 1200,
+  "size_cm": [
+    169,
+    136,
+    143
+  ],
+  "fbx": "SM_IdealAura.fbx",
+  "texture": "T_IdealAura_BaseColor.png"
+}

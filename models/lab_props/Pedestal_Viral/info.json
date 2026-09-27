@@ -1,0 +1,11 @@
+{
+  "name": "Pedestal_Viral",
+  "tris": 1716,
+  "size_cm": [
+    132,
+    132,
+    32
+  ],
+  "fbx": "SM_Pedestal_Viral.fbx",
+  "texture": "T_Pedestal_Viral_BaseColor.png"
+}

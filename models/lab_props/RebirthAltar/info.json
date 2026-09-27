@@ -1,0 +1,11 @@
+{
+  "name": "RebirthAltar",
+  "tris": 2664,
+  "size_cm": [
+    280,
+    280,
+    176
+  ],
+  "fbx": "SM_RebirthAltar.fbx",
+  "texture": "T_RebirthAltar_BaseColor.png"
+}

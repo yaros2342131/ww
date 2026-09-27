@@ -1,0 +1,11 @@
+{
+  "name": "CafeUmbrella",
+  "tris": 1400,
+  "size_cm": [
+    280,
+    280,
+    270
+  ],
+  "fbx": "SM_CafeUmbrella.fbx",
+  "texture": "T_CafeUmbrella_BaseColor.png"
+}

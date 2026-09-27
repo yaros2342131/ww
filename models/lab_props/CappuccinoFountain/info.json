@@ -1,0 +1,11 @@
+{
+  "name": "CappuccinoFountain",
+  "tris": 2036,
+  "size_cm": [
+    540,
+    520,
+    295
+  ],
+  "fbx": "SM_CappuccinoFountain.fbx",
+  "texture": "T_CappuccinoFountain_BaseColor.png"
+}

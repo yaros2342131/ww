@@ -1,0 +1,11 @@
+{
+  "name": "TourBus",
+  "tris": 3000,
+  "size_cm": [
+    565,
+    255,
+    290
+  ],
+  "fbx": "SM_TourBus.fbx",
+  "texture": "T_TourBus_BaseColor.png"
+}

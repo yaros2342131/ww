@@ -1,0 +1,11 @@
+{
+  "name": "MemeMachine",
+  "tris": 1308,
+  "size_cm": [
+    140,
+    112,
+    290
+  ],
+  "fbx": "SM_MemeMachine.fbx",
+  "texture": "T_MemeMachine_BaseColor.png"
+}

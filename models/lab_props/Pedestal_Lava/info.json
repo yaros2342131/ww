@@ -1,0 +1,11 @@
+{
+  "name": "Pedestal_Lava",
+  "tris": 1716,
+  "size_cm": [
+    132,
+    132,
+    32
+  ],
+  "fbx": "SM_Pedestal_Lava.fbx",
+  "texture": "T_Pedestal_Lava_BaseColor.png"
+}

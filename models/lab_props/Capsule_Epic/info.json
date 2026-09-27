@@ -1,0 +1,11 @@
+{
+  "name": "Capsule_Epic",
+  "tris": 4108,
+  "size_cm": [
+    46,
+    46,
+    85
+  ],
+  "fbx": "SM_Capsule_Epic.fbx",
+  "texture": "T_Capsule_Epic_BaseColor.png"
+}

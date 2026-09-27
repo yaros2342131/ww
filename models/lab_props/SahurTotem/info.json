@@ -1,0 +1,11 @@
+{
+  "name": "SahurTotem",
+  "tris": 2044,
+  "size_cm": [
+    164,
+    116,
+    360
+  ],
+  "fbx": "SM_SahurTotem.fbx",
+  "texture": "T_SahurTotem_BaseColor.png"
+}

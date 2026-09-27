@@ -1,0 +1,11 @@
+{
+  "name": "MemePortal",
+  "tris": 3056,
+  "size_cm": [
+    540,
+    140,
+    652
+  ],
+  "fbx": "SM_MemePortal.fbx",
+  "texture": "T_MemePortal_BaseColor.png"
+}

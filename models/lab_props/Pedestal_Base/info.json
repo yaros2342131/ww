@@ -1,0 +1,11 @@
+{
+  "name": "Pedestal_Base",
+  "tris": 1716,
+  "size_cm": [
+    132,
+    132,
+    32
+  ],
+  "fbx": "SM_Pedestal_Base.fbx",
+  "texture": "T_Pedestal_Base_BaseColor.png"
+}

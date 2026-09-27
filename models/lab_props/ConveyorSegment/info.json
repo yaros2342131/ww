@@ -1,0 +1,11 @@
+{
+  "name": "ConveyorSegment",
+  "tris": 1864,
+  "size_cm": [
+    300,
+    140,
+    57
+  ],
+  "fbx": "SM_ConveyorSegment.fbx",
+  "texture": "T_ConveyorSegment_BaseColor.png"
+}

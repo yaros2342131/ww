@@ -1,0 +1,11 @@
+{
+  "name": "HypeTower",
+  "tris": 8824,
+  "size_cm": [
+    240,
+    240,
+    970
+  ],
+  "fbx": "SM_HypeTower.fbx",
+  "texture": "T_HypeTower_BaseColor.png"
+}

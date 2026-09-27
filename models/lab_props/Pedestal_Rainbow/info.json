@@ -1,0 +1,11 @@
+{
+  "name": "Pedestal_Rainbow",
+  "tris": 1716,
+  "size_cm": [
+    132,
+    132,
+    32
+  ],
+  "fbx": "SM_Pedestal_Rainbow.fbx",
+  "texture": "T_Pedestal_Rainbow_BaseColor.png"
+}

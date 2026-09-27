@@ -1,0 +1,11 @@
+{
+  "name": "Pedestal_Diamond",
+  "tris": 1716,
+  "size_cm": [
+    132,
+    132,
+    32
+  ],
+  "fbx": "SM_Pedestal_Diamond.fbx",
+  "texture": "T_Pedestal_Diamond_BaseColor.png"
+}

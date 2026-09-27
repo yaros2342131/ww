@@ -1,0 +1,11 @@
+{
+  "name": "Incubator",
+  "tris": 3232,
+  "size_cm": [
+    154,
+    171,
+    227
+  ],
+  "fbx": "SM_Incubator.fbx",
+  "texture": "T_Incubator_BaseColor.png"
+}

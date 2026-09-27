@@ -1,0 +1,11 @@
+{
+  "name": "LemonTree",
+  "tris": 1624,
+  "size_cm": [
+    150,
+    150,
+    275
+  ],
+  "fbx": "SM_LemonTree.fbx",
+  "texture": "T_LemonTree_BaseColor.png"
+}

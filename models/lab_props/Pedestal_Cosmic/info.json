@@ -1,0 +1,11 @@
+{
+  "name": "Pedestal_Cosmic",
+  "tris": 1716,
+  "size_cm": [
+    132,
+    132,
+    32
+  ],
+  "fbx": "SM_Pedestal_Cosmic.fbx",
+  "texture": "T_Pedestal_Cosmic_BaseColor.png"
+}
