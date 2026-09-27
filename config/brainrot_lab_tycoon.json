@@ -20,6 +20,8 @@
     { "id": "iconic",    "name": "Икона",       "income_per_sec": 25000, "payback_sec": null, "hatch_sec": 300, "belt_weight": 0,   "hype_points": 80, "sell_likes": null }
   ],
   "capsule_price_rule": "цена капсулы = income_per_sec × payback_sec × множитель варианта",
+  "sell": { "cash_share": 0.3, "likes_rule": "rarities[].sell_likes × (номер варианта + 1)" },
+  "reserve_max": 10,
   "variants": [
     { "id": "base",    "name": "Базовый",       "income_mult": 1,   "belt_chance": null,  "available_from_week": 0 },
     { "id": "gold",    "name": "Золотой",       "income_mult": 2,   "belt_chance": 0.05,  "available_from_week": 0 },
@@ -41,9 +43,9 @@
   "families": [
     { "id": "cafe",    "name": "Кофейня",  "companion_perk": "hatch_speed",   "members": ["Ballerina_Cappuccina", "Cappuccino_Assassino", "Espresso_Signora"] },
     { "id": "dragons", "name": "Драконы",  "companion_perk": "pickaxe_crit",  "members": ["Dragon_Cannelloni", "Draghetto_Gelato", "Drakonino_Peperonino"] },
-    { "id": "air",     "name": "Авиация",  "companion_perk": "move_speed",    "members": ["Bombardiro_Crocodilo", "Bombombini_Gusini", "Svinina_Bombardino"] },
+    { "id": "air",     "name": "Авиация",  "companion_perk": "belt_discount",  "members": ["Bombardiro_Crocodilo", "Bombombini_Gusini", "Svinina_Bombardino"] },
     { "id": "jungle",  "name": "Джунгли",  "companion_perk": "likes_bonus",   "members": ["Chimpanzini_Bananini", "Pandaccini_Bananini", "Orangutini_Ananassini", "Brr_Brr_Patapim", "Burbaloni_Luliloli"] },
-    { "id": "ocean",   "name": "Океан",    "companion_perk": "variant_luck",  "members": ["Bananita_Dolphinita", "Blueberrinni_Octopussini", "Graipuss_Medussi", "Chef_Crabracadabra", "Trippi_Troppi", "Trulimero_Trulicina"] },
+    { "id": "ocean",   "name": "Океан",    "companion_perk": "variant_up",    "members": ["Bananita_Dolphinita", "Blueberrinni_Octopussini", "Graipuss_Medussi", "Chef_Crabracadabra", "Trippi_Troppi", "Trulimero_Trulicina"] },
     { "id": "kitchen", "name": "Кухня",    "companion_perk": "cash_bonus",    "members": ["Spaghetti_Tualetti", "Salamino_Penguino", "Noobini_Pizzanini", "Tim_Cheese"] },
     { "id": "fruit",   "name": "Фрукты",   "companion_perk": "offline_bonus", "members": ["Strawberrelli_Flamingelli", "Glorbo_Fruttodrillo", "Pipi_Kiwi"] },
     { "id": "savanna", "name": "Саванна",  "companion_perk": "tour_speed",    "members": ["Cacto_Hipopotamo", "Lirili_Larila", "Cocofanto_Elefanto"] },
@@ -64,6 +66,20 @@
     { "id": "cat_and_mouse", "name": "Кошки-мышки",      "bonus": 0.30, "members": ["Trippi_Troppi", "Trulimero_Trulicina", "Tim_Cheese"], "release_week": 3 },
     { "id": "banana_heaven", "name": "Банановый рай",    "bonus": 0.30, "members": ["Chimpanzini_Bananini", "Pandaccini_Bananini", "Bananita_Dolphinita"], "release_week": 0 }
   ],
+  "companion_perks": {
+    "hatch_speed":   "−X% ко времени вылупления",
+    "pickaxe_crit":  "+X к шансу крита кирки (абсолютно: 0.05 → 5%)",
+    "belt_discount": "−X% к цене капсул (не больше 40%)",
+    "likes_bonus":   "+X% Лайков",
+    "variant_up":    "X шанс, что брейнрот вылупится на вариант выше (не выше Радужного)",
+    "cash_bonus":    "+X% Кэша",
+    "offline_bonus": "+X% к ставке офлайн-дохода",
+    "tour_speed":    "−X% ко времени гастролей",
+    "fusion_speed":  "−X% ко времени скрещивания",
+    "hype_bonus":    "+X% очков Хайпа",
+    "ideal_luck":    "+X% к шансу Идеального (относительно)"
+  },
+  "companion_slots": { "start": 1, "max": 2 },
   "companion_perk_by_rarity": { "common": 0.05, "rare": 0.10, "epic": 0.15, "legendary": 0.25, "mythic": 0.40 },
   "companion_variant_bonus": "перк × (1 + 0.1 × номер варианта), base = 0",
   "brainrots": [
@@ -105,7 +121,7 @@
     { "id": "Svinina_Bombardino",         "rarity": "mythic",    "source": "fusion", "release_week": 3 },
     { "id": "La_Vacca_Saturno_Saturnita", "rarity": "mythic",    "source": "fusion", "release_week": 8 },
     { "id": "Tung_Tung_Tung_Sahur",       "rarity": "iconic",    "source": "event",  "release_week": 1, "perk": "+50% к шансу и силе крита кирки (бита)" },
-    { "id": "Tralalero_Tralala",          "rarity": "iconic",    "source": "event",  "release_week": 4, "perk": "+25% к скорости бега и +10% к шансу Золотого+ на конвейере" },
+    { "id": "Tralalero_Tralala",          "rarity": "iconic",    "source": "event",  "release_week": 4, "perk": "+25% к очкам Хайпа и +10% шанс, что брейнрот вылупится на вариант выше" },
     { "id": "SixSeven_67",                "rarity": "iconic",    "source": "event",  "release_week": 7, "perk": "×1.067 ко всему доходу + эмоция «six-seven»" }
   ],
   "belt": {
@@ -141,24 +157,25 @@
       "belt_spawn_interval_sec": 2,
       "belt_weight_mult": { "common": 1, "rare": 1, "epic": 2, "legendary": 3, "mythic": 3 }
     },
-    "contributor_reward": { "min_share_of_threshold": 0.05, "reward": "1 штормовая капсула (Эпическая или выше), бесплатно" },
+    "contributor_reward": { "min_share_of_threshold": 0.05, "reward": "1 штормовая капсула (Эпическая или выше), бесплатно", "rarity_weights": { "epic": 70, "legendary": 25, "mythic": 5 } },
     "target_interval_min": [12, 20]
   },
   "fusion": {
     "unlock_rebirth": 3,
-    "variant_upgrade": { "inputs": 3, "rule": "3 одинаковых брейнрота одного варианта → 1 следующего варианта" },
+    "available_from_week": 3,
+    "variant_upgrade": { "inputs": 3, "rule": "3 одинаковых брейнрота одного варианта → 1 следующего варианта", "time_min": 2 },
     "result_variant": "lowest_of_inputs",
     "cash_cost": "2 × цена капсулы редкости результата",
     "time_min": { "epic": 5, "legendary": 15, "mythic": 45 },
     "first_discovery_announce": true,
     "recipes": [
-      { "result": "Spaghetti_Tualetti",         "inputs": ["Noobini_Pizzanini", "Salamino_Penguino", "Tim_Cheese"] },
-      { "result": "Frigo_Camelo",               "inputs": ["Rhino_Toasterino", "Talpa_Di_Ferro", "Cacto_Hipopotamo"] },
-      { "result": "Trulimero_Trulicina",        "inputs": ["Trippi_Troppi", "Bananita_Dolphinita", "Blueberrinni_Octopussini"] },
-      { "result": "Chef_Crabracadabra",         "inputs": ["Graipuss_Medussi", "Blueberrinni_Octopussini", "Noobini_Pizzanini"] },
-      { "result": "Cocofanto_Elefanto",         "inputs": ["Lirili_Larila", "Burbaloni_Luliloli", "Cacto_Hipopotamo"] },
-      { "result": "Svinina_Bombardino",         "inputs": ["Bombardiro_Crocodilo", "Bombombini_Gusini", "Salamino_Penguino"] },
-      { "result": "La_Vacca_Saturno_Saturnita", "inputs": ["Girafa_Celestre", "Bombombini_Gusini", "Tim_Cheese"] }
+      { "result": "Spaghetti_Tualetti",         "inputs": ["Noobini_Pizzanini", "Salamino_Penguino", "Tim_Cheese"], "hint": "Вся кухня за одним столом" },
+      { "result": "Frigo_Camelo",               "inputs": ["Rhino_Toasterino", "Talpa_Di_Ferro", "Cacto_Hipopotamo"], "hint": "Техника в пустыне" },
+      { "result": "Trulimero_Trulicina",        "inputs": ["Trippi_Troppi", "Bananita_Dolphinita", "Blueberrinni_Octopussini"], "hint": "Кот ушёл в море" },
+      { "result": "Chef_Crabracadabra",         "inputs": ["Graipuss_Medussi", "Blueberrinni_Octopussini", "Noobini_Pizzanini"], "hint": "Океан на кухне" },
+      { "result": "Cocofanto_Elefanto",         "inputs": ["Lirili_Larila", "Burbaloni_Luliloli", "Cacto_Hipopotamo"], "hint": "Слон, кокос и колючки" },
+      { "result": "Svinina_Bombardino",         "inputs": ["Bombardiro_Crocodilo", "Bombombini_Gusini", "Salamino_Penguino"], "hint": "Авиация и колбаса" },
+      { "result": "La_Vacca_Saturno_Saturnita", "inputs": ["Girafa_Celestre", "Bombombini_Gusini", "Tim_Cheese"], "hint": "Корова, луна и сыр" }
     ]
   },
   "rebirth": {
@@ -182,12 +199,36 @@
       { "level": 9,  "need": [["Graipuss_Medussi", "base"], ["Rhino_Toasterino", "base"], ["Blueberrinni_Octopussini", "gold"]] },
       { "level": 10, "need": [["Bombardiro_Crocodilo", "base"], ["Cappuccino_Assassino", "gold"], ["Trippi_Troppi", "rainbow"]] },
       { "level": 11, "need": [["Lirili_Larila", "base"], ["Espresso_Signora", "base"], ["Ballerina_Cappuccina", "gold"]] },
-      { "level": 12, "need": [["Bombardiro_Crocodilo", "gold"], ["Lirili_Larila", "gold"], ["Espresso_Signora", "gold"]] }
+      { "level": 12, "need": [["Bombardiro_Crocodilo", "gold"], ["Lirili_Larila", "gold"], ["Espresso_Signora", "gold"]] },
+      { "level": 13, "need": [["Brr_Brr_Patapim", "gold"], ["Orangutini_Ananassini", "gold"], ["Graipuss_Medussi", "gold"]] },
+      { "level": 14, "need": [["Rhino_Toasterino", "gold"], ["Strawberrelli_Flamingelli", "diamond"], ["Cacto_Hipopotamo", "diamond"]] },
+      { "level": 15, "need": [["Bombardiro_Crocodilo", "diamond"], ["Cappuccino_Assassino", "diamond"], ["Glorbo_Fruttodrillo", "diamond"]] },
+      { "level": 16, "need": [["Lirili_Larila", "diamond"], ["Ballerina_Cappuccina", "diamond"], ["Burbaloni_Luliloli", "rainbow"]] },
+      { "level": 17, "need": [["Espresso_Signora", "diamond"], ["Brr_Brr_Patapim", "diamond"], ["Spioniro_Golubiro", "rainbow"]] },
+      { "level": 18, "need": [["Bombardiro_Crocodilo", "rainbow"], ["Orangutini_Ananassini", "diamond"], ["Talpa_Di_Ferro", "rainbow"]] },
+      { "level": 19, "need": [["Lirili_Larila", "rainbow"], ["Graipuss_Medussi", "diamond"], ["Chimpanzini_Bananini", "rainbow"]] },
+      { "level": 20, "need": [["Espresso_Signora", "rainbow"], ["Rhino_Toasterino", "diamond"], ["Blueberrinni_Octopussini", "rainbow"]] },
+      { "level": 21, "need": [["Bombombini_Gusini", "gold"], ["Cappuccino_Assassino", "rainbow"], ["Strawberrelli_Flamingelli", "rainbow"]] },
+      { "level": 22, "need": [["Spaghetti_Tualetti", "base"], ["Ballerina_Cappuccina", "rainbow"], ["Glorbo_Fruttodrillo", "rainbow"]] },
+      { "level": 23, "need": [["Chef_Crabracadabra", "base"], ["Frigo_Camelo", "gold"], ["Trulimero_Trulicina", "gold"]] },
+      { "level": 24, "need": [["Cocofanto_Elefanto", "base"], ["Bombombini_Gusini", "diamond"], ["Brr_Brr_Patapim", "rainbow"]] },
+      { "level": 25, "need": [["Dragon_Cannelloni", "base"], ["Spaghetti_Tualetti", "gold"], ["Orangutini_Ananassini", "rainbow"]] },
+      { "level": 26, "need": [["Svinina_Bombardino", "base"], ["Chef_Crabracadabra", "gold"], ["Graipuss_Medussi", "rainbow"]] },
+      { "level": 27, "need": [["Draghetto_Gelato", "base"], ["Cocofanto_Elefanto", "gold"], ["Rhino_Toasterino", "rainbow"]] },
+      { "level": 28, "need": [["Dragon_Cannelloni", "gold"], ["Bombardiro_Crocodilo", "lava"], ["Frigo_Camelo", "diamond"]] },
+      { "level": 29, "need": [["Drakonino_Peperonino", "base"], ["Lirili_Larila", "lava"], ["Trulimero_Trulicina", "diamond"]] },
+      { "level": 30, "need": [["Draghetto_Gelato", "gold"], ["Espresso_Signora", "lava"], ["Svinina_Bombardino", "gold"]] },
+      { "level": 31, "need": [["Girafa_Celestre", "base"], ["Bombardiro_Crocodilo", "viral"], ["Cocofanto_Elefanto", "diamond"]] },
+      { "level": 32, "need": [["La_Vacca_Saturno_Saturnita", "base"], ["Drakonino_Peperonino", "gold"], ["Chef_Crabracadabra", "lava"]] },
+      { "level": 33, "need": [["Dragon_Cannelloni", "diamond"], ["Girafa_Celestre", "gold"], ["Lirili_Larila", "viral"]] },
+      { "level": 34, "need": [["Draghetto_Gelato", "diamond"], ["Svinina_Bombardino", "diamond"], ["Espresso_Signora", "viral"]] },
+      { "level": 35, "need": [["La_Vacca_Saturno_Saturnita", "gold"], ["Drakonino_Peperonino", "diamond"], ["Bombardiro_Crocodilo", "cosmic"]] }
     ],
-    "requirements_13_plus": "тот же формат; заполнять по мере выхода мификов и новых вариантов"
+    "cycles_rule": "после «Вирусного взрыва» таблица проходится заново, требуемый вариант +1 за каждый взрыв (не выше Космического)"
   },
   "super_rebirth": {
     "name": "Вирусный взрыв",
+    "available_from_week": 5,
     "unlock": { "rebirth": 12, "own_variant": "rainbow", "own_rarity": "legendary" },
     "resets": ["cash", "rebirth"],
     "keeps": ["brainrots", "likes", "hype_crystals", "hype_shop_upgrades", "discoveries"],
@@ -198,7 +239,7 @@
   "hype_shop": [
     { "id": "second_companion",   "name": "2-й компаньон",                  "cost": 300, "max_level": 1 },
     { "id": "daily_crystals",     "name": "Кристалл за каждое ежедневное",  "cost": 200, "max_level": 1 },
-    { "id": "auto_collect",       "name": "Автосбор кэша",                  "cost": 150, "max_level": 1 },
+    { "id": "reserve_plus",       "name": "Запас капсул +5",                "cost": 150, "max_level": 2 },
     { "id": "extra_incubator",    "name": "+1 инкубатор",                   "cost": 250, "max_level": 2 },
     { "id": "belt_luck",          "name": "Удача конвейера +10%",           "cost": 400, "max_level": 5 },
     { "id": "hatch_speed",        "name": "Скорость вылупления +10%",       "cost": 150, "max_level": 5 },
@@ -221,28 +262,40 @@
   },
   "daily_quests": {
     "count": 3,
+    "pool": {
+      "easy":   [["hatch", 5], ["buy_capsule", 5], ["pickaxe_hit", 100], ["sell", 3]],
+      "medium": [["hatch", 20], ["storm", 1], ["tour", 1], ["upgrade", 1], ["pickaxe_hit", 400]],
+      "hard":   [["hatch_epic", 3], ["storm", 3], ["fusion", 1], ["hatch", 60]]
+    },
+    "pick_rule": "задание дня = pool[сложность][(номер дня UTC) mod длина пула] — у всех игроков одинаковые",
     "rewards": { "easy": { "likes": 20 }, "medium": { "likes": 60 }, "hard": { "likes": 150, "hype_crystals": 1 } },
     "examples": ["Выведи 5 брейнротов", "Собери семью из 3 брейнротов", "Сделай 200 ударов киркой по инкубатору", "Поучаствуй в Хайп-шторме", "Отправь брейнрота на гастроли", "Продай 3 брейнрота"]
   },
-  "tours": [
-    { "id": "tour_15m", "duration_min": 15,  "cost": "5 мин дохода",   "reward": { "likes": [10, 30] } },
-    { "id": "tour_1h",  "duration_min": 60,  "cost": "15 мин дохода",  "reward": { "likes": [40, 100], "capsule_chance": 0.25 } },
-    { "id": "tour_4h",  "duration_min": 240, "cost": "45 мин дохода",  "reward": { "likes": [150, 350], "capsule_chance": 0.6 } },
-    { "id": "tour_8h",  "duration_min": 480, "cost": "90 мин дохода",  "reward": { "likes": [300, 700], "capsule": "гарантированно Эпическая или выше" } }
-  ],
+  "tours": {
+    "slots": 1,
+    "_cost_rule": "цена = текущий доход в секунду × cost_income_min × 60",
+    "list": [
+      { "id": "tour_15m", "name": "Гастроли по району",  "duration_min": 15,  "cost_income_min": 5,  "likes": [10, 30],   "capsule_chance": 0,    "epic_plus": false },
+      { "id": "tour_1h",  "name": "Тур по Италии",       "duration_min": 60,  "cost_income_min": 15, "likes": [40, 100],  "capsule_chance": 0.25, "epic_plus": false },
+      { "id": "tour_4h",  "name": "Европейское турне",   "duration_min": 240, "cost_income_min": 45, "likes": [150, 350], "capsule_chance": 0.6,  "epic_plus": false },
+      { "id": "tour_8h",  "name": "Мировой тур (на ночь)", "duration_min": 480, "cost_income_min": 90, "likes": [300, 700], "capsule_chance": 1,    "epic_plus": true }
+    ]
+  },
   "vbucks_offers": [
     { "id": "storm_rainbow",  "name": "Личный шторм: Радужный",      "price": 200,  "type": "consumable", "effect": "следующая твоя капсула на конвейере — Радужная", "paid_random_item": false },
     { "id": "storm_lava",     "name": "Личный шторм: Лавовый",       "price": 300,  "type": "consumable", "effect": "следующая твоя капсула — Лавовая", "paid_random_item": false, "from_week": 5 },
     { "id": "storm_viral",    "name": "Личный шторм: Вирусный",      "price": 400,  "type": "consumable", "effect": "следующая твоя капсула — Вирусная", "paid_random_item": false, "from_week": 7 },
-    { "id": "hype_bomb",      "name": "Хайп-бомба (для всего лобби)", "price": 150,  "type": "consumable", "effect": "+50% к Хайп-метру лобби, имя покупателя на табло", "paid_random_item": false },
+    { "id": "hype_bomb",      "name": "Хайп-бомба (для всего лобби)", "price": 150,  "type": "consumable", "effect": "+50% к Хайп-метру лобби и объявление «Хайп-бомба!» для всех", "paid_random_item": false },
     { "id": "hat",            "name": "Шляпа для брейнрота",          "price": 250,  "type": "durable",    "effect": "косметика", "paid_random_item": false },
     { "id": "plot_paint",     "name": "Покраска участка",             "price": 300,  "type": "durable",    "effect": "косметика", "paid_random_item": false },
-    { "id": "lab_pack",       "name": "Набор лаборанта",              "price": 1200, "type": "bundle",     "effect": "+1 инкубатор, автосбор кэша, 2 личных Радужных шторма, шляпа; всё есть и за кристаллы", "paid_random_item": false },
+    { "id": "lab_pack",       "name": "Набор лаборанта",              "price": 1200, "type": "bundle",     "effect": "+1 инкубатор навсегда и 2 личных Радужных шторма; инкубатор есть и за кристаллы", "paid_random_item": false },
     { "id": "fusion_pack",    "name": "Набор скрещивания",            "price": 1800, "type": "bundle",     "effect": "скрещивание ×2 быстрее навсегда, 2-й стол скрещивания, 3 Лавовых шторма", "paid_random_item": false, "from_week": 3 }
   ],
   "events": {
-    "weekly_main": { "day": "saturday", "start_et": "16:00", "duration_h": 24 },
-    "weekly_mini": { "day": "thursday", "name": "Мем-пиньята", "spawn_every_min": 30, "reward": "Хайп-кристаллы + Радужная капсула всем, кто ударил", "likes_mult": 2 },
+    "launch_epoch_utc": 0,
+    "week_rule": "неделя контента = floor((сейчас − launch_epoch_utc) / 604800); в Verse — поле LaunchEpochSeconds у lab_manager_device",
+    "weekly_main": { "day": "saturday", "start_et": "16:00", "start_utc_hour": 20, "duration_h": 24, "income_mult": 2, "hatch_speed_mult": 2 },
+    "weekly_mini": { "day": "thursday", "name": "Мем-пиньята", "spawn_every_min": 30, "hp_hits_per_player": 60, "reward_crystals": 5, "reward": "Хайп-кристаллы + Радужная капсула всем, кто ударил", "likes_mult": 2 },
     "schedule": [
       { "week": 1,  "name": "Тунг-Тунг-Сахур",       "what": "собирай поленья по карте и неси к тотему → икона Tung Tung Tung Sahur; на конвейере Bombombini Gusini; комбо «Воздушный налёт»" },
       { "week": 2,  "name": "Драконья неделя",        "what": "первый мифик Dragon Cannelloni, табло «мифик каждый час», комбо «Ужин с драконом»" },
