@@ -1,0 +1,87 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 900" width="900" height="900" font-family="DejaVu Sans, Arial, sans-serif">
+  <title>Карта Брейнрот Лаборатории</title>
+  <desc>Хаб в центре с конвейером и станциями, 8 участков по кругу радиусом 85 м, дороги от хаба к участкам. 1 м = 4 px.</desc>
+  <rect width="900" height="900" fill="#8FCF6A"/>
+  <!-- вода по краю -->
+  <circle cx="450" cy="450" r="440" fill="none" stroke="#4FB3E8" stroke-width="30" opacity="0.7"/>
+  <!-- дороги к участкам -->
+  <g stroke="#E8D9B5" stroke-width="18" stroke-linecap="round">
+    <line x1="450" y1="450" x2="450" y2="110"/>
+    <line x1="450" y1="450" x2="690" y2="210"/>
+    <line x1="450" y1="450" x2="790" y2="450"/>
+    <line x1="450" y1="450" x2="690" y2="690"/>
+    <line x1="450" y1="450" x2="450" y2="790"/>
+    <line x1="450" y1="450" x2="210" y2="690"/>
+    <line x1="450" y1="450" x2="110" y2="450"/>
+    <line x1="450" y1="450" x2="210" y2="210"/>
+  </g>
+  <!-- хаб: площадь радиусом 40 м -->
+  <circle cx="450" cy="450" r="160" fill="#F2E6CC" stroke="#C8643B" stroke-width="4"/>
+  <!-- конвейер 36 м: от портала (север) на юг -->
+  <rect x="444" y="362" width="12" height="144" fill="#C8102E"/>
+  <g fill="#FFC83D">
+    <circle cx="450" cy="368" r="4"/><circle cx="450" cy="380" r="4"/><circle cx="450" cy="392" r="4"/>
+    <circle cx="450" cy="404" r="4"/><circle cx="450" cy="416" r="4"/><circle cx="450" cy="428" r="4"/>
+    <circle cx="450" cy="440" r="4"/><circle cx="450" cy="452" r="4"/><circle cx="450" cy="464" r="4"/>
+    <circle cx="450" cy="476" r="4"/><circle cx="450" cy="488" r="4"/><circle cx="450" cy="500" r="4"/>
+  </g>
+  <!-- портал -->
+  <rect x="424" y="348" width="52" height="12" rx="4" fill="#7A2BFF"/>
+  <text x="450" y="342" font-size="13" text-anchor="middle" fill="#3A2466">Мем-портал + табло гарантий</text>
+  <!-- станции хаба -->
+  <g font-size="12" fill="#1B1F33">
+    <circle cx="372" cy="424" r="16" fill="#2B2F45"/><text x="372" y="456" text-anchor="middle">Хайп-башня</text>
+    <rect x="376" y="462" width="26" height="16" fill="#6B4226"/><text x="389" y="476" text-anchor="end" dx="-18">Скрещивание</text>
+    <rect x="512" y="466" width="16" height="22" fill="#FF4F7B"/><text x="520" y="500" text-anchor="middle">Мем-автомат</text>
+    <rect x="508" y="414" width="40" height="16" rx="4" fill="#FFC83D"/><text x="528" y="446" text-anchor="middle">Гастроли</text>
+    <rect x="410" y="376" width="14" height="14" fill="#39F2E0"/><text x="392" y="372" text-anchor="end">Хайп-магазин</text>
+    <rect x="476" y="376" width="14" height="14" fill="#FFC83D"/><text x="508" y="372" text-anchor="start">Магазин</text>
+    <rect x="410" y="520" width="14" height="14" fill="#9AA3B5"/><text x="404" y="532" text-anchor="end">Задания</text>
+    <rect x="476" y="520" width="14" height="14" fill="#9AA3B5"/><text x="496" y="532" text-anchor="start">Мемопедия</text>
+    <circle cx="450" cy="556" r="12" fill="#FF4F7B"/><text x="450" y="584" text-anchor="middle">Пиньята (чт)</text>
+    <circle cx="548" cy="552" r="14" fill="#F4F1EA" stroke="#6F4A2E" stroke-width="3"/><text x="548" y="580" text-anchor="middle">Фонтан-капучино</text>
+    <text x="318" y="524" text-anchor="end">Спавн</text>
+  </g>
+  <g fill="#1E88E5">
+    <circle cx="324" cy="494" r="4"/><circle cx="336" cy="494" r="4"/><circle cx="348" cy="494" r="4"/><circle cx="360" cy="494" r="4"/>
+    <circle cx="324" cy="506" r="4"/><circle cx="336" cy="506" r="4"/><circle cx="348" cy="506" r="4"/><circle cx="360" cy="506" r="4"/>
+  </g>
+  <!-- ивентовые зоны -->
+  <g font-size="12" fill="#1B1F33">
+    <circle cx="332" cy="636" r="10" fill="#8B5A33"/><text x="348" y="640" text-anchor="start">Тотем Сахура</text>
+    <rect x="596" y="590" width="26" height="26" fill="#4FB3E8" stroke="#1D5FB8" stroke-width="3"/><text x="588" y="608" text-anchor="end">Акулья башня</text>
+  </g>
+  <!-- 8 участков 40×40 м на кольце 85 м -->
+  <g font-size="14" font-weight="bold" text-anchor="middle">
+    <rect x="370" y="30" width="160" height="160" rx="10" fill="#FFE0E6" stroke="#FF4F7B" stroke-width="4"/><text x="450" y="115">#1</text>
+    <rect x="610" y="130" width="160" height="160" rx="10" fill="#FFF2CC" stroke="#FFC83D" stroke-width="4" transform="rotate(45 690 210)"/><text x="690" y="215">#2</text>
+    <rect x="710" y="370" width="160" height="160" rx="10" fill="#DDF7F4" stroke="#39F2E0" stroke-width="4"/><text x="790" y="455">#3</text>
+    <rect x="610" y="610" width="160" height="160" rx="10" fill="#EDE0FF" stroke="#B26BFF" stroke-width="4" transform="rotate(45 690 690)"/><text x="690" y="695">#4</text>
+    <rect x="370" y="710" width="160" height="160" rx="10" fill="#E0EEFF" stroke="#4FA8FF" stroke-width="4"/><text x="450" y="795">#5</text>
+    <rect x="130" y="610" width="160" height="160" rx="10" fill="#E3F6D8" stroke="#66BB6A" stroke-width="4" transform="rotate(45 210 690)"/><text x="210" y="695">#6</text>
+    <rect x="30" y="370" width="160" height="160" rx="10" fill="#FFE8D6" stroke="#FF9F1C" stroke-width="4"/><text x="110" y="455">#7</text>
+    <rect x="130" y="130" width="160" height="160" rx="10" fill="#F0F0F5" stroke="#9AA3B5" stroke-width="4" transform="rotate(45 210 210)"/><text x="210" y="215">#8</text>
+  </g>
+  <!-- схема одного участка (#1) -->
+  <g font-size="10" fill="#1B1F33">
+    <rect x="400" y="40" width="100" height="26" fill="#C8643B"/><text x="450" y="57" text-anchor="middle" fill="#fff">Лаборатория</text>
+    <rect x="392" y="72" width="14" height="14" rx="7" fill="#BFF6FF" stroke="#3A4060"/><rect x="412" y="72" width="14" height="14" rx="7" fill="#BFF6FF" stroke="#3A4060"/>
+    <rect x="474" y="72" width="14" height="14" rx="7" fill="#BFF6FF" stroke="#3A4060"/><rect x="494" y="72" width="14" height="14" rx="7" fill="#BFF6FF" stroke="#3A4060"/>
+    <circle cx="518" cy="100" r="8" fill="#B26BFF"/>
+    <g fill="#FFFFFF" stroke="#2B2F45">
+      <circle cx="412" cy="126" r="5"/><circle cx="427" cy="126" r="5"/><circle cx="442" cy="126" r="5"/><circle cx="457" cy="126" r="5"/><circle cx="472" cy="126" r="5"/><circle cx="487" cy="126" r="5"/>
+      <circle cx="412" cy="141" r="5"/><circle cx="427" cy="141" r="5"/><circle cx="442" cy="141" r="5"/><circle cx="457" cy="141" r="5"/><circle cx="472" cy="141" r="5"/><circle cx="487" cy="141" r="5"/>
+      <circle cx="412" cy="156" r="5"/><circle cx="427" cy="156" r="5"/><circle cx="442" cy="156" r="5"/><circle cx="457" cy="156" r="5"/><circle cx="472" cy="156" r="5"/><circle cx="487" cy="156" r="5"/>
+      <circle cx="412" cy="171" r="5"/><circle cx="427" cy="171" r="5"/><circle cx="442" cy="171" r="5"/><circle cx="457" cy="171" r="5"/><circle cx="472" cy="171" r="5"/><circle cx="487" cy="171" r="5"/>
+    </g>
+    <circle cx="450" cy="98" r="5" fill="#E53935"/>
+  </g>
+  <!-- легенда -->
+  <g font-size="12" fill="#1B1F33">
+    <rect x="620" y="800" width="270" height="92" fill="#FFFFFF" opacity="0.85" rx="6"/>
+    <circle cx="636" cy="818" r="5" fill="#E53935"/><text x="648" y="822">устройство lab_plot (центр участка)</text>
+    <rect x="631" y="832" width="10" height="10" rx="5" fill="#BFF6FF" stroke="#3A4060"/><text x="648" y="842">инкубаторы (2 → 4)</text>
+    <circle cx="636" cy="856" r="5" fill="#FFFFFF" stroke="#2B2F45"/><text x="648" y="860">места подиума (сетка 6×5)</text>
+    <circle cx="636" cy="874" r="5" fill="#B26BFF"/><text x="648" y="878">алтарь перерождения · 1 м = 4 px</text>
+  </g>
+</svg>
